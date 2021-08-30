@@ -277,7 +277,7 @@ void fixup_utoprim(struct GridGeom *G, struct FluidState *S)
       }
       if(wsum < 1.e-10)
       {
-        fprintf(stderr, "fixup_utoprim: No usable neighbors at %d %d %d\n", i, j);
+        fprintf(stderr, "fixup_utoprim: No usable neighbors at %d %d\n", i, j);
         continue;
       }
       FLOOP S->P[ip][j][i] = sum[ip]/wsum;
