@@ -70,7 +70,7 @@ void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
   fprintf(fp, STRING_OUT, VERSION);
   int has_electrons = ELECTRONS;
   fprintf(fp, FML_INT_OUT , has_electrons);
-  char gridfile[15] = "grid.h5";
+  char gridfile[15] = "grid";
   fprintf(fp, STRING_OUT, gridfile);
 
   #if METRIC == MINKOWSKI
@@ -193,7 +193,7 @@ void dump_grid(struct GridGeom *G)
   for (int d = 0; d < NGRIDVARS; d++) x[d] = calloc(1, sizeof(GridDouble));
   const char *coordNames[] = {"X", "Y", "Z", "r", "th", "phi", "X1", "X2", "X3"};
 
-  char *fname = "dumps/grid.h5";
+  char *fname = "dumps/grid";
   fprintf(stdout, "GRID %s\n", fname);
 
   FILE *fp;

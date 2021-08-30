@@ -129,10 +129,10 @@ int main(int argc, char *argv[])
     if (access(abort_fname, F_OK) != -1)
     {
       fprintf(stdout, "\nFound 'abort' file. Quitting now.\n\n");
-    }
-    diag(G, S, DIAG_ABORT);
-    restart_write_backend(S, IO_ABORT);
-    return 0;
+			diag(G, S, DIAG_ABORT);
+			restart_write_backend(S, IO_ABORT);
+			return 0;
+		}
   
     dumpThisStep = 0;
     // Start timer for time-step
