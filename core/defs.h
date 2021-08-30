@@ -8,7 +8,7 @@
 
 #pragma once
 
-// Zone flags.  TODO move these to the heap
+// Zone flags
 GridInt pflag;
 GridInt fail_save;
 GridInt fflag;
@@ -30,7 +30,7 @@ double Rin, Rout, hslope;
 double poly_norm, poly_xt, poly_alpha, mks_smooth;
 double cour;
 double dV, dx[NDIM], startx[NDIM];
-double x1Min, x1Max, x2Min, x2Max
+double x1Min, x1Max, x2Min, x2Max;
 double dt, dt_light;
 double t, tf;
 double rcurr, hcurr;

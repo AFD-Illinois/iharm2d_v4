@@ -63,7 +63,7 @@ inline void heat_electrons_1zone(struct GridGeom *G, struct FluidState *Ss, stru
 
   // Evolve model entropy(ies)
   for (int idx = KEL0; idx < NVAR ; idx++) {
-    double fel = get_fels(G, Ss, i, j, k, idx);
+    double fel = get_fels(G, Ss, i, j, idx);
     Sf->P[idx][j][i] += (game-1.)/(gam-1.)*pow(Ss->P[RHO][j][i],gam-game)*fel*(kHarm - Sf->P[KTOT][j][i]);
   }
 
@@ -147,7 +147,7 @@ inline void fixup_electrons_1zone(struct FluidState *S, int i, int j)
 	// Enforce maximum Tp/Te
     S->P[idx][j][i] = MY_MAX(S->P[idx][j][i], kelmin);
 	// Enforce minimum Tp/Te
-    S->P[idx][i][j] = MY_MIN(S->P[idx][i][j], kelmax);
+    S->P[idx][j][i] = MY_MIN(S->P[idx][j][i], kelmax);
   }
 }
 #endif // ELECTRONS

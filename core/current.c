@@ -51,8 +51,7 @@ void current_calc(struct GridGeom *G, struct FluidState *S, struct FluidState *S
   DLOOP1 ZLOOPALL S->jcon[mu][j][i] = 0.;
 
   // Calculate j^{\mu} using centered differences for active zones
-  // TODO rewrite this vector-style
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(2)
   ZLOOP 
   {
     double gF0p[NDIM], gF0m[NDIM], gF1p[NDIM], gF1m[NDIM], gF2p[NDIM], gF2m[NDIM];

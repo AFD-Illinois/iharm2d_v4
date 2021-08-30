@@ -8,8 +8,8 @@
 
 -----------------------------------------------------------------------------------*/
 
+#include "bl_coord.h"
 #include "decs.h"
-#include "geometry.c"
 
 
 // Local declarations
@@ -18,15 +18,20 @@ double lfish_calc(double rmax);
 #define SANE 0
 #define MAD 1
 
+#define FML_DBL_OUT "%28.18e"
+#define FML_INT_OUT "%10d"
+#define STRING_OUT "%15s"
+
 static int maxr_normalization = 0;
 
 static int mad_type;
 static double beta;
 static double rin, rmax;
-static u_jitter;
+static double u_jitter;
 
 // Assign problem param names and pointers
-void set_problem_params() {
+void set_problem_params()
+{
   set_param("rin", &rin);
   set_param("rmax", &rmax);
   set_param("u_jitter", &u_jitter);
@@ -36,16 +41,16 @@ void set_problem_params() {
 }
 
 // Save problem specific details
-// This is done in each dump file in /header/problem/
-void save_problem_data(hid_t string_type)
+void save_problem_data(FILE *fp)
 {
-	hdf5_write_single_val(&mad_type, "mad_type", H5T_STD_I32LE);
-	hdf5_write_single_val("torus", "PROB", string_type);
-	hdf5_write_single_val(&rin, "rin", H5T_IEEE_F64LE);
-	hdf5_write_single_val(&rmax, "rmax", H5T_IEEE_F64LE);
-	hdf5_write_single_val(&beta, "beta", H5T_IEEE_F64LE);
-	hdf5_write_single_val(&u_jitter, "u_jitter", H5T_IEEE_F64LE);
+  fprintf(fp, FML_INT_OUT, mad_type);
+  fprintf(fp, STRING_OUT, "torus");
+  fprintf(fp, FML_DBL_OUT, rin);
+  fprintf(fp, FML_DBL_OUT, rmax);
+  fprintf(fp, FML_DBL_OUT, beta);
+  fprintf(fp, FML_DBL_OUT, u_jitter);
 }
+
 
 // Initializing matter and magnetic field
 void init(struct GridGeom *G, struct FluidState *S)
@@ -150,7 +155,7 @@ void init(struct GridGeom *G, struct FluidState *S)
       S->P[RHO][j][i] = rho;
       if (rho > rhomax) rhomax = rho;
       if (u > umax && r > rin) umax = u;
-      u *= (1. + u_jitter * (ran_uniform(rng) - 0.5));
+      u *= (1. + u_jitter * (ran_uniform() - 0.5));
       S->P[UU][j][i] = u;
       S->P[U1][j][i] = 0.;
       S->P[U2][j][i] = 0.;

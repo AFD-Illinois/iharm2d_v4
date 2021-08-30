@@ -2,7 +2,7 @@
 
   DECS.H
 
-  -Global macros, function definitions, includes and declarations
+  -GLOBAL MACROS, FUNCTION DEFINITIONS, INCLUDES AND DECLARATIONS
 
 ---------------------------------------------------------------------------------*/
 
@@ -270,7 +270,7 @@ extern double tp_over_te;
 extern double Rin, Rout, hslope;
 extern double cour;
 extern double dV, dx[NDIM], startx[NDIM];
-extern double x1Min, x1Max, x2Min, x2Max
+extern double x1Min, x1Max, x2Min, x2Max;
 extern double dt, dt_light;
 extern double t, tf;
 extern int nstep;
@@ -333,11 +333,11 @@ extern double poly_norm, poly_xt, poly_alpha, mks_smooth;
 #define JSLOOP(jstart, jstop) \
   for (int j = (jstart) + NG; j <= (jstop) + NG; j++)
 #define ZSLOOP(jstart, jstop, istart, istop) \
-  for (int i = (jstart) + NG; j <= (jstop) + NG; j++) \
-  for (int j = (istart) + NG; i <= (istop) + NG; i++)
+  for (int j = (jstart) + NG; j <= (jstop) + NG; j++) \
+  for (int i = (istart) + NG; i <= (istop) + NG; i++)
 #define ZSLOOP_REVERSE(jstart, jstop, istart, istop) \
-  for (int i = (jstop) + NG; j >= (jstart) + NG; j--) \
-  for (int j = (istop) + NG; i >= (istart) + NG; i--)
+  for (int j = (jstop) + NG; j >= (jstart) + NG; j--) \
+  for (int i = (istop) + NG; i >= (istart) + NG; i--)
 #define ZSLOOP_OUT(istart, istop, jstart, jstop) \
   JSLOOP(jstart,jstop) ISLOOP(istart,istop)
 
@@ -350,8 +350,8 @@ extern double poly_norm, poly_xt, poly_alpha, mks_smooth;
                for (int nu = 0; nu < NDIM; nu++)
 
 // For adding quotes to passed arguments e.g. git commit #0
-#define HASH(x) #x
-#define QUOTE(x) HASH(x)
+//#define HASH(x) #x
+//#define QUOTE(x) HASH(x)
 
 // Math functions commonly mistyped
 #define MY_MIN(fval1,fval2) ( ((fval1) < (fval2)) ? (fval1) : (fval2))
@@ -423,8 +423,6 @@ void fixup_utoprim(struct GridGeom *G, struct FluidState *S);
 double get_flux(struct GridGeom *G, struct FluidState *S, struct FluidFlux *F);
 void flux_ct(struct FluidFlux *F);
 
-// hdf5_utils.c has its own header
-
 // io.c
 void init_io();
 void dump(struct GridGeom *G, struct FluidState *S);
@@ -435,7 +433,7 @@ void dump_grid(struct GridGeom *G);
 double gcon_func(double gcov[NDIM][NDIM], double gcon[NDIM][NDIM]);
 void get_gcov(struct GridGeom *G, int i, int j, int loc, double gcov[NDIM][NDIM]);
 void get_gcon(struct GridGeom *G, int i, int j, int loc, double gcon[NDIM][NDIM]);
-void conn_func(struct GridGeom *G, int i, int j, int k);
+void conn_func(struct GridGeom *G, int i, int j);
 void lower_grid(GridVector vcon, GridVector vcov, struct GridGeom *G, int i, int j, int loc);
 void raise_grid(GridVector vcov, GridVector vcon, struct GridGeom *G, int i, int j, int loc);
 void lower(double ucon[NDIM], double gcov[NDIM][NDIM], double ucov[NDIM]);
@@ -460,7 +458,7 @@ void read_params(char *pfname);
 // phys.c
 void prim_to_flux(struct GridGeom *G, struct FluidState *S, int i, int j, int dir, int loc, GridPrim flux);
 void prim_to_flux_vec(struct GridGeom *G, struct FluidState *S, int dir, int loc, int istart, int istop, int jstart, int jstop, GridPrim flux);
-void bcon_calc(struct FluidState *S, int i, int j, int k);
+void bcon_calc(struct FluidState *S, int i, int j);
 void mhd_calc(struct FluidState *S, int i, int j, int dir, double *mhd);
 void get_fluid_source(struct GridGeom *G, struct FluidState *S, GridPrim *dU);
 double bsq_calc(struct FluidState *S, int i, int j);
@@ -475,7 +473,7 @@ void set_problem_params();
 void init(struct GridGeom *G, struct FluidState *S);
 // Boundary condition (currently used for Bondi flow)
 void bound_gas_prob_x1r(int i, int j, GridPrim  P, struct GridGeom *G);
-void save_problem_data();
+void save_problem_data(FILE *fp);
 
 // random.c
 void init_rng(int seed);

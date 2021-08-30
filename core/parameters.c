@@ -8,7 +8,6 @@
 -----------------------------------------------------------------------------------*/
 
 #include "decs.h"
-#include <sys.stat.h>
 #include <ctype.h>
 
 // O(n) dictionary for converting strings to pointers to global variables
@@ -88,7 +87,7 @@ void set_core_params()
 // Set runtime parameters from param.dat
 void read_params(char* pfname)
 {
-  void *ptr
+  void *ptr;
   
   // Try reading the parameter file
   FILE *fp = fopen(pfname, "r");
@@ -107,7 +106,7 @@ void read_params(char* pfname)
       continue;
     
     // Check if param is not whitespace or null character
-    char test[STRLEN], ket[STRLEN];
+    char test[STRLEN], key[STRLEN];
     test[0] = '\0';
     sscanf(line, "%*s %s %*s %s", key, test);
     char *word = test;
@@ -116,7 +115,7 @@ void read_params(char* pfname)
       word++;
     }
     if (word[0] == '\0')
-      continue
+      continue;
 
     // Read in parameter depending on datatype
     char type[6];
@@ -152,6 +151,6 @@ void read_params(char* pfname)
     exit(-1);
   }
 
-  fclose(fp)
+  fclose(fp);
   fprintf(stdout, "Parameter file read\n\n");
 }

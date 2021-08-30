@@ -13,10 +13,11 @@
 -----------------------------------------------------------------------------------*/
 
 #include "decs.h"
+#include "defs.h"
 #include <time.h>
 #include <sys/stat.h>
 
-int main(int argc chat *argv)
+int main(int argc, char *argv[])
 {
   fprintf(stdout, "\n        ************************************************************\n");
   fprintf(stdout, "          *                                                          *\n");
@@ -40,7 +41,7 @@ int main(int argc chat *argv)
   // Read command line arguments
   char pfname[STRLEN] = "param.dat"; // Assumed parameter file name
   char outputdir[STRLEN] = ".";
-  for (int n=0; n<argc; n++)
+  for (int n = 0; n < argc; n++)
   {
     if (*argv[n] == '-' && *(argv[n]+1) != '\0' && *(argv[n]+2) == '\0'&& n < argc-1)
     {
@@ -62,7 +63,7 @@ int main(int argc chat *argv)
 
   // Remove 'abort' file if it exists
   char abort_fname[256] = "abort";
-  remove(abort_fname)l
+  remove(abort_fname);
 
   // Change to output directory and make 'dumps' and 'restarts' subdirectories
   if (chdir(outputdir) != 0)
@@ -123,7 +124,7 @@ int main(int argc chat *argv)
   time_init();
   
   int dumpThisStep = 0;
-  while (t < tf):
+  while (t < tf)
   {
     if (access(abort_fname, F_OK) != -1)
     {
@@ -168,7 +169,7 @@ int main(int argc chat *argv)
     }
     
     // Stop timer for time-step
-    time_stop(TIMER_ALL);
+    timer_stop(TIMER_ALL);
 
     // Print code performance 
     if (nstep % DTp == 0)
