@@ -208,7 +208,7 @@ void init(struct GridGeom *G, struct FluidState *S)
     }
 
     A[i][j] = 0.;
-    A[i][j] = q;
+    if (q > 0.) A[i][j] = q;
   }
 
   // Calculate B-field and find bsq_max

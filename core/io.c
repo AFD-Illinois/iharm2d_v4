@@ -120,7 +120,7 @@ void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
   fprintf(fp, FML_DBL_OUT, dx[1]);
   fprintf(fp, FML_DBL_OUT, dx[2]);
   int n_dim = NDIM;
-  fprintf(fp, FML_DBL_OUT, n_dim);
+  fprintf(fp, FML_INT_OUT, n_dim);
 
   #if METRIC == MKS
   #if DEREFINE_POLES
@@ -185,7 +185,7 @@ void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
   timer_stop(TIMER_IO);
 }
 
-#define NGRIDVARS 9
+#define NGRIDVARS 6
 // The function that actually writes the grid file
 void dump_grid(struct GridGeom *G)
 {
@@ -201,7 +201,7 @@ void dump_grid(struct GridGeom *G)
 
   ZLOOP
   {
-    double xp[3];
+    double xp[NDIM];
     coord(i, j, CENT, xp);
     #if METRIC == MINKOWSKI
     (*x[0])[j][i] = xp[1];

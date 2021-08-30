@@ -40,6 +40,14 @@ build: $(EXE)
 	@echo -e "Completed build of prob: $(PROB)"
 	@echo -e "CFLAGS: $(CFLAGS)"
 
+clean:
+	@echo "Cleaning build files..."
+	@rm -f $(EXE) $(OBJ)
+
+distclean: clean
+	@echo "Cleaning config files..."
+	@rm -rf build_archive
+
 $(EXE): $(ARC_DIR)$(EXE)
 	@cp $(ARC_DIR)$(EXE) .
 

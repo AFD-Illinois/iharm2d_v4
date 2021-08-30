@@ -19,7 +19,7 @@
 
 int main(int argc, char *argv[])
 {
-  fprintf(stdout, "\n        ************************************************************\n");
+  fprintf(stdout, "\n          ************************************************************\n");
   fprintf(stdout, "          *                                                          *\n");
   fprintf(stdout, "          *                          IHARM2D_V4                      *\n");
   fprintf(stdout, "          *                                                          *\n");
