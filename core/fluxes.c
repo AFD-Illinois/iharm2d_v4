@@ -25,7 +25,7 @@ double ndt_min(GridVector *ctop)
   ZLOOP
   {
     double ndt_zone = 0;
-    for (int mu = 1; mu < NDIM; mu++)
+    for (int mu = 1; mu < NDIM-1; mu++)
       ndt_zone += 1/(cour*dx[mu]/(*ctop)[mu][j][i]);
     ndt_zone = 1/ndt_zone;
 

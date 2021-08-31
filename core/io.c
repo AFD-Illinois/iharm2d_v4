@@ -224,15 +224,14 @@ void dump_grid(struct GridGeom *G)
   {
     for (int d = 0; d < NGRIDVARS; d++)
     {
-      fprintf(fp, FML_DBL_OUT, x[d][j][i]);
+      fprintf(fp, FML_DBL_OUT, (*x[d])[j][i]);
     }
     fprintf(fp, FML_DBL_OUT, G->gdet[CENT][j][i]);    
     fprintf(fp, FML_DBL_OUT, G->lapse[CENT][j][i]);
     DLOOP2
-    {
       fprintf(fp, FML_DBL_OUT, G->gcon[CENT][mu][nu][j][i]);
+    DLOOP2
       fprintf(fp, FML_DBL_OUT, G->gcov[CENT][mu][nu][j][i]);
-    }
 
     fprintf(fp, "\n");
   }

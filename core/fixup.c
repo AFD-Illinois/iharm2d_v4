@@ -73,14 +73,6 @@ void fixup(struct GridGeom *G, struct FluidState *S)
     if (flag & HIT_FLOOR_KTOT) n_ktot++;
   }
 
-  n_geom_rho = mpi_reduce_int(n_geom_rho);
-  n_geom_u = mpi_reduce_int(n_geom_u);
-  n_b_rho = mpi_reduce_int(n_b_rho);
-  n_b_u = mpi_reduce_int(n_b_u);
-  n_temp = mpi_reduce_int(n_temp);
-  n_gamma = mpi_reduce_int(n_gamma);
-  n_ktot = mpi_reduce_int(n_ktot);
-
   LOG("FLOORS:");
   if (n_geom_rho > 0) LOGN("Hit %d GEOM_RHO", n_geom_rho);
   if (n_geom_u > 0) LOGN("Hit %d GEOM_U", n_geom_u);

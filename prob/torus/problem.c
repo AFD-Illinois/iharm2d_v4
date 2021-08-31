@@ -222,8 +222,8 @@ void init(struct GridGeom *G, struct FluidState *S)
     bl_coord(X, &r, &th);
     
     // Flux-ct
-    S->P[B1][j][i] = -(A[i][j] - A[i][j + 1] + A[i + 1][j] - A[i + 1][j + 1]) / (2. * dx[2] * G->gdet[CENT][i][j]);
-    S->P[B2][j][i] = (A[i][j] + A[i][j + 1] - A[i + 1][j] - A[i + 1][j + 1]) / (2. * dx[1] * G->gdet[CENT][i][j]);
+    S->P[B1][j][i] = -(A[i][j] - A[i][j + 1] + A[i + 1][j] - A[i + 1][j + 1]) / (2. * dx[2] * G->gdet[CENT][j][i]);
+    S->P[B2][j][i] = (A[i][j] + A[i][j + 1] - A[i + 1][j] - A[i + 1][j + 1]) / (2. * dx[1] * G->gdet[CENT][j][i]);
     S->P[B3][j][i] = 0.;
 
     get_state(G, S, i, j, CENT);

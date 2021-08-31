@@ -86,7 +86,7 @@ if (model == KAWAZURA) {
   if(Tpr <= 0.) Tpr = SMALL;
 
   double Trat = fabs(Tpr/Tel);
-  double pres = S->P[RHO][i][j]*Tpr; // Proton pressure
+  double pres = S->P[RHO][j][i]*Tpr; // Proton pressure
   double beta = pres/bsq*2;
   if(beta > 1.e20) beta = 1.e20;
   
