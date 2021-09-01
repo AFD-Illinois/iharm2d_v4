@@ -154,8 +154,8 @@ void init(struct GridGeom *G, struct FluidState *S)
 
       S->P[RHO][j][i] = rho;
       if (rho > rhomax) rhomax = rho;
-      if (u > umax && r > rin) umax = u;
       u *= (1. + u_jitter * (ran_uniform() - 0.5));
+      if (u > umax && r > rin) umax = u;
       S->P[UU][j][i] = u;
       S->P[U1][j][i] = 0.;
       S->P[U2][j][i] = 0.;
@@ -175,7 +175,7 @@ void init(struct GridGeom *G, struct FluidState *S)
   ZLOOPALL
   {
     S->P[RHO][j][i] /= rhomax;
-    S->P[UU][j][i] /= umax;
+    S->P[UU][j][i] /= rhomax;
   }
   umax /= rhomax;
   rhomax = 1;

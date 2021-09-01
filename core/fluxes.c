@@ -190,12 +190,11 @@ void flux_ct(struct FluidFlux *F)
   timer_start(TIMER_FLUX_CT);
 
   static GridDouble emf;
-  /*static int firstc = 1;
+  static int firstc = 1;
   if (firstc)
   {
-    emf = calloc(1,sizeof(GridDouble));
     firstc = 0;
-  }*/
+  }
 
 #pragma omp parallel
   {
