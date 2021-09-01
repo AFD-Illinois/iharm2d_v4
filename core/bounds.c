@@ -51,14 +51,14 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
       PLOOP S->P[ip][j][i] = S->P[ip][j][iactive];
       pflag[j][i] = pflag[j][iactive];
 #elif X1L_BOUND == OUTFLOW
-        int iz = 0 + NG;
-        PLOOP S->P[ip][j][i] = S->P[ip][j][iz];
-        pflag[j][i] = pflag[j][iz];
+			int iz = 0 + NG;
+			PLOOP S->P[ip][j][i] = S->P[ip][j][iz];
+			pflag[j][i] = pflag[j][iz];
 
-        double rescale = G->gdet[CENT][j][iz]/G->gdet[CENT][j][i];
-        S->P[B1][j][i] *= rescale;
-        S->P[B2][j][i] *= rescale;
-        S->P[B3][j][i] *= rescale;
+			double rescale = G->gdet[CENT][j][iz]/G->gdet[CENT][j][i];
+			S->P[B1][j][i] *= rescale;
+			S->P[B2][j][i] *= rescale;
+			S->P[B3][j][i] *= rescale;
 #endif
     }
   }

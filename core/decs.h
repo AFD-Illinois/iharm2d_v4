@@ -338,8 +338,8 @@ extern double poly_norm, poly_xt, poly_alpha, mks_smooth;
 #define ZSLOOP_REVERSE(jstart, jstop, istart, istop) \
   for (int j = (jstop) + NG; j >= (jstart) + NG; j--) \
   for (int i = (istop) + NG; i >= (istart) + NG; i--)
-#define ZSLOOP_OUT(istart, istop, jstart, jstop) \
-  JSLOOP(jstart,jstop) ISLOOP(istart,istop)
+#define ZSLOOP_OUT(jstart, jstop, istart, istop) \
+  ISLOOP(istart,istop) JSLOOP(jstart,jstop)
 
 // Loop over primitive variables
 #define PLOOP for(int ip = 0; ip < NVAR; ip++)
@@ -442,11 +442,6 @@ double dot_grid(GridVector vcon, GridVector vcov, int i, int j);
 double dot(double vcon[NDIM], double vcov[NDIM]);
 double invert(double *m, double *inv);
 
-// pack.c
-void pack_write_scalar(double in[N2+2*NG][N1+2*NG], const char* name, size_t datatype);
-void pack_write_int(int in[N2+2*NG][N1+2*NG], const char* name);
-void pack_write_vector(double in[][N2+2*NG][N1+2*NG], int len, const char* name, size_t datatype);
-
 void pack_write_axiscalar(double in[N2+2*NG][N1+2*NG], const char* name, size_t datatype);
 void pack_write_Gtensor(double in[NDIM][NDIM][N2+2*NG][N1+2*NG], const char* name, size_t datatype);
 
@@ -457,13 +452,13 @@ void read_params(char *pfname);
 
 // phys.c
 void prim_to_flux(struct GridGeom *G, struct FluidState *S, int i, int j, int dir, int loc, GridPrim flux);
-void prim_to_flux_vec(struct GridGeom *G, struct FluidState *S, int dir, int loc, int istart, int istop, int jstart, int jstop, GridPrim flux);
+void prim_to_flux_vec(struct GridGeom *G, struct FluidState *S, int dir, int loc, int jstart, int jstop, int istart, int istop, GridPrim flux);
 void bcon_calc(struct FluidState *S, int i, int j);
 void mhd_calc(struct FluidState *S, int i, int j, int dir, double *mhd);
 void get_fluid_source(struct GridGeom *G, struct FluidState *S, GridPrim *dU);
 double bsq_calc(struct FluidState *S, int i, int j);
 void get_state(struct GridGeom *G, struct FluidState *S, int i, int j, int loc);
-void get_state_vec(struct GridGeom *G, struct FluidState *S, int loc, int istart, int istop, int jstart, int jstop);
+void get_state_vec(struct GridGeom *G, struct FluidState *S, int loc, int jstart, int jstop, int istart, int istop);
 void ucon_calc(struct GridGeom *G, struct FluidState *S, int i, int j, int loc);
 double mhd_gamma_calc(struct GridGeom *G, struct FluidState *S, int i, int j, int loc);
 void mhd_vchar(struct GridGeom *G, struct FluidState *Sr, int i, int j, int loc, int dir, GridDouble cmax, GridDouble cmin);

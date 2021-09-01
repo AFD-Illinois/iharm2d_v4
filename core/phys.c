@@ -188,7 +188,7 @@ inline void mhd_vchar(struct GridGeom *G, struct FluidState *S, int i, int j, in
 
   DLOOP1
     Bcov[mu] = 0.;
-  Bcov[dir] = 1.;
+  Bcov[0] = 1.;
 
   DLOOP1
   {
