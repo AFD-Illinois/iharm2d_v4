@@ -1,5 +1,5 @@
 # iharm2d_v4
-`iharm2d_v4` is the 2D version of [iharm3d](https://github.com/AFD-Illinois/iharm3d) with minimal dependencies. `iharm2d_v4` parallelizes computation across all cores of a single node using `OpenMP`. This means you must have C compiler with OpenMP. Data is written out to ASCII files and a sample analysis script is provided at `scripts/analysis/simple_plot.py` to get a feel for the output format (One can always browse through `core/io.c` to get a better sense for the dump output).
+`iharm2d_v4` is the 2D version of [iharm3d](https://github.com/AFD-Illinois/iharm3d) with minimal dependencies. `iharm2d_v4` parallelizes computation across all cores of a single node using `OpenMP`. This means you must have a C compiler with OpenMP. Data is written out to ASCII files and a sample analysis script is provided at `scripts/analysis/simple_plot.py` to get a feel for the output format (One can always browse through `core/io.c` to get a better sense for the dump output).
 TODO: Documentation page for dump format.
 
 DISCLAIMER: A bug persists (with regards to divergence cleaning), will be exterminated in the near future.
