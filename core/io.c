@@ -163,7 +163,11 @@ void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
     fprintf(fp, FML_DBL_OUT, mhd_gamma_calc(G, S, i, j, CENT));
   
   // Write divB
-    fprintf(fp, FML_DBL_OUT, flux_ct_divb(G, S, i, j));
+    if (i > 0+NG && j > 0+NG)
+      fprintf(fp, FML_DBL_OUT, flux_ct_divb(G, S, i, j));
+    else
+      fprintf(fp, FML_DBL_OUT, 0.);
+
 
   // Write u_to_p fails
     fprintf(fp, FML_INT_OUT, fail_save[j][i]);
