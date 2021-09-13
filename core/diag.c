@@ -53,7 +53,8 @@ void diag(struct GridGeom *G, struct FluidState *S, int call_code)
   }
 
   double pp = 0.;
-  double divbmax = 0.;
+  double divbmax = 0.; 
+  int imax = 0; int jmax = 0;
   double rmed = 0.;
   double e = 0.;
   // Calculate conserved quantities
@@ -71,9 +72,16 @@ void diag(struct GridGeom *G, struct FluidState *S, int call_code)
       rmed += S->U[RHO][j][i]*dV;
       pp += S->U[U3][j][i]*dV;
       e += S->U[UU][j][i]*dV;
-      double divb = flux_ct_divb(G, S, i, j);
-      if (divb > divbmax)
-        divbmax = divb;
+      if (i > 0+NG && j > 0+NG)
+      {
+        double divb = flux_ct_divb(G, S, i, j);
+        if (divb > divbmax)
+        {
+          divbmax = divb;
+          imax = i;
+          jmax = j;
+        }
+      }
     }
   }
 
@@ -115,7 +123,7 @@ void diag(struct GridGeom *G, struct FluidState *S, int call_code)
   {
     //mdot will be negative w/scheme above
     double phi = Phi/sqrt(fabs(mdot) + SMALL);
-    fprintf(stdout, "LOG      t=%g \t divbmax: %g\n", t, divbmax);
+    fprintf(stdout, "LOG      t=%g \t divbmax: %g at %d %d\n", t, divbmax, imax, jmax);
     fprintf(ener_file, "%10.5g %10.5g %10.5g %10.5g %15.8g %15.8g ", t, rmed, pp, e, S->P[UU][N2/2][N1/2]*pow(S->P[RHO][N2/2][N1/2], -gam), S->P[UU][N2/2][N1/2]);
     fprintf(ener_file, "%15.8g %15.8g %15.8g ", mdot, edot, ldot);
     fprintf(ener_file, "%15.8g %15.8g ", mass, egas);
