@@ -67,7 +67,7 @@ void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
   // Write dump header
   save_problem_data(fp); 
  
-  fprintf(fp, STRING_OUT, VERSION);
+  fprintf(fp, " %s", VERSION);
   int has_electrons = ELECTRONS;
   fprintf(fp, FML_INT_OUT , has_electrons);
   char gridfile[15] = "grid";
