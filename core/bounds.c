@@ -59,6 +59,10 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
 			S->P[B1][j][i] *= rescale;
 			S->P[B2][j][i] *= rescale;
 			S->P[B3][j][i] *= rescale;
+#elif X1L_BOUND == PERIODIC
+			int iz = N1 + i;
+			PLOOP S->P[ip][j][i] = S->P[ip][j][iz];
+			pflag[j][i] = pflag[j][iz];
 #endif
     }
   }
@@ -98,6 +102,10 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
       S->P[B3][j][i] *= rescale;
 #elif X1R_BOUND == USER
       bound_gas_prob_x1r(i, j, S->P, G);
+#elif X1R_BOUND == PERIODIC
+			int iz = i - N1;
+			PLOOP S->P[ip][j][i] = S->P[ip][j][iz];
+			pflag[j][i] = pflag[j][iz];
 #endif
     }
   }
@@ -137,6 +145,10 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
       pflag[j][i] = pflag[jrefl][i];
       S->P[U2][j][i] *= -1.;
       S->P[B2][j][i] *= -1.;
+#elif X2L_BOUND == PERIODIC
+			int jz = N2 + j;
+			PLOOP S->P[ip][j][i] = S->P[ip][jz][i];
+			pflag[j][i] = pflag[jz][i];
 #endif
     }
   }
@@ -163,6 +175,10 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
       pflag[j][i] = pflag[jrefl][i];
       S->P[U2][j][i] *= -1.;
       S->P[B2][j][i] *= -1.;
+#elif X2R_BOUND == PERIODIC
+			int jz = j - N2;
+			PLOOP S->P[ip][j][i] = S->P[ip][jz][i];
+			pflag[j][i] = pflag[jz][i];
 #endif
     }
   }

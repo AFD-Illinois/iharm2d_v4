@@ -1,0 +1,33 @@
+### RUNTIME PARAMETERS FOR EHT COMPARISON PROBLEM ###
+
+# COORDINATES
+[dbl] tf = 5.0
+[dbl] dt = 1.0e-06
+[dbl] x1Min = 0.0
+[dbl] x1Max = 1.0
+[dbl] x2Min = 0.0
+[dbl] x2Max = 1.0
+
+# FLUID
+[dbl] gam = 1.333333
+[dbl] cour = 0.9
+
+[dbl] u_jitter = 4.0e-02
+
+# OUTPUT
+[dbl] DTd = 0.2
+[dbl] DTf = 10.0
+[dbl] DTl = 0.5
+[int] DTr = 100
+[int] DTp = 10
+
+# Electrons
+[dbl] game = 1.333333
+[dbl] gamp = 1.666667
+[dbl] fel0 = 0.01
+[dbl] tptemin = 0.001
+[dbl] tptemax = 1000.0
+
+# PROBLEM
+[int] idim = 1
+[int] nmode = 3
