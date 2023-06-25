@@ -30,8 +30,6 @@
  
 #define ELECTRONS           0
 #define ALLMODELS           0
-#define SUPPRESS_HIGHB_HEAT 1
-#define BETA_HEAT           1
 
 // Reconstruction algorithm: 'LINEAR' or 'PPM' or 'WENO' or 'MP5'
 
