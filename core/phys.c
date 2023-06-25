@@ -312,5 +312,5 @@ inline double bsq_calc(struct FluidState *S, int i, int j)
   DLOOP1
     bsq += S->bcon[mu][j][i]*S->bcov[mu][j][i];
   
-  return bsq;
+  return MY_MAX(bsq, SMALL);
 }
