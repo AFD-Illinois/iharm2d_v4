@@ -16,16 +16,19 @@ double MINOR(double m[16], int r0, int r1, int r2, int c0, int c1, int c2);
 void adjoint(double m[16], double adjOut[16]);
 double determinant(double m[16]);
 
+// Calculate contravariant metric
 inline double gcon_func(double gcov[NDIM][NDIM], double gcon[NDIM][NDIM])
 {
   double gdet = invert(&gcov[0][0],&gcon[0][0]);
   return sqrt(fabs(gdet));
 }
 
+// Make a local copy of gcov (from Grid struct)
 inline void get_gcov(struct GridGeom *G, int i, int j, int loc, double gcov[NDIM][NDIM]) {
   DLOOP2 gcov[mu][nu] = G->gcov[loc][mu][nu][j][i];
 }
 
+// Make a local copy of gcon (from Grid struct)
 inline void get_gcon(struct GridGeom *G, int i, int j, int loc, double gcon[NDIM][NDIM])
 {
   DLOOP2 gcon[mu][nu] = G->gcon[loc][mu][nu][j][i];
@@ -111,6 +114,7 @@ void lower_grid_vec(GridVector vcon, GridVector vcov, struct GridGeom *G, int js
   }
 }
 
+// Raise the grid of covariant rank-1 tensors to covariant ones
 inline void raise_grid(GridVector vcov, GridVector vcon, struct GridGeom *G, int i, int j, int loc)
 {
   for (int mu = 0; mu < NDIM; mu++) {
@@ -139,6 +143,7 @@ inline double MINOR(double m[16], int r0, int r1, int r2, int c0, int c1, int c2
          m[4*r0+c2]*(m[4*r1+c0]*m[4*r2+c1] - m[4*r2+c0]*m[4*r1+c1]);
 }
 
+// Adjoint of a 4x4 matrix
 inline void adjoint(double m[16], double adjOut[16])
 {
   adjOut[ 0] =  MINOR(m,1,2,3,1,2,3);

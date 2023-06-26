@@ -8,6 +8,7 @@
 
 #pragma once
 
+// Import C libraries
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -17,8 +18,10 @@
 
 #include <omp.h>
 
+// Include problem-specific header (parameter) file 
 #include "parameters.h"
 
+// Constants
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327
 #endif
@@ -33,6 +36,7 @@
                             COMPILE-TIME PARAMETERS
 ---------------------------------------------------------------------------------*/
 
+// Code version
 #define VERSION "iharm2d_v4-alpha-1.0"
 
 // Number of active zones on each MPI process
@@ -46,21 +50,21 @@
 // Fixup parameters
 #define RHOMINLIMIT (1.e-20)
 #define UUMINLIMIT  (1.e-20)
-#define RHOMIN  (1.e-6)
-#define UUMIN (1.e-8)
+#define RHOMIN      (1.e-6)
+#define UUMIN       (1.e-8)
 
 // Numerical convenience to represent a small (<< 1) non-zero quantity
 #define SMALL (1.e-20)
 // Set the spatial discretization in numerical derivatives
 #define DELTA 1.e-5
 
-// TODO Move this per-problem.  Keep defaults here?
+// Temperature ceiling => floor on internal energy density
+#ifndef UORHOMAX
+#define UORHOMAX (100.)
+#endif
 // Floors in terms of bsq
 #ifndef BSQORHOMAX
 #define BSQORHOMAX (100.)
-#endif
-#ifndef UORHOMAX
-#define UORHOMAX (100.)
 #endif
 #ifndef BSQOUMAX
 #define BSQOUMAX (BSQORHOMAX * UORHOMAX)
@@ -90,20 +94,6 @@
 #endif
 #ifndef STATIC_TIMESTEP
 #define STATIC_TIMESTEP 0
-#endif
-
-// The Intel compiler is a pain
-// Intel 18.0.0 aka 20170811 works
-// Intel 18.0.2,3 aka 20180315 and 20180516 crash in places
-// So we #if off the crashes with this flag
-#ifndef INTEL_WORKAROUND
-
-#if __INTEL_COMPILER_BUILD_DATE > 20180101
-#define INTEL_WORKAROUND 1
-#else
-#define INTEL_WORKAROUND 0
-#endif
-
 #endif
 
 // Default string length
@@ -159,7 +149,7 @@
 
 // abort versus regular IO
 #define IO_REGULAR (1)
-#define IO_ABORT (2)
+#define IO_ABORT   (2)
 
 // Diagnostic calls
 #define DIAG_INIT  (0)
@@ -169,16 +159,12 @@
 #define DIAG_ABORT (4)
 
 // Failure modes
-// TODO find+eliminate uses
 #define FAIL_UTOPRIM     (0)
 #define FAIL_VCHAR_DISCR (1)
 #define FAIL_COEFF_NEG   (2)
 #define FAIL_COEFF_SUP   (3)
 #define FAIL_GAMMA       (4)
 #define FAIL_METRIC      (5)
-
-// U to P failure modes
-
 
 // Timers
 #define TIMER_RECON    (1)
@@ -189,7 +175,7 @@
 #define TIMER_U_TO_P   (6)
 #define TIMER_FIXUP    (7)
 #define TIMER_BOUND    (8)
-#define TIMER_BOUND_COMMS (9) // TODO remove comms timer
+#define TIMER_BOUND_COMMS (9)
 #define TIMER_DIAG        (10)
 #define TIMER_LR_STATE    (11)
 #define TIMER_LR_PTOF     (12)
@@ -212,11 +198,13 @@
                                   GLOBAL TYPES
 ---------------------------------------------------------------------------------*/
 
+// Useful aliases
 typedef int    GridInt[N2+2*NG][N1+2*NG];
 typedef double GridDouble[N2+2*NG][N1+2*NG];
 typedef double GridVector[NDIM][N2+2*NG][N1+2*NG];
 typedef double GridPrim[NVAR][N2+2*NG][N1+2*NG];
 
+// Grid struct
 struct GridGeom {
   double gcov[NPG][NDIM][NDIM][N2+2*NG][N1+2*NG];
   double gcon[NPG][NDIM][NDIM][N2+2*NG][N1+2*NG];
@@ -225,6 +213,7 @@ struct GridGeom {
   double conn[NDIM][NDIM][NDIM][N2+2*NG][N1+2*NG];
 };
 
+// Fluid state struc
 struct FluidState {
   GridPrim P;
   GridPrim U;
@@ -235,26 +224,15 @@ struct FluidState {
   GridVector jcon;
 };
 
+// Struct to save fluxes
 struct FluidFlux {
   GridPrim X1;
   GridPrim X2;
 };
 
-struct FluidEMF {
-  GridDouble X1;
-  GridDouble X2;
-};
-
-//struct FluidFail {
 extern GridInt pflag;
 extern GridInt fail_save;
 extern GridInt fflag;
-//};
-
-#if DEBUG
-extern struct FluidFlux preserve_F;
-extern GridPrim preserve_dU;
-#endif
 
 /*---------------------------------------------------------------------------------
                               GLOBAL VARIABLES SECTION
@@ -295,7 +273,6 @@ extern int nthreads;
 
 // Electrons
 #if ELECTRONS
-// TODO put these in parameters.h? Define MP/ME direct?
 #define KTOTMAX (3.)
 #define ME (9.1093826e-28  ) // Electron mass
 #define MP (1.67262171e-24 ) // Proton mass
@@ -310,6 +287,9 @@ extern double poly_norm, poly_xt, poly_alpha, mks_smooth;
 /*---------------------------------------------------------------------------------
                                   MACROS
 ---------------------------------------------------------------------------------*/
+
+// Loop macros
+// Loop over all zones across (physical or physical+ghost) a given direction or over the entire domain
 #define ILOOP	\
   for (int i = 0 + NG; i < N1 + NG; i++)
 #define ILOOPALL \
@@ -328,6 +308,7 @@ extern double poly_norm, poly_xt, poly_alpha, mks_smooth;
 #define ZLOOP_TRANSPOSE \
   ILOOPALL JLOOPALL
 
+// Loop over a section of zones
 #define ISLOOP(istart, istop) \
   for (int i = (istart) + NG; i <= (istop) + NG; i++)
 #define JSLOOP(jstart, jstop) \
@@ -349,20 +330,15 @@ extern double poly_norm, poly_xt, poly_alpha, mks_smooth;
 #define DLOOP2 for (int mu = 0; mu < NDIM; mu++)	\
                for (int nu = 0; nu < NDIM; nu++)
 
-// For adding quotes to passed arguments e.g. git commit #0
-//#define HASH(x) #x
-//#define QUOTE(x) HASH(x)
-
 // Math functions commonly mistyped
 #define MY_MIN(fval1,fval2) ( ((fval1) < (fval2)) ? (fval1) : (fval2))
 #define MY_MAX(fval1,fval2) ( ((fval1) > (fval2)) ? (fval1) : (fval2))
 #define MY_SIGN(fval) ( ((fval) <0.) ? -1. : 1. )
 #define delta(i,j) ((i == j) ? 1. : 0.)
 
-// Convenience macros for logging under MPI
-#define LOG(msg) if(DEBUG) {fprintf(stderr,msg); fprintf(stderr,"\n");}
-#define LOGN(fmt,x) if(DEBUG) {fprintf(stderr,fmt,x); fprintf(stderr,"\n");}
-// TODO bring the whole MPI ship down too
+// Convenience macros for logging
+#define LOG(msg) if(DEBUG) {fprintf(stderr, msg); fprintf(stderr,"\n");}
+#define LOGN(fmt,x) if(DEBUG) {fprintf(stderr, fmt, x); fprintf(stderr,"\n");}
 #define ERROR(msg) {fprintf(stderr, msg); fprintf(stderr,"\n"); exit(-1);}
 
 // FLAG macros are scattered through the code.  One can place a crude "watch" on a var
@@ -392,21 +368,11 @@ void zero_arrays();
 
 // current.c
 void current_calc(struct GridGeom *G, struct FluidState *S, struct FluidState *Ssave, double dtsave);
-void omega_calc(struct GridGeom *G, struct FluidState *S, GridDouble *omega);
 
 // diag.c
-void reset_log_variables();
 void diag_flux(struct FluidFlux *F);
 void diag(struct GridGeom *G, struct FluidState *S, int call_code);
 double flux_ct_divb(struct GridGeom *G, struct FluidState *S, int i, int j);
-#if DEBUG
-void global_map(int iglobal, int jglobal, GridPrim prim);
-void area_map(int i, int j, GridPrim prim);
-void area_map_pflag(int i, int j);
-void check_nan(struct FluidState *S, const char* flag);
-double sigma_max(struct GridGeom *G, struct FluidState *S);
-void update_f(struct FluidFlux *F, GridPrim *dU);
-#endif
 
 // electrons.c
 #if ELECTRONS
@@ -424,7 +390,6 @@ double get_flux(struct GridGeom *G, struct FluidState *S, struct FluidFlux *F);
 void flux_ct(struct FluidFlux *F);
 
 // io.c
-void init_io();
 void dump(struct GridGeom *G, struct FluidState *S);
 void dump_backend(struct GridGeom *G, struct FluidState *S, int type);
 void dump_grid(struct GridGeom *G);
@@ -436,9 +401,6 @@ void get_gcon(struct GridGeom *G, int i, int j, int loc, double gcon[NDIM][NDIM]
 void conn_func(struct GridGeom *G, int i, int j);
 void lower_grid(GridVector vcon, GridVector vcov, struct GridGeom *G, int i, int j, int loc);
 void raise_grid(GridVector vcov, GridVector vcon, struct GridGeom *G, int i, int j, int loc);
-void lower(double ucon[NDIM], double gcov[NDIM][NDIM], double ucov[NDIM]);
-void raise(double ucov[NDIM], double gcon[NDIM][NDIM], double ucon[NDIM]);
-double dot_grid(GridVector vcon, GridVector vcov, int i, int j);
 double dot(double vcon[NDIM], double vcov[NDIM]);
 double invert(double *m, double *inv);
 

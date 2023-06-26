@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
   fprintf(stdout, "          *                                                          *\n");
   fprintf(stdout, "          *                          IHARM2D_V4                      *\n");
   fprintf(stdout, "          *                                                          *\n");
-  fprintf(stdout, "          *          Prather et al. JOSS, 2021 [UNDER REVIEW]        *\n");
-  fprintf(stdout, "          *          Gammie, McKinney & Toth ApJ 509:444, 2003       *\n");
   fprintf(stdout, "          *                                                          *\n");
   fprintf(stdout, "          *  V K Dhruv                                               *\n");
   fprintf(stdout, "          *  B S Prather                                             *\n");

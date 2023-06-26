@@ -30,10 +30,11 @@ inline void mhd_calc(struct FluidState *S, int i, int j, int dir, double *mhd)
     mhd[mu] = eta*S->ucon[dir][j][i]*S->ucov[mu][j][i] + ptot*delta(dir, mu) - S->bcon[dir][j][i]*S->bcov[mu][j][i];
 }
 
+// Convert primitives to corresponding fluxes
 void prim_to_flux(struct GridGeom *G, struct FluidState *S, int i, int j, int dir, int loc, GridPrim flux)
 {
   double mhd[NDIM];
-  //Particl number flux
+  //Particle number flux
   flux[RHO][j][i] = S->P[RHO][j][i]*S->ucon[dir][j][i];
   
   mhd_calc(S, i, j, dir, mhd);
@@ -53,9 +54,11 @@ void prim_to_flux(struct GridGeom *G, struct FluidState *S, int i, int j, int di
   flux[KTOT][j][i] = flux[RHO][j][i]*S->P[KTOT][j][i];
 #endif
   
+  // Multiply with gdet (Jacobian) to account for the coordinate system
   PLOOP flux[ip][j][i] *= G->gdet[loc][j][i];
 }
 
+// Convert primitives to corresponding fluxes
 void prim_to_flux_vec(struct GridGeom *G, struct FluidState *S, int dir, int loc, int jstart, int jstop, int istart, int istop, GridPrim flux)
 {
 #pragma omp parallel

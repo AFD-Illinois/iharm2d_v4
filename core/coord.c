@@ -100,7 +100,8 @@ inline double th_of_X(const double X[NDIM])
 #endif
 }
 
-// Boyer-Lindquist coordinate of point X
+// Boyer-Lindquist/Kerr-Schild coordinate of point X
+// Equivalently, this can also be called ks_coord since the radial and colatitude angle are the same in BL and KS
 inline void bl_coord(const double X[NDIM], double *r, double *th)
 {
   *r = r_of_X(X);
@@ -252,9 +253,7 @@ void set_grid(struct GridGeom *G)
   set_points();
   dV = dx[1]*dx[2];
 
-#if !INTEL_WORKAROUND
 #pragma omp parallel for collapse(2)
-#endif
   JSLOOP(-NG, N2 - 1 + NG) {
     ISLOOP(-NG, N1 - 1 + NG) {
       set_grid_loc(G, i, j, CENT);

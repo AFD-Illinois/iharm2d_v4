@@ -132,9 +132,7 @@ void init(struct GridGeom *G, struct FluidState *S)
       S->P[U2][j][i] = 0.;
       S->P[U3][j][i] = 0.;
     }
-    /* Region inside magnetized torus; u^i is calculated in
-     * Boyer-Lindquist coordinates, as per FM,
-     * so it needs to be transformed at the end */
+    // Region inside magnetized torus; u^i is calculated in Boyer-Lindquist coordinates, as per FM, so it needs to be transformed at the end
     else {
       double hm1 = exp(lnh) - 1.;
       double rho = pow(hm1 * (gam - 1.) / (kappa * gam),

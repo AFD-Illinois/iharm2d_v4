@@ -89,6 +89,7 @@ void fixup(struct GridGeom *G, struct FluidState *S)
   timer_stop(TIMER_FIXUP);
 }
 
+// Limit the lorentz factor, fluid enetropy (applicable when electron heating is enabled)
 inline void fixup_ceiling(struct GridGeom *G, struct FluidState *S, int i, int j)
 {
   // First apply ceilings:
@@ -117,6 +118,7 @@ inline void fixup_ceiling(struct GridGeom *G, struct FluidState *S, int i, int j
 #endif
 }
 
+// Floor rest-mass density and internal energy density
 inline void fixup_floor(struct GridGeom *G, struct FluidState *S, int i, int j)
 {
   // Then apply floors:
@@ -135,7 +137,6 @@ inline void fixup_floor(struct GridGeom *G, struct FluidState *S, int i, int j)
     uflr_geom = UUMIN*pow(rhoscal, gam);
 
     // Impose overall minimum
-    // TODO These would only be hit at by r^-3 floors for r_out = 100,000M.  Worth keeping?
     rhoflr_geom = MY_MAX(rhoflr_geom, RHOMINLIMIT);
     uflr_geom = MY_MAX(uflr_geom, UUMINLIMIT);
   } 
@@ -234,7 +235,6 @@ void fixup_utoprim(struct GridGeom *G, struct FluidState *S)
 #endif
 
   // Make sure we are not using ill defined physical corner regions
-  // TODO find a way to do this once, or put it in bounds at least?
   for (int j = 0; j < NG; j++)
   {
     for (int i = 0; i < NG; i++)

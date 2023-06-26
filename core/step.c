@@ -11,6 +11,8 @@
 // Declarations
 double advance_fluid(struct GridGeom *G, struct FluidState *Si, struct FluidState *Ss, struct FluidState *Sf, double Dt);
 
+// Driver function that calls advance_fluid twice (predictor and corrector), heats electrons,
+// applies boundary conditions, calculate 4-current at ened of timestep, and updates timestep value
 void step(struct GridGeom *G, struct FluidState *S)
 {
   static struct FluidState *Stmp;
@@ -24,13 +26,10 @@ void step(struct GridGeom *G, struct FluidState *S)
   }
 
   // Need both P_n and P_n+1 to calculate current
-  // Work around ICC 18.0.2 bug in assigning to pointers to structs
-#if INTEL_WORKAROUND
-  memcpy(&(Ssave->P),&(S->P),sizeof(GridPrim));
-#else
+
 #pragma omp parallel for simd collapse(2)
   PLOOP ZLOOPALL Ssave->P[ip][j][i] = S->P[ip][j][i];
-#endif
+
   LOGN("Step %d",nstep);
   FLAG("Start step");
 
@@ -93,6 +92,7 @@ void step(struct GridGeom *G, struct FluidState *S)
     dt = ndt;
 }
 
+// Updates conserved and primitives each substep
 inline double advance_fluid(struct GridGeom *G, struct FluidState *Si, struct FluidState *Ss, struct FluidState *Sf, double Dt)
 {
   static GridPrim *dU;
@@ -106,13 +106,9 @@ inline double advance_fluid(struct GridGeom *G, struct FluidState *Si, struct Fl
     firstc = 0;
   }
 
-  // Work around ICC 18.0.2 bug in assigning to pointers to structs
-#if INTEL_WORKAROUND
-  memcpy(&(Sf->P),&(Si->P),sizeof(GridPrim));
-#else
+
 #pragma omp parallel for simd collapse(2)
   PLOOP ZLOOPALL Sf->P[ip][j][i] = Si->P[ip][j][i];
-#endif
 
   double ndt = get_flux(G, Ss, F);
 

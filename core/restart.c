@@ -12,6 +12,7 @@
 
 #include <ctype.h>
 
+// Set output precision
 #define FML_DBL_OUT "%28.18e"
 #define FML_INT_OUT "%10d"
 #define STRING_OUT "%25s"

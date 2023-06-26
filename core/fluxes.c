@@ -2,7 +2,7 @@
 
   FLUXES.C
 
-  -Compute fluid fluxes
+  -Compute fluid fluxes, maximum wavespeed and timestep
   -Apply constrained transport
 
 ---------------------------------------------------------------------------------*/
@@ -12,6 +12,7 @@
 void lr_to_flux(struct GridGeom *G, struct FluidState *Sl, struct FluidState *Sr, int dir, int loc, GridPrim *flux, GridVector *ctop);
 double ndt_min(GridVector *ctop);
 
+// Compute the timestep by considering the global minimum based on local wavespeed values
 double ndt_min(GridVector *ctop)
 {
   timer_start(TIMER_CMAX);
@@ -47,6 +48,7 @@ double ndt_min(GridVector *ctop)
   return ndt_min;
 }
 
+// Reconstruct primitives at zones faces and compute flux by solving a Riemann problem
 double get_flux(struct GridGeom *G, struct FluidState *S, struct FluidFlux *F)
 {
   static struct FluidState *Sl, *Sr;
@@ -80,6 +82,7 @@ double get_flux(struct GridGeom *G, struct FluidState *S, struct FluidFlux *F)
   return ndt_min(ctop);
 }
 
+// Compute the LLF flux from the left- and right-reconstructed values
 // Note that the sense of L/R flips from zone to interface during function call
 void lr_to_flux(struct GridGeom *G, struct FluidState *Sr, struct FluidState *Sl, int dir, int loc, GridPrim *flux, GridVector *ctop)
 {
@@ -185,6 +188,7 @@ void lr_to_flux(struct GridGeom *G, struct FluidState *Sr, struct FluidState *Sl
   timer_stop(TIMER_LR_TO_F);
 }
 
+// Perform Flux-CT (Toth 2000)
 void flux_ct(struct FluidFlux *F)
 {
   timer_start(TIMER_FLUX_CT);

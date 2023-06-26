@@ -13,11 +13,6 @@ GridInt pflag;
 GridInt fail_save;
 GridInt fflag;
 
-#if DEBUG
-struct FluidFlux preserve_F;
-GridPrim preserve_dU;
-#endif
-
 // Parameters
 // physical
 double a;
@@ -52,8 +47,10 @@ double mdot, edot, ldot;
 double mdot_eh, edot_eh, ldot_eh;
 int icurr, jcurr;
 
+// Number of OpenMP threads
 int nthreads;
 
+// Electron-heating related globals
 #if ELECTRONS
 double game, gamp;
 double fel0;

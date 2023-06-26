@@ -8,6 +8,7 @@
 
 #include "decs.h"
 
+// Set macro RECON_ALGO
 #if RECONSTRUCTION == LINEAR
 #define RECON_ALGO linear_mc
 #elif RECONSTRUCTION == WENO

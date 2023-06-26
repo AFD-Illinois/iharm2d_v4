@@ -11,7 +11,6 @@
 
 #if ELECTRONS
 
-// TODO put these in options with a default in decs.h
 // Defined as in decs.h, CONSTANT not included in ALLMODELS version
 // KAWAZURA is run by default if ALLMODELS=0 
 #define KAWAZURA  9
@@ -24,6 +23,7 @@ void fixup_electrons_1zone(struct FluidState *S, int i, int j);
 void heat_electrons_1zone(struct GridGeom *G, struct FluidState *Sh, struct FluidState *S, int i, int j);
 double get_fels(struct GridGeom *G, struct FluidState *S, int i, int j, int model);
 
+// Initialize electron entropies like (k = P / rho^gam)
 void init_electrons(struct GridGeom *G, struct FluidState *S)
 {
   ZLOOPALL {
@@ -43,7 +43,7 @@ void init_electrons(struct GridGeom *G, struct FluidState *S)
   set_bounds(G, S);
 }
 
-// TODO merge these
+// Heat electrons over the physical domain
 void heat_electrons(struct GridGeom *G, struct FluidState *Ss, struct FluidState *Sf)
 {
   timer_start(TIMER_ELECTRON_HEAT);
@@ -56,6 +56,7 @@ void heat_electrons(struct GridGeom *G, struct FluidState *Ss, struct FluidState
   timer_stop(TIMER_ELECTRON_HEAT);
 }
 
+// Heat electrons at given zone
 inline void heat_electrons_1zone(struct GridGeom *G, struct FluidState *Ss, struct FluidState *Sf, int i, int j)
 {
   // Actual entropy at final time
@@ -117,6 +118,7 @@ if (model == KAWAZURA) {
 	fel = 1./(1.+1./QeQi);
 }
 
+// Avoid electron heating at high sigma
 #if SUPPRESS_HIGHB_HEAT
   if(bsq/S->P[RHO][j][i] > 1.) fel = 0;
 #endif
@@ -124,6 +126,9 @@ if (model == KAWAZURA) {
   return fel;
 }
 
+// Fix electron if either (i) the heating prescription provied NaN for some reason, or 
+// (ii) the ratio of ion to electron temperature was too large, or
+// (iii) the ratio of ion to electron temperature was too small
 void fixup_electrons(struct FluidState *S)
 {
   timer_start(TIMER_ELECTRON_FIXUP);
@@ -136,6 +141,7 @@ void fixup_electrons(struct FluidState *S)
   timer_stop(TIMER_ELECTRON_FIXUP);
 }
 
+// Fix for a given zone
 inline void fixup_electrons_1zone(struct FluidState *S, int i, int j)
 {
   double kelmax = S->P[KTOT][j][i]*pow(S->P[RHO][j][i],gam-game)/(tptemin*(gam-1.)/(gamp-1.) + (gam-1.)/(game-1.));

@@ -8,8 +8,8 @@
 
 #include "decs.h"
 
-#define ERRTOL  1.e-8
-#define ITERMAX 8
+#define ERRTOL  1.e-8 // Acceptable error in inversion
+#define ITERMAX 8 // Maximum number of iterations for secant search
 #define DEL 1.e-5
 
 double Pressure_rho0_u(double rho0, double u);
@@ -18,6 +18,7 @@ double err_eqn(double Bsq, double D, double Ep, double QdB, double Qtsq, double 
 double gamma_func(double Bsq, double D, double QdB, double Qtsq, double Wp, int *eflag);
 double Wp_func(struct GridGeom *G, struct FluidState *S, int i, int j, int loc, int *eflag);
 
+// Invert conserved variables to primitives. Returns error code
 int U_to_P(struct GridGeom *G, struct FluidState *S, int i, int j, int loc)
 {
 
@@ -97,8 +98,6 @@ int U_to_P(struct GridGeom *G, struct FluidState *S, int i, int j, int loc)
   double err = err_eqn(Bsq, D, Ep, QdB, Qtsq, Wp, &eflag);
   double errm = err_eqn(Bsq, D, Ep, QdB, Qtsq, Wpm, &eflag);
 
-  // TODO why does I17 botch the following
-
   // Attempt a Halley/Muller/Bailey/Press step
   double dedW = (errp - errm)/(Wpp - Wpm);
   double dedW2 = (errp - 2.*err + errm)/(h*h);
@@ -122,7 +121,6 @@ int U_to_P(struct GridGeom *G, struct FluidState *S, int i, int j, int loc)
   for (iter = 0; iter < ITERMAX; iter++) {
     dW = (Wp1 - Wp)*err/(err - err1);
 
-    // TODO should this have limit applied?
     Wp1 = Wp;
     err1 = err;
 

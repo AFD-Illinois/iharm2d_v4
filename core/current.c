@@ -2,7 +2,7 @@
 
   CURRENT.C
   
-  -Calculate current from fluid variables
+  -Calculate 4-current from fluid variables
 
 -----------------------------------------------------------------------------------*/
 
@@ -11,6 +11,7 @@
 double gFcon_calc(struct GridGeom *G, struct FluidState *S, int mu, int nu, int i, int j);
 int antisym(int a, int b, int c, int d);
 int pp(int n, int *P);
+
 
 static struct FluidState *Sa;
 
@@ -22,16 +23,13 @@ void current_calc(struct GridGeom *G, struct FluidState *S, struct FluidState *S
   static int first_run = 1;
   if (first_run)
   {
-    //We only need the primitives, but this is fast
+    // We only need the primitives, but this is fast
     Sa = calloc(1,sizeof(struct FluidState));
     first_run = 0;
   }
 
-  // Calculate time-centered P
-  // Intel 18.0.2 crashes at these parallel directives
-#if !INTEL_WORKAROUND
+  // Calculate time-centered P value of the primitives
 #pragma omp parallel for simd collapse(2)
-#endif
   PLOOP
   {
     ZLOOPALL
@@ -45,9 +43,8 @@ void current_calc(struct GridGeom *G, struct FluidState *S, struct FluidState *S
   get_state_vec(G, Ssave, CENT, -1, N2, -1, N1);
   get_state_vec(G, Sa, CENT, -1, N2, -1, N1);
 
-#if !INTEL_WORKAROUND
+  // Initialize the 4-current to zero
 #pragma omp parallel for simd collapse(2)
-#endif
   DLOOP1 ZLOOPALL S->jcon[mu][j][i] = 0.;
 
   // Calculate j^{\mu} using centered differences for active zones

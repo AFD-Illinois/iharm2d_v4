@@ -39,9 +39,8 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
 {
   timer_start(TIMER_BOUND);
 
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
   JLOOP 
   {
     ISLOOP(-NG, -1)
@@ -71,18 +70,16 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
   if(X1L_INFLOW == 0)
   {
     // Make sure there is no inflow at the inner boundary
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
     JLOOP
       ISLOOP(-NG, -1)
         inflow_check(G, S, i, j, 0);
   }
 #endif
 
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
   JLOOP
   {
     ISLOOP(N1, N1 - 1 + NG)
@@ -114,18 +111,16 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
   if(X1R_INFLOW == 0)
   {
     // Make sure there is no inflow at the outer boundary
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif   
     JLOOP
       ISLOOP(N1, N1 - 1 + NG)
         inflow_check(G, S, i, j, 1);
   }
 #endif
 
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
   ILOOPALL
   {
     JSLOOP(-NG, -1)
@@ -153,9 +148,8 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
     }
   }
 
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
   ILOOPALL
   {
     JSLOOP(N2, N2-1+NG)
@@ -187,6 +181,8 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
 }
 
 #if METRIC == MKS
+// Ensure there is no inflow at radial boundaries
+// Reset the radial velocity primitives so that ucon[1] is zero at the boundary
 void inflow_check(struct GridGeom *G, struct FluidState *S, int i, int j, int type)
 {
   double alpha, beta1, vsq;
@@ -226,38 +222,37 @@ void inflow_check(struct GridGeom *G, struct FluidState *S, int i, int j, int ty
   }
 }
 
+// Fix flux at the X1 and X2 boundaries
+// Set particle number flux along X1 at radial boundaries to zero if inflow is not permitted
+// Set flux of all primitives at poles along X2 to zero since there is no surface there in spherical KS coordinates
+// Reflect B2 flux (along X1) about the poles (for 1 zone)
 void fix_flux(struct FluidFlux *F)
 {
   if (X1L_INFLOW == 0)
   {
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
     JLOOPALL
       F->X1[RHO][j][0+NG] = MY_MIN(F->X1[RHO][j][0+NG], 0.);
   }
 
   if (X1R_INFLOW == 0)
   {
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
     JLOOPALL
       F->X1[RHO][j][N1+NG] = MY_MAX(F->X1[RHO][j][N1+NG], 0.);
   }
 
-#if !INTEL_WORKAROUND
+
 #pragma omp parallel for
-#endif
   ILOOPALL
   {
     F->X1[B2][-1+NG][i] = -F->X1[B2][0+NG][i];
     PLOOP F->X2[ip][0+NG][i] = 0.;
   }
 
-#if !INTEL_WORKAROUND
 #pragma omp parallel for
-#endif
   ILOOPALL
   {
     F->X1[B2][N2+NG][i] = -F->X1[B2][N2-1+NG][i];

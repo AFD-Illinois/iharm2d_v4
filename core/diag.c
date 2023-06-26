@@ -15,17 +15,14 @@
 #include "decs.h"
 
 // Evaluate flux based diagnostics; put results in global variables
-// Note this is still per-process
 void diag_flux(struct FluidFlux *F)
 {
   mdot = edot = ldot = 0.;
   mdot_eh = edot_eh = ldot_eh = 0.;
   int iEH = NG + 5;
-#if !INTEL_WORKAROUND
 #pragma omp parallel for \
   reduction(+:mdot) reduction(+:edot) reduction(+:ldot) \
   reduction(+:mdot_eh) reduction(+:edot_eh) reduction(+:ldot_eh)
-#endif
     JSLOOP(0, N2 - 1)
     {
       mdot += -F->X1[RHO][j][NG]*dx[2];
@@ -37,6 +34,10 @@ void diag_flux(struct FluidFlux *F)
     }
 }
 
+// Additional diagnostics: divB, conserved quantities: rho*u^t, T^_t, T^t_k,
+// jet luminosity (see EHT CC'19), total integrated conserved mass and conserved energy
+// Calls dump_backend to write out dump
+// Prints diagnostics to log file
 void diag(struct GridGeom *G, struct FluidState *S, int call_code)
 {
   static FILE *ener_file;
@@ -62,11 +63,9 @@ void diag(struct GridGeom *G, struct FluidState *S, int call_code)
   {
     get_state_vec(G, S, CENT, 0, N2 - 1, 0, N1 - 1);
     prim_to_flux_vec(G, S, 0, CENT, 0, N2 - 1, 0, N1 - 1, S->U);
-#if !INTEL_WORKAROUND
 #pragma omp parallel for \
   reduction(+:rmed) reduction(+:pp) reduction(+:e) \
   reduction(max:divbmax) collapse(2)
-#endif
     ZLOOP
     {
       rmed += S->U[RHO][j][i]*dV;
@@ -90,9 +89,7 @@ void diag(struct GridGeom *G, struct FluidState *S, int call_code)
   double Phi = 0.;
   double jet_EM_flux = 0.;
   double lum_eht = 0.;
-#if !INTEL_WORKAROUND
 #pragma omp parallel for reduction(+:mass) reduction(+:egas) reduction(+:Phi) reduction(+:jet_EM_flux) reduction(+:lum_eht) collapse(2)
-#endif
   ZLOOP
   {
     mass += S->U[RHO][j][i]*dV;

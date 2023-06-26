@@ -2,7 +2,9 @@
 
   RANDOM.C
   
-  -Mersenne Twister PRNG 
+  -Mersenne Twister PRNG
+  
+  Credit: Evan Papoutsis who first wrote this for iharm2d_v3
 
 ---------------------------------------------------------------------------------*/
 /* 
