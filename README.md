@@ -1,6 +1,5 @@
 # iharm2d_v4
-`iharm2d_v4` is the 2D version of [iharm3d](https://github.com/AFD-Illinois/iharm3d) with minimal dependencies. `iharm2d_v4` parallelizes computation across all cores of a single node using `OpenMP`. This means you must have a C compiler with OpenMP. Data is written out to ASCII files and a sample analysis script is provided at `files/plot_density.py` to get a feel for the output format (One can always browse through `core/io.c` to get a better sense for the dump output).
-TODO: Documentation page for dump format.
+`iharm2d_v4` is the 2D version of [iharm3d](https://github.com/AFD-Illinois/iharm3d) with minimal dependencies. `iharm2d_v4` parallelizes computation across all cores of a single node using `OpenMP`. This means you must have a C compiler with OpenMP. Data is written out to ASCII files and a sample analysis script is provided at `files/plot_density.py` to get a feel for the output format. A more complete documentation of the native output format, both grid and dump files, can be found [here](https://github.com/AFD-Illinois/iharm2d_v4/wiki/Output-Format). (One can always browse through `core/io.c` to get a better sense for the dump output).
 
 ## Compiling and running
 One can `make` the program from the output directory,
