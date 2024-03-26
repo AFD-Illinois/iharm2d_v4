@@ -111,7 +111,7 @@ void init(struct GridGeom *G, struct FluidState *S)
     ZLOOP {
         coord(i, j, CENT, X);
 
-        double mode = amp*cos(k1*X[2] + k2*X[3]);
+        double mode = amp*cos(k1*X[1] + k2*X[2]);
         
         S->P[RHO][j][i] = rho0 + creal(drho*mode);
         S->P[UU][j][i]  = u0 + creal(du*mode);
