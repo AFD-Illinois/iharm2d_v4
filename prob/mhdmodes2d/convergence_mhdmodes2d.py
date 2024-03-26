@@ -85,7 +85,7 @@ def plot_convergence(res, mode):
     mpl.rcParams['figure.dpi']  = 120
     mpl.rcParams['savefig.dpi'] = 120
     mpl.rcParams['figure.autolayout'] = True
-    mpl.rcParams['figure.figsize'] = (10,10)
+    mpl.rcParams['figure.figsize'] = (7,7)
     mpl.rcParams['axes.titlesize'] = 18
     mpl.rcParams['axes.labelsize'] = 16
     mpl.rcParams['xtick.labelsize'] = 14

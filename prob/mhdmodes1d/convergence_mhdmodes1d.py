@@ -39,18 +39,32 @@ def plot_convergence(res, mode, idim):
     
     # pertubation
     dvar = np.zeros(NVARS)
-    if mode == "entropy":
-        dvar[0] = 1.
-    elif mode == "slow":
-        dvar[0] = 0.580429492464
-        dvar[1] = 0.773905989952
-        dvar[2] = -0.253320198552
-    elif mode == "alfven":
-        dvar[3] = 0.480384461415
-        dvar[6] = 0.877058019307
-    elif mode == "fast":
-        dvar[4] = 0.480384461415
-        dvar[7] = 0.877058019307
+    if idim == 1:
+        if mode == "entropy":
+            dvar[0] = 1.
+        elif mode == "slow":
+            dvar[0] = 0.580429492464
+            dvar[1] = 0.773905989952
+            dvar[2] = -0.253320198552
+        elif mode == "alfven":
+            dvar[3] = 0.480384461415
+            dvar[6] = 0.877058019307
+        elif mode == "fast":
+            dvar[4] = 0.480384461415
+            dvar[7] = 0.877058019307
+    elif idim == 2:
+        if mode == "entropy":
+            dvar[0] = 1.
+        elif mode == "slow":
+            dvar[0] = 0.580429492464
+            dvar[1] = 0.773905989952
+            dvar[3] = -0.253320198552
+        elif mode == "alfven":
+            dvar[4] = 0.480384461415
+            dvar[7] = 0.877058019307
+        elif mode == "fast":
+            dvar[2] = 0.480384461415
+            dvar[5] = 0.877058019307
     dvar *= amp
     
     for r in range(len(RES)):
@@ -70,7 +84,10 @@ def plot_convergence(res, mode, idim):
         # eigenmode and error
         dvar_sol = []
         for p in range(NVARS):
-            dvar_sol.append(np.real(dvar[p]*np.cos(k*x1)))
+            if idim == 1:
+                dvar_sol.append(np.real(dvar[p]*np.cos(k*x1)))
+            elif idim == 2:
+                dvar_sol.append(np.real(dvar[p]*np.cos(k*x2)))                
             l1[r,p] = np.mean(np.fabs(dvar_code[p] - dvar_sol[p]))
             
     # MEASURE CONVERGENCE
@@ -82,7 +99,7 @@ def plot_convergence(res, mode, idim):
     mpl.rcParams['figure.dpi']  = 120
     mpl.rcParams['savefig.dpi'] = 120
     mpl.rcParams['figure.autolayout'] = True
-    mpl.rcParams['figure.figsize'] = (10,10)
+    mpl.rcParams['figure.figsize'] = (7,7)
     mpl.rcParams['axes.titlesize'] = 18
     mpl.rcParams['axes.labelsize'] = 16
     mpl.rcParams['xtick.labelsize'] = 14
@@ -94,7 +111,7 @@ def plot_convergence(res, mode, idim):
     fig = plt.gcf()
     ax  = fig.gca()
     
-    ax.set_title('iharm2d_v4 MHD modes in 2D ({})'.format(mode))
+    ax.set_title('iharm2d_v4 MHD modes in D ({})'.format(mode))
     for p in range(NVARS):
         if abs(dvar[p]) != 0.:
             ax.loglog(RES, l1[:,p], color=colors[p], marker='o', label=VARS[p])
