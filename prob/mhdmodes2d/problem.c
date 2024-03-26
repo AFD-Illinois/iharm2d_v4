@@ -127,4 +127,6 @@ void init(struct GridGeom *G, struct FluidState *S)
     //Enforce boundary conditions
     set_bounds(G, S);
 
+    LOG("Finished init()");
+
 }

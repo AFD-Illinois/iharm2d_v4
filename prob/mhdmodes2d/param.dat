@@ -1,7 +1,7 @@
-### RUNTIME PARAMETERS FOR EHT COMPARISON PROBLEM ###
+### RUNTIME PARAMETERS FOR 2D LINEAR MODE ###
 
 # COORDINATES
-[dbl] tf = 5.0
+[dbl] tf = 1.0e-06
 [dbl] dt = 1.0e-06
 [dbl] x1Min = 0.0
 [dbl] x1Max = 1.0
@@ -13,7 +13,7 @@
 [dbl] cour = 0.9
 
 # OUTPUT
-[dbl] DTd = 0.2
+[dbl] DTd = 0.5
 [dbl] DTf = 10.0
 [dbl] DTl = 2.5
 [int] DTr = 100
