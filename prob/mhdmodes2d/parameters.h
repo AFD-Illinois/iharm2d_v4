@@ -31,7 +31,7 @@
 #define ELECTRONS           0
 #define ALLMODELS           0
 
-// Reconstruction algorithm: 'LINEAR' or 'PPM' or 'WENO' or 'MP5'
+// Reconstruction algorithm: 'LINEAR' or 'WENO'
 
 #define RECONSTRUCTION LINEAR
 
