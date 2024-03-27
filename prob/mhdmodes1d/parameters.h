@@ -9,7 +9,7 @@
 // Global resolution
 // Since there's no MPI, NiTOT==Ni
 #define N1TOT 64
-#define N2TOT 64
+#define N2TOT 1
 
 
 // Metric: 'MINKOWSKI''
@@ -31,7 +31,7 @@
 #define ELECTRONS           0
 #define ALLMODELS           0
 
-// Reconstruction algorithm: 'LINEAR' or 'WENO'
+// Reconstruction algorithm: 'LINEAR' or 'PPM' or 'WENO' or 'MP5'
 
 #define RECONSTRUCTION LINEAR
 

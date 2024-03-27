@@ -1,10 +1,7 @@
 .vscode
-.vscode/*
 *.swp
 harm
 build_archive/
 dumps/
 restarts/
-
-
-
+tests/convergence/tests_output

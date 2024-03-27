@@ -12,8 +12,7 @@ import click
 @click.option('-r', '--res', default="64,128,256,512", help="Resolutions", show_default=True)
 @click.option('-m', '--mode', default="fast", help="Eigenmode",\
     type=click.Choice(['entropy', 'slow', 'alfven', 'fast']), show_default=True)
-@click.option('-d', '--idim', default=1, help="Mode direction",\
-    type=click.Choice([1,2]), show_default=True)
+@click.option('-d', '--idim', default=1, help="Mode direction", show_default=True)
 def plot_convergence(res, mode, idim):
     RES = []
     RES = [int(x) for x in res.split(",")]
@@ -72,14 +71,16 @@ def plot_convergence(res, mode, idim):
         dfile = sorted(glob.glob(os.path.join('{}'.format(RES[r]), 'dumps', 'dump_*')))[-1]
         
         grid = np.loadtxt(gfile)
-        x1 = grid[:,0].reshape((RES[r],RES[r]))
-        x2 = grid[:,1].reshape((RES[r],RES[r]))
+        if idim == 1:
+            x1 = grid[:,0].reshape(RES[r])
+        elif idim == 2:
+            x2 = grid[:,1].reshape(RES[r])
         
         # loading prims and saving perturbations
         dvar_code = []
         prims = np.loadtxt(dfile, skiprows=1)
         for p in range(NVARS):
-            dvar_code.append(prims[:,p].reshape((RES[r],RES[r])) - var_background[p])
+            dvar_code.append(prims[:,p].reshape(RES[r]) - var_background[p])
             
         # eigenmode and error
         dvar_sol = []
