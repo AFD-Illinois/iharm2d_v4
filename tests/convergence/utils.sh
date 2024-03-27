@@ -59,6 +59,21 @@ set_recon_scheme() {
 
 # Set mode dimension (for 1D linear modes)
 set_idim() {
-    local SIMDIR="$1"
+    local SIM_DIR="$1"
     local idim="$2"
+    sed -i -e "s/idim = [0-9]\+/idim = $idim/g" ${SIM_DIR}/param.dat
+}
+
+# Set mode (for linear modes)
+set_mode() {
+    local SIM_DIR="$1"
+    local nmode="$2"
+    sed -i -e "s/nmode = [0-9]\+/nmode = $nmode/g" ${SIM_DIR}/param.dat
+}
+
+# Run HARM
+run_harm() {
+    local SIM_DIR="$1"
+    cd $SIM_DIR
+    ./harm -p param.dat
 }

@@ -18,10 +18,10 @@ PROB_DIR="$HARM_DIR/prob/$PROB"
 # resolutions and then analyzing it
 CURRENT_DIR=""
 
-RECONS=("LINEAR" "WENO")
+RECONS=("LINEAR")
 DIMENSIONS=(1 2)
 MODES=("slow" "alfven" "fast")
-RESOLUTIONS=(64 128 256 512)
+RESOLUTIONS=(32 64 128 256)
 
 for rec in "${RECONS[@]}"; do
     echo "Reconstruction scheme: $rec"
@@ -40,6 +40,18 @@ for rec in "${RECONS[@]}"; do
 
             MODES_DIR="$DIM_DIR/$m"
             make_output_dir $MODES_DIR
+
+            nmode=""
+            # need integer flags equivalent for modes for param.dat
+            if [ "$m" == "slow" ]; then
+                nmode=1
+            fi
+            if [ "$m" == "alfven" ]; then
+                nmode=2
+            fi
+            if [ "$m" == "fast" ]; then
+                nmode=3
+            fi
 
             for res in "${RESOLUTIONS[@]}"; do
                 echo "Resolution: $res"
@@ -63,11 +75,18 @@ for rec in "${RECONS[@]}"; do
                 set_recon_scheme $RES_DIR $rec
                 build_harm $RES_DIR $PROB
                 # edit runtime params
-                # set_idim $d
-                # set_mode $m
+                set_idim $RES_DIR $d
+                set_mode $RES_DIR $nmode
                 # run harm
-                # run_harm
+                run_harm $RES_DIR
             done
+            # plot convergence
+            cd $MODES_DIR
+            cp $PROB_DIR/convergence_mhdmodes1d.py ./
+            IFS=,  # Set the Internal Field Separator to a comma
+            res_comma_separated="${RESOLUTIONS[*]}"
+            unset IFS
+            python3 convergence_mhdmodes1d.py --res=$res_comma_separated --mode=$m --idim=$d
         done
     done
 done
