@@ -47,7 +47,6 @@ set_res_x2() {
     local SIM_DIR="$1"
     local N2="$2"
     sed -i -e "s/N2TOT [0-9]\+/N2TOT $N2/g" ${SIM_DIR}/build_archive/parameters.h
-
 }
 
 # Set reconstruction scheme

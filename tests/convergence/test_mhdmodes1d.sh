@@ -18,7 +18,7 @@ PROB_DIR="$HARM_DIR/prob/$PROB"
 # resolutions and then analyzing it
 CURRENT_DIR=""
 
-RECONS=("LINEAR")
+RECONS=("WENO")
 DIMENSIONS=(1 2)
 MODES=("slow" "alfven" "fast")
 RESOLUTIONS=(32 64 128 256)
