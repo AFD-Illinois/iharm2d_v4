@@ -32,12 +32,9 @@
 #define ALLMODELS           0
 
 // Reconstruction algorithm: 'LINEAR' or 'WENO'
-
 #define RECONSTRUCTION LINEAR
 
 // Boundary conditions:
-// 'OUTFLOW' for X1
-// 'POLAR' for X2 
 #define X1L_BOUND PERIODIC
 #define X1R_BOUND PERIODIC
 #define X2L_BOUND PERIODIC

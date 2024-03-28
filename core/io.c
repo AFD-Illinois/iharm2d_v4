@@ -86,12 +86,8 @@ void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
   
   #if RECONSTRUCTION == LINEAR
   fprintf(fp, STRING_OUT, "LINEAR");
-  #elif RECONSTRUCTION == PPM
-  fprintf(fp, STRING_OUT, "PPM");
   #elif RECONSTRUCTION == WENO
   fprintf(fp, STRING_OUT, "WENO");
-  #elif RECONSTRUCTION == MP%
-  fprintf(fp, STRING_OUT, "MP5");
   #endif
 
   fprintf(fp, FML_INT_OUT, N1);

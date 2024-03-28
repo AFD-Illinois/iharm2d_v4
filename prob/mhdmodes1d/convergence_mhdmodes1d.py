@@ -119,6 +119,8 @@ def plot_convergence(res, mode, idim):
             
     ax.loglog([RES[0], RES[-1]], 10*amp*np.asarray([RES[0], RES[-1]])**(-2.), color='black', linestyle='dashed', label='$N^{-2}$')
     plt.xscale('log', base=2)
+    ax.set_xlabel('Resolution')
+    ax.set_ylabel('L1 norm')
     ax.legend()
     plt.savefig(os.path.join("mhdmodes1d_{}_convergence.png".format(mode)))
 

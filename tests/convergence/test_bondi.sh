@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Run the 2D Linear modes problem for MHD. This script runs the 'slow', 
+# 'alfven', and 'fast' waves for LINEAR and WENO5 reconstruction scheme at 4
+# resolutions.
+
+source ./utils.sh
+
+# Make directory for mhdmodes1d outputs
+BONDI_OUTPUT_DIR="$TESTS_OUTPUT_DIR/bondi"
+make_output_dir $BONDI_OUTPUT_DIR
+
+# Path to problem directory
+PROB="bondi"
+PROB_DIR="$HARM_DIR/prob/$PROB"
+
+# Track current directory as we go about running the problem at different
+# resolutions and then analyzing it
+CURRENT_DIR=""
+
+RESOLUTIONS=(32 64 128 256)
+
+for res in "${RESOLUTIONS[@]}"; do
+    echo "Resolution: $res"
+
+    RES_DIR="$BONDI_OUTPUT_DIR/$res"
+    make_output_dir $RES_DIR
+
+    # build harm
+    build_harm $RES_DIR $PROB
+    # copy over runtime par file
+    cp $PROB_DIR/param.dat $RES_DIR
+    # edit compile time params and build harm again
+    set_res_x1 $RES_DIR $res
+    set_res_x2 $RES_DIR $res
+    build_harm $RES_DIR $PROB
+    # run harm
+    run_harm $RES_DIR
+done
+# plot convergence
+cd $BONDI_OUTPUT_DIR
+cp $PROB_DIR/convergence_bondi.py ./
+IFS=,  # Set the Internal Field Separator to a comma
+res_comma_separated="${RESOLUTIONS[*]}"
+unset IFS
+python3 convergence_bondi.py --res=$res_comma_separated

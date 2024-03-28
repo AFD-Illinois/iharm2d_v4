@@ -1,4 +1,3 @@
-
 /*---------------------------------------------------------------------------------
 
   PARAMETERS.H
@@ -9,15 +8,12 @@
 
 // Global resolution
 // Since there's no MPI, NiTOT==Ni
-#define N1TOT 256
-#define N2TOT 256
+#define N1TOT 64
+#define N2TOT 64
 
 
-// Metric: 'MINKOWSKI' or 'MKS'
 #define METRIC MKS
-// Set 'DEREFINE_POLES' to 1 for FMKS
-#define DEREFINE_POLES 1
-
+#define DEREFINE_POLES 0
 
 // Floors:
 // Wind term is a small source for torii only
@@ -34,19 +30,19 @@
  
 #define ELECTRONS           0
 #define ALLMODELS           0
-#define SUPPRESS_HIGHB_HEAT 1
 
-// Reconstruction algorithm: 'LINEAR' or 'PPM' or 'WENO' or 'MP5'
-
+// Reconstruction algorithm: 'LINEAR' or 'WENO'
 #define RECONSTRUCTION WENO
 
 // Boundary conditions:
-// 'OUTFLOW' for X1
+// 'OUTFLOW' for X1 inner boundary
+// 'USER' for outer X1 boundary (analytic solution)
 // 'POLAR' for X2 
 #define X1L_BOUND OUTFLOW
-#define X1R_BOUND OUTFLOW
+#define X1R_BOUND USER
 #define X2L_BOUND POLAR
 #define X2R_BOUND POLAR
 
+// Ensure no inflow at inner boundary
 #define X1L_INFLOW 0
-#define X1R_INFLOW 0
+#define X1R_INFLOW 1

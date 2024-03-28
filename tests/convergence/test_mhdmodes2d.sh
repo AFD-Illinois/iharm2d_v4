@@ -7,8 +7,8 @@
 source ./utils.sh
 
 # Make directory for mhdmodes1d outputs
-MHDMODES1D_OUTPUT_DIR="$TESTS_OUTPUT_DIR/mhdmodes2d"
-make_output_dir $MHDMODES1D_OUTPUT_DIR
+MHDMODES2D_OUTPUT_DIR="$TESTS_OUTPUT_DIR/mhdmodes2d"
+make_output_dir $MHDMODES2D_OUTPUT_DIR
 
 # Path to problem directory
 PROB="mhdmodes2d"
@@ -25,7 +25,7 @@ RESOLUTIONS=(32 64 128 256)
 for rec in "${RECONS[@]}"; do
     echo "Reconstruction scheme: $rec"
         
-    RECON_DIR="$MHDMODES1D_OUTPUT_DIR/${rec}"
+    RECON_DIR="$MHDMODES2D_OUTPUT_DIR/${rec}"
     make_output_dir $RECON_DIR
 
     for m in "${MODES[@]}"; do
