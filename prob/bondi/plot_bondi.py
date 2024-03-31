@@ -14,7 +14,7 @@ import multiprocessing as mp
 mpl.rcParams['figure.dpi'] = 120
 mpl.rcParams['savefig.dpi'] = 120
 mpl.rcParams['figure.autolayout'] = True
-mpl.rcParams['figure.figsize'] = (8,5)
+mpl.rcParams['figure.figsize'] = (12,6)
 mpl.rcParams['axes.titlesize'] = 18
 mpl.rcParams['axes.labelsize'] = 16
 mpl.rcParams['xtick.labelsize'] = 14
@@ -25,6 +25,13 @@ mpl.rcParams["font.serif"] = 'cmr10',
 mpl.rcParams["font.monospace"] = 'Computer Modern Typewriter'
 mpl.rcParams["mathtext.fontset"]= 'cm'
 mpl.rcParams['axes.unicode_minus'] = False
+
+
+# Command line arguments
+dumpsdir = sys.argv[1]   
+plotsdir = sys.argv[2]
+if not os.path.exists(plotsdir):
+	os.makedirs(plotsdir)
 
 
 # Global dictionaries to store (i) fluid dump (ii) grid (iii) analytic solution data
@@ -202,36 +209,37 @@ def load_data(dumpsdir, dumpno):
     header = open(os.path.join(dumpsdir,'dump_0000{0:04d}'.format(dumpno)), 'r')
     firstline = header.readline()
     header.close()
-    firstline = firstline.split() 
+    firstline = firstline.split()
+    
     dump['mdot'] = float(firstline[0])   
     dump['rc']   = float(firstline[1])
     dump['gam']  = float(firstline[11])
     dump['rEH']  = float(firstline[21])
     
-    grid['n1']   = float(firstline[7])
-    grid['n2']   = float(firstline[8])
-    grid['ndim'] = float(firstline[18])
+    grid['n1']   = int(firstline[7])
+    grid['n2']   = int(firstline[8])
+    grid['ndim'] = int(firstline[18])
     
     grid['dx1']  = float(firstline[16])
     grid['dx2']  = float(firstline[17])
     
-    grid['rEH_ind'] = np.argmin(np.fabs(grid['r'][:,0] - dump['rEH']) > 0.)
-    
     # read grid file
-    grid = np.loadtxt(os.path.join(dumpsdir, 'grid'))
-    grid['r']     = grid[:,2].reshape((grid['n1'],grid['n2']))
-    grid['th']    = grid[:,3].reshape((grid['n1'],grid['n2']))
-    grid['x1']    = grid[:,4].reshape((grid['n1'],grid['n2']))
-    grid['x2']    = grid[:,5].reshape((grid['n1'],grid['n2']))
-    grid['gdet']  = grid[:,6].reshape((grid['n1'],grid['n2']))
-    grid['lapse'] = grid[:,7].reshape((grid['n1'],grid['n2']))
-    grid['gcon']  = grid[:,8:24].reshape((grid['n1'], grid['n2'], grid['ndim'], grid['ndim']))
-    grid['gcov']  = grid[:,24:].reshape((grid['n1'], grid['n2'], grid['ndim'], grid['ndim']))
+    gfile = np.loadtxt(os.path.join(dumpsdir, 'grid'))
+    grid['r']     = gfile[:,2].reshape((grid['n1'],grid['n2']))
+    grid['th']    = gfile[:,3].reshape((grid['n1'],grid['n2']))
+    grid['x1']    = gfile[:,4].reshape((grid['n1'],grid['n2']))
+    grid['x2']    = gfile[:,5].reshape((grid['n1'],grid['n2']))
+    grid['gdet']  = gfile[:,6].reshape((grid['n1'],grid['n2']))
+    grid['lapse'] = gfile[:,7].reshape((grid['n1'],grid['n2']))
+    grid['gcon']  = gfile[:,8:24].reshape((grid['n1'], grid['n2'], grid['ndim'], grid['ndim']))
+    grid['gcov']  = gfile[:,24:].reshape((grid['n1'], grid['n2'], grid['ndim'], grid['ndim']))
 
     grid['x3'] = np.zeros((grid['n1'],grid['n2']))
 
     grid['hslope'] = float(firstline[23])
     grid['a'] = float(firstline[24])
+    
+    grid['rEH_ind'] = np.argmin(np.fabs(grid['r'][:,0] - dump['rEH']) > 0.)
     
 
 ############### COMPUTE ANALYTIC IDEAL BONDI SOLUTION ###############
@@ -322,17 +330,59 @@ def get_prim():
 # Plot analytic and numerical solution
 def plot(dumpno):
     
-    # loading prims
-    prims = np.loadtxt(os.path.join(dumpsdir,'dump_0000{0:04d}'.format(dumpno)), skiprows=1)
+    # header info
+    header = open(os.path.join(dumpsdir,'dump_0000{0:04d}'.format(dumpno)), 'r')
+    firstline = header.readline()
+    header.close()
+    firstline = firstline.split()
     
+    t = float(firstline[19])
+    t = '{:.3f}'.format(t)
+    
+    # load prims
+    prims = np.loadtxt(os.path.join(dumpsdir,'dump_0000{0:04d}'.format(dumpno)), skiprows=1)
+    rho      = prims[:,0].reshape(grid['n1'],grid['n2'])
+    u        = prims[:,1].reshape(grid['n1'],grid['n2'])
+    utilde_r = prims[:,2].reshape(grid['n1'],grid['n2'])
+    
+    # set lower limit for plotting
+    r_start     = 3.0
+    r_start_ind = np.argmin(np.fabs(grid['r'][:,0] - r_start))
+    
+    # plot
+    fig = plt.figure()
+    nrows = 4
+    ncols = 1
+    heights = [1,10,10,10]
+    gs = gridspec.GridSpec(nrows=nrows, ncols=ncols, height_ratios=heights, figure=fig)
+
+    ax0 = fig.add_subplot(gs[0,0])
+    ax0.annotate('t= '+str(t), xy=(0.5,0.5), xycoords='axes fraction', va='center', ha='center', fontsize = 'x-large')
+    ax0.axis('off')
+    
+    ax1 = fig.add_subplot(gs[1,0])
+    ax1.plot(grid['r'][r_start_ind:,0], rho[r_start_ind:,0], 'o', color='crimson')
+    ax1.plot(grid['r'][r_start_ind:,0], soln['rho'][r_start_ind:], color='black')
+    ax1.set_ylabel('$\\rho$')
+    
+    ax2 = fig.add_subplot(gs[2,0])
+    ax2.plot(grid['r'][r_start_ind:,0], u[r_start_ind:,0], 'o', color='crimson')
+    ax2.plot(grid['r'][r_start_ind:,0], soln['u'][r_start_ind:], color='black')
+    ax2.set_ylabel('$u_{g}$')
+
+    ax3 = fig.add_subplot(gs[3,0])
+    ax3.plot(grid['r'][r_start_ind:,0], utilde_r[r_start_ind:,0], 'o', color='crimson')
+    ax3.plot(grid['r'][r_start_ind:,0], soln['utilde_r'][r_start_ind:], color='black')
+    ax3.set_ylabel('$\\tilde{u}^{1}$')
+    
+    plt.savefig(os.path.join(plotsdir,'bondi_radial_slice_{0:04d}.png'.format(dumpno)))
+    plt.close()
     
 ############### MAIN IS MAIN ###############
 if __name__=='__main__':
-    dumpsdir = sys.argv[1]   
-    plotsdir = sys.argv[2]
     
     # Compute analytic solution
-    load_data(dumpsdir, 0, False)
+    load_data(dumpsdir, 0)
     gcov_bl()
     gcov_ks()
     gcon_ks()
