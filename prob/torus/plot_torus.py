@@ -109,7 +109,7 @@ def plotting(dumpno):
 	zp = z
 	fig = plt.figure(figsize=(5,10))
 	heights = [1,10]
-	gs = gridspec.GridSpec(nrows = 2, ncols = 1, height_ratios = heights, figure = fig)
+	gs = gridspec.GridSpec(nrows=2, ncols=1, height_ratios=heights, figure=fig)
 
 	# plotting
 	ax0 = fig.add_subplot(gs[0,:])
