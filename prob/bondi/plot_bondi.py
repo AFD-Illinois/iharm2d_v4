@@ -9,6 +9,7 @@ import matplotlib as mpl
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import multiprocessing as mp
 
+
 # Configure plot params
 mpl.rcParams['figure.dpi'] = 120
 mpl.rcParams['savefig.dpi'] = 120
@@ -25,10 +26,20 @@ mpl.rcParams["font.monospace"] = 'Computer Modern Typewriter'
 mpl.rcParams["mathtext.fontset"]= 'cm'
 mpl.rcParams['axes.unicode_minus'] = False
 
+
 # Global dictionaries to store (i) fluid dump (ii) grid (iii) analytic solution data
 dump = {}
 grid = {}
 soln = {}
+
+
+# Function to parallelize plotting
+def run_parallel(function, dlist, nthreads):
+	pool = mp.Pool(nthreads)
+	pool.map_async(function, dlist).get(720000)
+	pool.close()
+	pool.join()
+
 
 ############### GEOMETRY FUNCTIONS ###############
 # Compute gcov in BL from (r,th) read from grid file
@@ -221,7 +232,7 @@ def load_data(dumpsdir, dumpno):
 
     grid['hslope'] = float(firstline[23])
     grid['a'] = float(firstline[24])
-
+    
 
 ############### COMPUTE ANALYTIC IDEAL BONDI SOLUTION ###############
 # Nonlinear expression to solve for T
@@ -308,13 +319,31 @@ def get_prim():
     soln['utilde_r'] = utilde[Ellipsis,0,0]
     
     
+# Plot analytic and numerical solution
+def plot(dumpno):
+    
+    # loading prims
+    prims = np.loadtxt(os.path.join(dumpsdir,'dump_0000{0:04d}'.format(dumpno)), skiprows=1)
+    
+    
 ############### MAIN IS MAIN ###############
 if __name__=='__main__':
     dumpsdir = sys.argv[1]   
     plotsdir = sys.argv[2]
     
-    load_data(dumpsdir, 0, True)
+    # Compute analytic solution
+    load_data(dumpsdir, 0, False)
     gcov_bl()
     gcov_ks()
     gcon_ks()
     get_prim()
+
+    # Plot    
+    dstart = int(sorted(glob.glob(os.path.join(dumpsdir,'dump*')))[0][-4:])
+    dend = int(sorted(glob.glob(os.path.join(dumpsdir,'dump*')))[-1][-4:])
+    dlist = range(dstart,dend+1)
+
+    ncores = psutil.cpu_count(logical=True)
+    pad = 0.5
+    nthreads = int(ncores*pad)
+    run_parallel(plot, dlist, nthreads)

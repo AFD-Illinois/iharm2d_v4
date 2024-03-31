@@ -7,18 +7,21 @@ from matplotlib import gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import multiprocessing as mp
 
+
 # paths
 dumpsdir = sys.argv[1]
 outputdir = sys.argv[2]
 if not os.path.exists(outputdir):
 	os.makedirs(outputdir)
 
+
 # function to parallelize plotting
-def run_parallel(function, dlist,	nthreads):
+def run_parallel(function, dlist, nthreads):
 	pool = mp.Pool(nthreads)
 	pool.map_async(function, dlist).get(720000)
 	pool.close()
 	pool.join()
+
 
 # function to generate 4-potential from magnetic field
 def plotting_bfield_lines(ax, B1, B2, xp, zp, n1, n2, dx1, dx2, gdet, nlines=20):
@@ -29,6 +32,7 @@ def plotting_bfield_lines(ax, B1, B2, xp, zp, n1, n2, dx1, dx2, gdet, nlines=20)
 	AJ_phi -=AJ_phi.min()
 	levels = np.linspace(0,AJ_phi.max(),nlines*2)
 	ax.contour(xp, zp, AJ_phi, levels=levels, colors='k')
+
 
 def plotting(dumpno):	
 	# plotting parameters
@@ -134,6 +138,7 @@ def plotting(dumpno):
 	
 	plt.savefig(os.path.join(outputdir,'density_{0:04d}.png'.format(dumpno)))
 	plt.close()
+
 
 if __name__=="__main__":
 	dstart = int(sorted(glob.glob(os.path.join(dumpsdir,'dump*')))[0][-4:])
