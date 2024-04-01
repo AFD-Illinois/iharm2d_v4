@@ -8,9 +8,8 @@
 
 // Global resolution
 // Since there's no MPI, NiTOT==Ni
-#define N1TOT 512
-#define N2TOT 512
-
+#define N1TOT 128
+#define N2TOT 128
 
 #define METRIC MINKOWSKI
 
