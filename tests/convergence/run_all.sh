@@ -8,3 +8,4 @@
 ./test_mhdmodes1d.sh
 ./test_mhdmodes2d.sh
 ./test_bondi.sh
+./test_torus_equilibrium.sh

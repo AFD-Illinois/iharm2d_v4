@@ -1,4 +1,4 @@
-### Plot convergence for Bondi inflow in 2D ###
+### Plot convergence for Fishbone-Moncrief torus ###
 
 import numpy as np
 import sys, glob, os
@@ -16,7 +16,7 @@ def plot_convergence(res):
     RES = [int(x) for x in res.split(",")]
     
     NVARS = 3
-    VARS  = ['rho', 'u', 'u1']
+    VARS  = ['rho', 'u', 'u3']
     
     l1 = np.zeros([len(RES), NVARS])
     powerfits = np.zeros(NVARS)
@@ -24,29 +24,24 @@ def plot_convergence(res):
     for r in range(len(RES)):
         # load initial dump as reference solution
         dfile_init = sorted(glob.glob(os.path.join('{}'.format(RES[r]), 'dumps', 'dump_*')))[0]
-        prims_init = np.loadtxt(dfile_init, skiprows=1)
+        prims_init = np.loadtxt(dfile_init, usecols=(0,1,4), skiprows=1)
 
         # load grid and final dump
         gfile = os.path.join('{}'.format(RES[r]), 'dumps','grid')
         dfile = sorted(glob.glob(os.path.join('{}'.format(RES[r]), 'dumps', 'dump_*')))[-1]
-        prims = np.loadtxt(dfile, skiprows=1)
+        prims = np.loadtxt(dfile, usecols=(0,1,4), skiprows=1)
         
-        # read event horizon value
-        header = open(dfile).readline()
-        header = header.split()
-        r_eh = float(header[21])
-        
-        # consider zones outside the event horizon
-        grid = np.loadtxt(gfile)
-        r_val = grid[:,2].reshape((RES[r],RES[r]))[:,0]
-        imin = 0
-        while r_val[imin] < r_eh:
-            imin += 1
-                    
         # compute error
+        # only consider zones where rho > (0.02 * rho_max) where rho_max = 1 (see problem init)
+        error = np.zeros((RES[r], RES[r], NVARS))
+        num_zones = np.zeros(NVARS)
         for p in range(NVARS):
-            l1[r,p] = np.mean(np.fabs(prims[:,p].reshape((RES[r],RES[r]))[imin:,:] \
-                - prims_init[:,p].reshape((RES[r],RES[r]))[imin:,:]))
+            error[Ellipsis,p] = np.where(prims_init[:,0].reshape((RES[r],RES[r])) > 0.02, \
+                        np.fabs(prims[:,p].reshape((RES[r],RES[r])) - prims_init[:,p].reshape((RES[r],RES[r]))), 0.0)
+            num_zones[p] = np.count_nonzero(error[Ellipsis,p])
+                            
+        for p in range(NVARS):
+            l1[r,p] = np.sum(error[Ellipsis,p]) / num_zones[p]
             
     # MEASURE CONVERGENCE
     for p in range(NVARS):
@@ -68,7 +63,7 @@ def plot_convergence(res):
     fig = plt.gcf()
     ax  = fig.gca()
     
-    ax.set_title('iharm2d_v4 Bondi inflow')
+    ax.set_title('iharm2d_v4 Fishbone-Moncrief torus')
     for p in range(NVARS):
         ax.loglog(RES, l1[:,p], color=colors[p], marker='o', label=VARS[p])
             
@@ -77,7 +72,7 @@ def plot_convergence(res):
     ax.set_xlabel('Resolution')
     ax.set_ylabel('L1 norm')
     ax.legend()
-    plt.savefig(os.path.join("bondi_convergence.png"))
+    plt.savefig(os.path.join("torus_equilibrium_convergence.png"))
 
 
 if __name__=='__main__':

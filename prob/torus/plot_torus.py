@@ -1,3 +1,5 @@
+### Plot density and field lines ###
+
 import numpy as np
 import sys, glob, psutil, os
 import matplotlib

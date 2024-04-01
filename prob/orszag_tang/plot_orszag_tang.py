@@ -1,3 +1,5 @@
+### Plot density and norm of 4-current ###
+
 import numpy as np
 import sys, glob, psutil, os
 import matplotlib

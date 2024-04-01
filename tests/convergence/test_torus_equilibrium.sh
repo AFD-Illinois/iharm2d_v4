@@ -1,27 +1,27 @@
 #!/bin/bash
 
-# Run the Bondi flow problem at 4 resolutions.
+# Run Fishbone-Moncrief torus equilibrium test at 3 resolutions
 
 source ./utils.sh
 
 # Make directory for mhdmodes1d outputs
-BONDI_OUTPUT_DIR="$TESTS_OUTPUT_DIR/bondi"
-make_output_dir $BONDI_OUTPUT_DIR
+TORUS_OUTPUT_DIR="$TESTS_OUTPUT_DIR/torus_equilibrium"
+make_output_dir $TORUS_OUTPUT_DIR
 
 # Path to problem directory
-PROB="bondi"
+PROB="torus_equilibrium"
 PROB_DIR="$HARM_DIR/prob/$PROB"
 
 # Track current directory as we go about running the problem at different
 # resolutions and then analyzing it
 CURRENT_DIR=""
 
-RESOLUTIONS=(32 64 128 256)
+RESOLUTIONS=(128 256 512)
 
 for res in "${RESOLUTIONS[@]}"; do
     echo "Resolution: $res"
 
-    RES_DIR="$BONDI_OUTPUT_DIR/$res"
+    RES_DIR="$TORUS_OUTPUT_DIR/$res"
     make_output_dir $RES_DIR
 
     # build harm
@@ -36,9 +36,9 @@ for res in "${RESOLUTIONS[@]}"; do
     run_harm $RES_DIR
 done
 # plot convergence
-cd $BONDI_OUTPUT_DIR
-cp $PROB_DIR/convergence_bondi.py ./
+cd $TORUS_OUTPUT_DIR
+cp $PROB_DIR/convergence_torus.py ./
 IFS=,  # Set the Internal Field Separator to a comma
 res_comma_separated="${RESOLUTIONS[*]}"
 unset IFS
-python3 convergence_bondi.py --res=$res_comma_separated
+python3 convergence_torus.py --res=$res_comma_separated
