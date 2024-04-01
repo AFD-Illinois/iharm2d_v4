@@ -80,6 +80,7 @@ for rec in "${RECONS[@]}"; do
                 # run harm
                 run_harm $RES_DIR
             done
+            
             # plot convergence
             cd $MODES_DIR
             cp $PROB_DIR/convergence_mhdmodes1d.py ./

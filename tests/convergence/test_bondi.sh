@@ -35,6 +35,7 @@ for res in "${RESOLUTIONS[@]}"; do
     # run harm
     run_harm $RES_DIR
 done
+
 # plot convergence
 cd $BONDI_OUTPUT_DIR
 cp $PROB_DIR/convergence_bondi.py ./
