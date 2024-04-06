@@ -4,7 +4,7 @@
  
   -Read and store problem-specific parameters from parameter file
   -Initialize Fishbone-Moncrief torus (FM)
-  -Seed it with a SANE or MAD poloidal magnetic field
+  -Seed it with a SANE poloidal magnetic field
 
 -----------------------------------------------------------------------------------*/
 

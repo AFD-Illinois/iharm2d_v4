@@ -1,4 +1,4 @@
-### Plot convergence for MHD linear modes in 2D ###
+### Plot convergence for advection test ###
 
 import numpy as np
 import sys, glob, os

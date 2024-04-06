@@ -3,7 +3,7 @@
   PROBLEM.C
  
   -Read and store problem-specific parameters from parameter file
-  -Initialize Orszag-Tang problem
+  -Initialize advection problem
 
 -----------------------------------------------------------------------------------*/
 
