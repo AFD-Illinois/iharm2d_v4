@@ -13,7 +13,7 @@ import multiprocessing as mp
 mpl.rcParams['figure.dpi'] = 120
 mpl.rcParams['savefig.dpi'] = 120
 mpl.rcParams['figure.autolayout'] = True
-mpl.rcParams['figure.figsize'] = (8,4)
+mpl.rcParams['figure.figsize'] = (6,6)
 mpl.rcParams['axes.titlesize'] = 18
 mpl.rcParams['axes.labelsize'] = 16
 mpl.rcParams['xtick.labelsize'] = 14
@@ -42,10 +42,8 @@ def run_parallel(function, dlist,	nthreads):
 def plot(dumpno):
     print("Plotting dump {:04d}".format(dumpno))
     # plotting parameters
-    vmin_rho = 0; vmax_rho = 1
-    vmin_jsq = -3; vmax_jsq = 0
+    vmin_rho = 0.0; vmax_rho = 0.35
     cmap_rho = 'turbo'
-    cmap_jsq = 'plasma'
     shading = 'gouraud'
 
     # header info
@@ -54,34 +52,30 @@ def plot(dumpno):
     header.close()
     firstline = firstline.split()
 
-    n1   = int(firstline[7])
-    n2   = int(firstline[8])
-    ndim = int(firstline[18])
-    t    = float(firstline[19])
-
-    t = '{:.3f}'.format(t)
+    t_scale = float(firstline[0])
+    u_flow  = float(firstline[4])
+    n1      = int(firstline[15])
+    n2      = int(firstline[16])
+    t       = float(firstline[27])
 
     # load density and four-current
     prims = np.loadtxt(os.path.join(dumpsdir,'dump_0000{0:04d}'.format(dumpno)), skiprows=1)
     rho  = prims[:,0].reshape((n1,n2))
-    jcon = prims[:,8:12].reshape((n1,n2,4))
 
 	# read grid file
     grid = np.loadtxt(os.path.join(dumpsdir,'grid'))
     x1 = grid[:,4].reshape((n1,n2))
     x2 = grid[:,5].reshape((n1,n2))
-    gcov = grid[:,24:].reshape((n1, n2, ndim, ndim))
     
-    # compute covariant four-current
-    jcov = np.einsum('ijmn,ijn->ijm', gcov, jcon)
+    # Rescale time units
+    L = 1.
+    t /= (L / u_flow) / t_scale
+    t = '{:.1f}'.format(t)
     
-    # compute magnitude of four-current
-    jsq = np.einsum('ijm,ijm->ij', jcov, jcon)
-
 	# plot	
     fig = plt.figure()
     nrows = 2
-    ncols = 2
+    ncols = 1
     heights = [1,10]
     gs = gridspec.GridSpec(nrows=nrows, ncols=ncols, height_ratios=heights, figure=fig)
 
@@ -93,23 +87,15 @@ def plot(dumpno):
     rho_plot = ax1.pcolormesh(x1, x2, np.log10(rho), cmap=cmap_rho, vmin=vmin_rho, vmax=vmax_rho, shading=shading)
     ax1.set_xlabel('$x$')
     ax1.set_ylabel('$y$')
+    ax1.set_xticks([0.,0.25,0.5,0.75,1.])
+    ax1.set_yticks([0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.])
     ax1.set_title('Log$_{10}(\\rho$)')
     ax1.set_aspect('equal')
     divider = make_axes_locatable(ax1)
     cax = divider.append_axes("right", size="5%", pad=0.05)
     plt.colorbar(rho_plot, cax=cax)
-    
-    ax2 = fig.add_subplot(gs[1,1])
-    jsq_plot = ax2.pcolormesh(x1, x2, np.log10(jsq), cmap=cmap_jsq, vmin=vmin_jsq, vmax=vmax_jsq, shading=shading)
-    ax2.set_xlabel('$x$')
-    ax2.set_ylabel('$y$')
-    ax2.set_title('Log$_{10}(j^{2}$)')
-    ax2.set_aspect('equal')
-    divider = make_axes_locatable(ax2)
-    cax = divider.append_axes("right", size="5%", pad=0.05)
-    plt.colorbar(jsq_plot, cax=cax)
 
-    plt.savefig(os.path.join(plotsdir,'orszag_tang_{0:04d}.png'.format(dumpno)))
+    plt.savefig(os.path.join(plotsdir,'kelvin_helmholtz_{0:04d}.png'.format(dumpno)))
     plt.close()
 
 if __name__=="__main__":
@@ -118,6 +104,6 @@ if __name__=="__main__":
     dlist = range(dstart,dend+1)
 
     ncores = psutil.cpu_count(logical=True)
-    pad = 0.5
+    pad = 0.8
     nthreads = int(ncores*pad)
     run_parallel(plot,dlist,nthreads)

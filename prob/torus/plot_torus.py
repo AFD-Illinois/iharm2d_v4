@@ -129,7 +129,7 @@ def plotting(dumpno):
 	ax1.set_ylabel('$z (GM/c^2)$')
 	ax1.set_xlim(domain[:2])
 	ax1.set_ylim(domain[2:])
-	ax1.set_title('Log($\\rho$)',fontsize='large')
+	ax1.set_title('Log$_{10}(\\rho$)',fontsize='large')
 	if bh:
 					circle = plt.Circle((0,0), rEH, color='k')
 					ax1.add_artist(circle)
