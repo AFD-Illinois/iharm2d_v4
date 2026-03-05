@@ -1,9 +1,31 @@
+/**
+ * @file random.c
+ * @brief Mersenne Twister MT19937 pseudo-random number generator.
+ *
+ * @details Implements the MT19937 algorithm (Matsumoto & Nishimura 1998)
+ * as adapted for iharm2d by Evan Papoutsis (originally for iharm2d_v3).
+ * The state vector has 624 32-bit words; the period is 2^19937 - 1.
+ *
+ * **Functions:**
+ * - **init_rng()**: Seed the generator with an unsigned 32-bit integer.
+ *   Uses Knuth TAOCP Vol. 2 (3rd ed., p. 106) multiplier-based seeding.
+ *   If init_rng() is never called, ran_uniform() auto-seeds with 5489.
+ * - **ran_uniform()**: Returns the next double in [0, 1) using the standard
+ *   MT19937 tempering operations.
+ *
+ * @note Used primarily in problem setup functions (e.g., torus) to add
+ * small seed perturbations to the initial magnetic field or density.
+ *
+ * Copyright (C) 1997 – 2002 Makoto Matsumoto and Takuji Nishimura;
+ * BSD-3-Clause licence (see file header).
+ */
+
 /*---------------------------------------------------------------------------------
 
   RANDOM.C
-  
+
   -Mersenne Twister PRNG
-  
+
   Credit: Evan Papoutsis who first wrote this for iharm2d_v3
 
 ---------------------------------------------------------------------------------*/
@@ -58,6 +80,16 @@ static int mti=625; /* mti==625 means mt[N] is not initialized */
 
 #include "decs.h"
 
+/**
+ * @brief Seed the Mersenne Twister RNG.
+ *
+ * @details Initialises the 624-element state vector using the recurrence
+ * @f$mt[i] = 1812433253 \cdot (mt[i-1] \oplus (mt[i-1] \gg 30)) + i@f$,
+ * truncated to 32 bits.  Must be called before ran_uniform() for reproducible
+ * sequences; otherwise ran_uniform() uses the default seed 5489.
+ *
+ * @param seed  32-bit seed value.
+ */
 void init_rng(int seed)
 {
 	unsigned long s = (unsigned long) seed;
@@ -74,6 +106,19 @@ void init_rng(int seed)
     }
 }
 
+/**
+ * @brief Return the next pseudo-random double uniformly distributed in [0, 1).
+ *
+ * @details Implements the standard MT19937 generation and tempering:
+ * 1. When the state is exhausted (mti >= 624), regenerate all 624 words using
+ *    the twist transformation with MATRIX_A.
+ * 2. Extract the next word y = mt[mti++].
+ * 3. Apply four tempering operations (XOR with shifts and masks).
+ * 4. Return @f$y \times 2^{-32}@f$.
+ * If init_rng() has not been called, auto-seeds with 5489.
+ *
+ * @return  Pseudo-random double in [0, 1).
+ */
 // Return pseudo-random value between 0 and 1
 double ran_uniform()
 {

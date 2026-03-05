@@ -1,3 +1,22 @@
+/**
+ * @file defs.h
+ * @brief Global variable definitions (storage allocation for all shared simulation state).
+ *
+ * @details This file is included by exactly one source file (main.c) via the
+ * standard C pattern of declaring variables @c extern in the header (decs.h) and
+ * defining them (allocating storage) here.
+ *
+ * The file defines:
+ * - Per-zone integer flag arrays (pflag, fail_save, fflag).
+ * - Physical parameters (a, gam, Rhor, tp_over_te).
+ * - Geometry and grid parameters (Rin, Rout, hslope, dx, startx, ...).
+ * - Timing and output cadence variables (DTd, DTl, DTr, DTp, ...).
+ * - Diagnostic accumulators (mdot, edot, ldot, ...).
+ * - Electron-heating parameters (game, gamp, fel0, ...) when ELECTRONS is defined.
+ *
+ * @note Do NOT include this file more than once; it allocates global storage.
+ */
+
 /*---------------------------------------------------------------------------------
 
   DEFS.H

@@ -1,0 +1,113 @@
+# Doxyfile for iharm2d_v4
+# Run with: doxygen Doxyfile
+# Output will be written to docs/html/index.html
+
+#---------------------------------------------------------------------------
+# Project metadata
+#---------------------------------------------------------------------------
+PROJECT_NAME           = "iharm2d_v4"
+PROJECT_BRIEF          = "2D ideal GRMHD code in Modified Kerr-Schild coordinates"
+PROJECT_NUMBER         = "v4"
+OUTPUT_DIRECTORY       = docs
+
+#---------------------------------------------------------------------------
+# Input sources
+#---------------------------------------------------------------------------
+# Include only the core library and the shared header.
+# Problem directories are excluded because they duplicate many declarations.
+INPUT                  = core
+RECURSIVE              = YES
+FILE_PATTERNS          = *.c *.h
+
+# Exclude the test build archives (copies of core files)
+EXCLUDE                = tests
+
+#---------------------------------------------------------------------------
+# Symbol extraction
+#---------------------------------------------------------------------------
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_LOCAL_METHODS  = YES
+INTERNAL_DOCS          = YES
+
+# Show source code alongside documentation
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+
+#---------------------------------------------------------------------------
+# Preprocessor: expand conditional compilation branches so that all code
+# paths (electrons, MKS metric, FMKS, debug, etc.) are documented.
+#---------------------------------------------------------------------------
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = core
+
+# Pre-define macros to expose all code branches in the documentation.
+# Adjust values to match the most common production configuration.
+PREDEFINED             = \
+    METRIC=2 \
+    MKS=2 \
+    MINKOWSKI=1 \
+    ELECTRONS=1 \
+    ALLMODELS=1 \
+    DEREFINE_POLES=0 \
+    COORDSINGFIX=1 \
+    TIMERS=1 \
+    DEBUG=0 \
+    WIND_TERM=0 \
+    SUPPRESS_HIGHB_HEAT=0 \
+    N1=128 \
+    N2=128 \
+    NG=3 \
+    NDIM=4 \
+    NVAR=8
+
+#---------------------------------------------------------------------------
+# HTML output
+#---------------------------------------------------------------------------
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_TIMESTAMP         = YES
+GENERATE_TREEVIEW      = YES
+TREEVIEW_WIDTH         = 250
+
+# Use MathJax for rendering LaTeX equations (@f[...@f], @f$...$@f).
+USE_MATHJAX            = YES
+MATHJAX_VERSION        = MathJax_3
+MATHJAX_RELPATH        = https://cdn.jsdelivr.net/npm/mathjax@3
+
+#---------------------------------------------------------------------------
+# LaTeX output (optional; set GENERATE_LATEX = NO to skip)
+#---------------------------------------------------------------------------
+GENERATE_LATEX         = NO
+
+#---------------------------------------------------------------------------
+# Graphs and call graphs (requires Graphviz dot)
+#---------------------------------------------------------------------------
+HAVE_DOT               = YES
+DOT_NUM_THREADS        = 4
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+DOT_GRAPH_MAX_NODES    = 100
+MAX_DOT_GRAPH_DEPTH    = 4
+COLLABORATION_GRAPH    = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+
+#---------------------------------------------------------------------------
+# Miscellaneous
+#---------------------------------------------------------------------------
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+FULL_PATH_NAMES        = NO
+STRIP_FROM_PATH        = /home/vdhruv2/iharm2d_v4/
+TAB_SIZE               = 4
+OPTIMIZE_OUTPUT_FOR_C  = YES
+SORT_MEMBER_DOCS       = NO

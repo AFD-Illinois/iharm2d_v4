@@ -1,8 +1,25 @@
+/**
+ * @file metric.c
+ * @brief Metric tensor utilities: inversion, Christoffel symbols, index raising/lowering.
+ *
+ * @details Provides:
+ * - **gcon_func()**: Invert the 4x4 covariant metric @f$g_{\mu\nu}@f$ to obtain
+ *   @f$g^{\mu\nu}@f$ using the adjoint / cofactor method.  Returns @f$\sqrt{|g|}@f$.
+ * - **conn_func()**: Compute all 40 independent Christoffel connection coefficients
+ *   @f$\Gamma^\lambda_{\mu\nu}@f$ at a zone center via numerical finite differencing of
+ *   the metric (using @c DELTA = 1e-5 as step size).
+ * - **lower_grid() / raise_grid()**: Index lowering/raising over the full GridVector array.
+ * - **dot()**: Scalar product @f$v^\mu w_\mu@f$ of a contravariant and covariant 4-vector.
+ * - **invert()**: General 4x4 matrix inversion used by gcon_func() and coord.c.
+ *
+ * @note Connection coefficients are computed once at startup and cached in GridGeom::conn.
+ */
+
 /*---------------------------------------------------------------------------------
 
   METRIC.C
 
-  -Helper functions for metric tensors 
+  -Helper functions for metric tensors
   -Compute 4x4 matrix minor, adjoint, determinant and inverse
   -Compute connection coefficients
   -Raise and lower rank-1 tensors
@@ -16,7 +33,16 @@ double MINOR(double m[16], int r0, int r1, int r2, int c0, int c1, int c2);
 void adjoint(double m[16], double adjOut[16]);
 double determinant(double m[16]);
 
-// Calculate contravariant metric
+/**
+ * @brief Invert the 4x4 covariant metric tensor to obtain the contravariant metric.
+ *
+ * @details Uses the adjoint (cofactor matrix) method.  Also computes
+ * @f$\sqrt{|det(g_{\mu\nu})|}@f$ and stores it via the return value.
+ *
+ * @param gcov   4x4 covariant metric input.
+ * @param gcon   4x4 contravariant metric output.
+ * @return       @f$\sqrt{|det(g)|}@f$ (equals gdet).
+ */
 inline double gcon_func(double gcov[NDIM][NDIM], double gcon[NDIM][NDIM])
 {
   double gdet = invert(&gcov[0][0],&gcon[0][0]);
@@ -24,17 +50,48 @@ inline double gcon_func(double gcov[NDIM][NDIM], double gcon[NDIM][NDIM])
 }
 
 // Make a local copy of gcov (from Grid struct)
+/**
+ * @brief Copy covariant metric g_mu_nu from GridGeom into a local 4x4 array.
+ * @param G    Grid geometry.
+ * @param i    X1 zone index.
+ * @param j    X2 zone index.
+ * @param loc  Grid centering location.
+ * @param gcov Output 4x4 covariant metric.
+ */
 inline void get_gcov(struct GridGeom *G, int i, int j, int loc, double gcov[NDIM][NDIM]) {
   DLOOP2 gcov[mu][nu] = G->gcov[loc][mu][nu][j][i];
 }
 
 // Make a local copy of gcon (from Grid struct)
+/**
+ * @brief Copy contravariant metric g^mu^nu from GridGeom into a local 4x4 array.
+ * @param G    Grid geometry.
+ * @param i    X1 zone index.
+ * @param j    X2 zone index.
+ * @param loc  Grid centering location.
+ * @param gcon Output 4x4 contravariant metric.
+ */
 inline void get_gcon(struct GridGeom *G, int i, int j, int loc, double gcon[NDIM][NDIM])
 {
   DLOOP2 gcon[mu][nu] = G->gcon[loc][mu][nu][j][i];
 }
 
-// Calculate connection coefficient 
+// Calculate connection coefficient
+/**
+ * @brief Compute all Christoffel connection coefficients @f$\Gamma^\lambda_{\mu\nu}@f$ at zone (i, j).
+ *
+ * @details Uses second-order centered finite differences of the metric:
+ * @f[
+ *   \partial_\mu g_{\lambda\nu} \approx \frac{g_{\lambda\nu}(X + \delta_\mu) - g_{\lambda\nu}(X - \delta_\mu)}{2\,\text{DELTA}}
+ * @f]
+ * then combines the first derivatives into the standard expression for the Christoffel symbols
+ * and raises the first index using @f$g^{\mu\nu}@f$ to obtain @f$\Gamma^\lambda_{\mu\nu}@f$.
+ * Results are stored in G->conn[lam][nu][mu][j][i].
+ *
+ * @param G  Grid geometry (gcon at CENT must be pre-computed; conn is written here).
+ * @param i  X1 zone index.
+ * @param j  X2 zone index.
+ */
 inline void conn_func(struct GridGeom *G, int i, int j)
 {
   double tmp[NDIM][NDIM][NDIM];
@@ -90,6 +147,15 @@ inline void conn_func(struct GridGeom *G, int i, int j)
 }
 
 // Lower a contravariant rank-1 tensor to a covariant one
+/**
+ * @brief Lower vector index: vcov_mu = g_mu_nu * vcon^nu at zone (i, j).
+ * @param vcon  Contravariant 4-vector.
+ * @param vcov  Covariant 4-vector output.
+ * @param G     Grid geometry.
+ * @param i     X1 zone index.
+ * @param j     X2 zone index.
+ * @param loc   Grid centering location.
+ */
 inline void lower_grid(GridVector vcon, GridVector vcov, struct GridGeom *G, int i,
   int j, int loc)
 {
@@ -102,6 +168,7 @@ inline void lower_grid(GridVector vcon, GridVector vcov, struct GridGeom *G, int
 }
 
 // Lower the grid of contravariant rank-1 tensors to covariant ones
+/** @brief Vectorized lower_grid() over a rectangular zone range (OpenMP SIMD). */
 void lower_grid_vec(GridVector vcon, GridVector vcov, struct GridGeom *G, int jstart, int jstop, int istart, int istop, int loc)
 {
 #pragma omp parallel for simd collapse(3)
@@ -115,6 +182,15 @@ void lower_grid_vec(GridVector vcon, GridVector vcov, struct GridGeom *G, int js
 }
 
 // Raise the grid of covariant rank-1 tensors to covariant ones
+/**
+ * @brief Raise vector index: vcon^mu = g^mu^nu * vcov_nu at zone (i, j).
+ * @param vcov  Covariant 4-vector input.
+ * @param vcon  Contravariant 4-vector output.
+ * @param G     Grid geometry.
+ * @param i     X1 zone index.
+ * @param j     X2 zone index.
+ * @param loc   Grid centering location.
+ */
 inline void raise_grid(GridVector vcov, GridVector vcon, struct GridGeom *G, int i, int j, int loc)
 {
   for (int mu = 0; mu < NDIM; mu++) {
@@ -126,6 +202,12 @@ inline void raise_grid(GridVector vcov, GridVector vcon, struct GridGeom *G, int
 }
 
 // Take dot product of a contravariant and covariant rank-1 tensor
+/**
+ * @brief Compute the scalar product @f$v^\mu w_\mu@f$.
+ * @param vcon  Contravariant 4-vector.
+ * @param vcov  Covariant 4-vector.
+ * @return @f$\sum_\mu v^\mu w_\mu@f$.
+ */
 inline double dot(double vcon[NDIM], double vcov[NDIM])
 {
   double dot = 0.;
@@ -177,6 +259,17 @@ inline double determinant(double m[16])
 }
 
 // Computes inverse of a 4x4 matrix
+/**
+ * @brief Compute the inverse of a 4x4 matrix using the adjoint method.
+ *
+ * @details Evaluates @f$A^{-1} = \text{adj}(A) / \det(A)@f$.
+ * If |det(A)| < 1e-10 the inversion is singular; return value is the determinant
+ * and entries may be garbage.
+ *
+ * @param m       Input matrix, stored as a flat 16-element (row-major) array.
+ * @param invOut  Output inverse matrix, same storage convention.
+ * @return        Determinant of @c m.
+ */
 inline double invert(double *m, double *invOut)
 {
   adjoint(m, invOut);

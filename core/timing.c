@@ -1,3 +1,29 @@
+/**
+ * @file timing.c
+ * @brief Wall-clock performance timing and reporting.
+ *
+ * @details Maintains two static arrays:
+ * - `timers[NUM_TIMERS]`: stores the wall time recorded at the last timer_start() call.
+ * - `times[NUM_TIMERS]`: accumulates total elapsed wall time per timer.
+ *
+ * Usage pattern:
+ * ```c
+ * timer_start(TIMER_RECON);
+ * // ... work to be timed ...
+ * timer_stop(TIMER_RECON);
+ * ```
+ *
+ * Only the OpenMP master thread updates the timing arrays; all calls inside
+ * parallel regions are safe due to the `#pragma omp master` guard.
+ * When the TIMERS flag is disabled, only the TIMER_ALL entry is still updated.
+ *
+ * report_performance() prints a per-timer breakdown (wall seconds per step +
+ * percentage of TIMER_ALL) and the zone-cycles-per-second throughput.
+ *
+ * @note The file header incorrectly says "METRIC.C"; the file actually
+ * implements timing functionality for the whole simulation.
+ */
+
 /*---------------------------------------------------------------------------------
 
   METRIC.C
@@ -13,6 +39,14 @@ static double times[NUM_TIMERS];
 
 static int nstep_start = 0;
 
+/**
+ * @brief Initialize (reset) all accumulated timing counters to zero.
+ *
+ * @details Sets all entries in `times[]` to 0.0 and records the current
+ * nstep so that report_performance() can compute a per-step average.
+ * Must be called once after the first step is complete and the warm-up
+ * overhead should be excluded.
+ */
 void time_init()
 {
   for (int n = 0; n < NUM_TIMERS; n++) {
@@ -21,6 +55,15 @@ void time_init()
   nstep_start = nstep;
 }
 
+/**
+ * @brief Record the start time for a named timer.
+ *
+ * @details Stores omp_get_wtime() in `timers[timerCode]`.
+ * Only executed by the OpenMP master thread (harmless to call inside or outside
+ * parallel regions).  No-op unless TIMERS is set or timerCode == TIMER_ALL.
+ *
+ * @param timerCode  Timer identifier (one of the TIMER_* constants in decs.h).
+ */
 inline void timer_start(int timerCode)
 {
   if (TIMERS || timerCode == TIMER_ALL) {
@@ -31,6 +74,15 @@ inline void timer_start(int timerCode)
   }
 }
 
+/**
+ * @brief Accumulate elapsed time for a named timer.
+ *
+ * @details Adds `omp_get_wtime() - timers[timerCode]` to `times[timerCode]`.
+ * Must be called after the corresponding timer_start().
+ * Only executed by the OpenMP master thread.
+ *
+ * @param timerCode  Timer identifier matching a prior timer_start() call.
+ */
 inline void timer_stop(int timerCode)
 {
   if (TIMERS || timerCode == TIMER_ALL) {
@@ -41,6 +93,17 @@ inline void timer_stop(int timerCode)
   }
 }
 
+/**
+ * @brief Print a summary of timing statistics to stdout.
+ *
+ * @details Computes the number of steps elapsed since time_init(), then for
+ * each timer prints the per-step wall time and its percentage of TIMER_ALL.
+ * Also reports:
+ * - Zone-cycles per core-second: N1*N2 / (T_ALL * nthreads / nsteps).
+ * - Zone-cycles per second:      N1*N2 / (T_ALL / nsteps).
+ * Only the timer breakdowns are gated by the TIMERS compile-time flag;
+ * the final two lines are always printed.
+ */
 // Report a running average of performance data
 void report_performance()
 {

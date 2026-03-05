@@ -1,3 +1,31 @@
+/**
+ * @file fixup.c
+ * @brief Post-inversion floor/ceiling fixups and bad-zone repair.
+ *
+ * @details Called after every U_to_P() pass and after the physical time step.
+ * Applies three layers of corrections:
+ *
+ * 1. **Ceilings** (fixup_ceiling()): Hard upper limits on the Lorentz factor
+ *    (γ ≤ GAMMAMAX) and, when ELECTRONS is enabled, on the total entropy
+ *    variable KTOT (≤ KTOTMAX).
+ *
+ * 2. **Floors** (fixup_floor()): Enforces minimum rest-mass density and
+ *    internal energy using three tiers of floors:
+ *    - *Geometric*: r-dependent floors ~ρ_min r^{-2}/(1 + r/R_char).
+ *    - *Magnetic*: bsq/BSQORHOMAX and bsq/BSQOUMAX (prevent excessive
+ *       magnetisation / inverse-beta).
+ *    - *Temperature*: U/UORHOMAX (prevent unphysically cold dense gas).
+ *    Mass/energy is injected as a zero-velocity fluid parcel at rest in the
+ *    normal-observer frame; the injection is conservative (U_new = U_old + dU).
+ *
+ * 3. **Bad-zone interpolation** (fixup_utoprim()): Zones marked failed by the
+ *    U_to_P inversion are repaired by a distance-weighted average of their
+ *    8-nearest-neighbor good zones.
+ *
+ * @note Floor codes are recorded in the per-zone bit-flag fflag[j][i] and
+ * written to dump files for diagnostic purposes.
+ */
+
 /*---------------------------------------------------------------------------------
 
   FIXUP.C
@@ -8,7 +36,7 @@
   -Apply ceiling to total fluid entropy (only if ELECTRONS enabled)
   -Apply ceiling to sigma and plasma beta inverse
   -Apply temperature ceiling
-  -Replace inversion failure grid zones with values interpolated from 
+  -Replace inversion failure grid zones with values interpolated from
    neighbouring zones
 
 ---------------------------------------------------------------------------------*/
@@ -32,6 +60,20 @@ static struct FluidState *Stmp;
 void fixup_ceiling(struct GridGeom *G, struct FluidState *S, int i, int j);
 void fixup_floor(struct GridGeom *G, struct FluidState *S, int i, int j);
 
+/**
+ * @brief Apply floors and ceilings to all active zones.
+ *
+ * @details Orchestrates the per-zone ceiling and floor passes over the full
+ * active grid (ZLOOP).  Specifically:
+ * 1. Clears fflag for all zones.
+ * 2. Calls fixup_ceiling() for every active zone.
+ * 3. Calls get_state_vec() to precompute 4-vectors needed by bsq_calc().
+ * 4. Calls fixup_floor() for every active zone.
+ * In DEBUG mode, reports floor hit counts per category.
+ *
+ * @param G  Grid geometry.
+ * @param S  Fluid state (P[] and U[] modified in-place).
+ */
 // Apply floors to density, internal energy
 void fixup(struct GridGeom *G, struct FluidState *S)
 {
@@ -89,6 +131,21 @@ void fixup(struct GridGeom *G, struct FluidState *S)
   timer_stop(TIMER_FIXUP);
 }
 
+/**
+ * @brief Apply Lorentz-factor ceiling and (optionally) entropy ceiling to a single zone.
+ *
+ * @details Enforces:
+ * - Gamma ceiling: if γ > GAMMAMAX, the 3-velocity components are rescaled by
+ *   f = sqrt((GAMMAMAX²-1)/(γ²-1)) so the new γ equals GAMMAMAX.
+ * - KTOT ceiling (ELECTRONS only): if the total entropy K_tot > KTOTMAX, U is
+ *   reduced to the isentropic value corresponding to KTOTMAX.
+ * The floor flag bit HIT_FLOOR_GAMMA or HIT_FLOOR_KTOT is set in fflag[j][i].
+ *
+ * @param G  Grid geometry.
+ * @param S  Fluid state (P[] is read and possibly modified).
+ * @param i  X1 zone index.
+ * @param j  X2 zone index.
+ */
 // Limit the lorentz factor, fluid enetropy (applicable when electron heating is enabled)
 inline void fixup_ceiling(struct GridGeom *G, struct FluidState *S, int i, int j)
 {
@@ -118,6 +175,26 @@ inline void fixup_ceiling(struct GridGeom *G, struct FluidState *S, int i, int j
 #endif
 }
 
+/**
+ * @brief Apply density and internal energy floors at a single zone.
+ *
+ * @details Computes the tightest applicable floor from three sources and, if
+ * either ρ or u falls below it, injects a zero-velocity "virtual parcel" of
+ * mass/energy conservatively by computing its contribution to U via
+ * prim_to_flux() and adding it to the current state before re-inverting with
+ * U_to_P().  The floor sources are (highest wins per variable):
+ *
+ * - **Geometric** (MKS only): ρ_floor = RHOMIN * r^{-2}/(1 + r/FLOOR_R_CHAR);
+ *   u_floor = UUMIN * ρscale^γ.  Both are clamped above RHOMINLIMIT/UUMINLIMIT.
+ * - **Geometric** (MINKOWSKI): ρ_floor = RHOMIN*1e-2; u_floor = UUMIN*1e-2.
+ * - **Magnetic** (both): ρ_floor = b²/BSQORHOMAX; u_floor = b²/BSQOUMAX.
+ * - **Temperature**: ρ_floor = max(U, u_floor_max) / UORHOMAX.
+ *
+ * @param G  Grid geometry.
+ * @param S  Fluid state (P[], U[] are read and modified if floors are applied).
+ * @param i  X1 zone index.
+ * @param j  X2 zone index.
+ */
 // Floor rest-mass density and internal energy density
 inline void fixup_floor(struct GridGeom *G, struct FluidState *S, int i, int j)
 {
@@ -212,6 +289,27 @@ inline void fixup_floor(struct GridGeom *G, struct FluidState *S, int i, int j)
 
 }
 
+/**
+ * @brief Replace U_to_P inversion failures via weighted interpolation from neighbors.
+ *
+ * @details After a time step, zones where U_to_P failed and set pflag != 0
+ * are repaired:
+ * 1. pflag is inverted (1 = good, 0 = bad) for the duration of the repair.
+ * 2. Physical corner ghost zones (4 corners) are hardcoded bad to prevent
+ *    propagation of edge artifacts.
+ * 3. Each bad zone receives a distance-weighted average of the (hydro) primitive
+ *    variables from its 8-connected good neighbors, weighting a zone at
+ *    Manhattan distance d by 1/(d+1)*good_flag[d].
+ * 4. The repaired zone is then re-passed through fixup_ceiling() and
+ *    fixup_floor() to ensure it satisfies all clamps.
+ * 5. pflag is reset to zero.
+ *
+ * @note Only hydro primitives (indices 0..B1-1) are interpolated; B-field
+ * primitives are not modified (magnetic topology should be maintained by CT).
+ *
+ * @param G  Grid geometry.
+ * @param S  Fluid state (P[] is repaired in-place; pflag[j][i] is reset).
+ */
 // Replace bad points with values interpolated from neighbors
 #define FLOOP for(int ip=0;ip<B1;ip++)
 void fixup_utoprim(struct GridGeom *G, struct FluidState *S)

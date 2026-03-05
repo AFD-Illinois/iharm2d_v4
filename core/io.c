@@ -1,3 +1,26 @@
+/**
+ * @file io.c
+ * @brief ASCII dump and grid file output.
+ *
+ * @details Provides three output functions:
+ *
+ * - **dump()**: Writes a regular time-step dump to `dumps/dump_NNNNNNNN`.
+ * - **dump_backend()**: The actual writer; also called with type=IO_ABORT to
+ *   produce an emergency snapshot at `dumps/dump_abort`.  Output includes:
+ *   a header with all compile-time and runtime parameters, then one line per
+ *   active zone containing: all NVAR primitives, the 4-current j^μ, Lorentz
+ *   factor γ, div-B, the U_to_P failure code, and the floor flag.
+ * - **dump_grid()**: Writes a one-time `dumps/grid` file containing, per zone,
+ *   Cartesian and spherical coordinates, gdet, lapse, and the full g_μν / g^μν
+ *   tensors at zone centres.  Called only on the first dump (dump_cnt == 0).
+ *
+ * All output is plain-text ASCII.  Floating-point values use 28-character
+ * scientific notation (%28.18e); integers use 10-character fields (%10d).
+ *
+ * @note The output loop uses ZLOOP_OUT (j inner, i outer – matches Python reader
+ * conventions where data is read with shape [N2, N1]).
+ */
+
 /*---------------------------------------------------------------------------------
 
   IO.C
@@ -17,12 +40,38 @@
 #define FML_INT_OUT "%10d"
 #define STRING_OUT "%15s"
 
+/**
+ * @brief Write a regular time-step dump file.
+ *
+ * @details Thin wrapper that calls dump_backend() with type=IO_REGULAR,
+ * writing to `dumps/dump_NNNNNNNN` where NNNNNNNN = dump_cnt.
+ *
+ * @param G  Grid geometry (needed for gdet and metric quantities written per zone).
+ * @param S  Fluid state (primitive variables, 4-current written to file).
+ */
 // Write REGULAR dump file by calling dump_write_backend with type=IO_REGULAR
 void dump(struct GridGeom *G, struct FluidState *S)
 {
   dump_backend(G, S, IO_REGULAR);
 }
 
+/**
+ * @brief Core dump writer: writes a complete snapshot to a named file.
+ *
+ * @details Produces a structured ASCII file containing:
+ * 1. **Header**: VERSION string, grid size (N1×N2), metric name, reconstruction
+ *    scheme, number of primitives, equation-of-state parameters, coordinate
+ *    parameters (Rin, Rout, a, hslope for MKS; x{1,2}{Min,Max} for MINKOWSKI),
+ *    and the elapsed simulation time / step counter.
+ * 2. **Zone data** (one line per active zone in ZLOOP_OUT order):
+ *    NVAR primitives P[], NDIM 4-current components j^μ, Lorentz factor γ,
+ *    divergence-B measure, U_to_P failure code, and fixup floor flag.
+ * Dumps the grid file on the very first call (dump_cnt == 0).
+ *
+ * @param G     Grid geometry.
+ * @param S     Fluid state.
+ * @param type  IO_REGULAR to write an indexed dump; IO_ABORT to write dump_abort.
+ */
 // The function that actually writes the dump file
 void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
 {
@@ -186,6 +235,22 @@ void dump_backend(struct GridGeom *G, struct FluidState *S, int type)
   timer_stop(TIMER_IO);
 }
 
+/**
+ * @brief Write a one-time grid metadata file to `dumps/grid`.
+ *
+ * @details For every active zone writes, in ZLOOP_OUT order:
+ *   - For MKS: Cartesian (R sin θ, R cos θ), cylindrical radius r, polar angle θ.
+ *   - For MINKOWSKI: x1, x2 code coordinates.
+ *   - Code coordinates X1, X2.
+ *   - gdet = sqrt(-g) at zone centre.
+ *   - Lapse function α at zone centre.
+ *   - All 16 elements of g^μν and g_μν at zone centre.
+ *
+ * This file is read by post-processing scripts (e.g., `analysis/` Python tools)
+ * to reconstruct physical coordinates and geometric weights.
+ *
+ * @param G  Grid geometry (gcov, gcon, gdet, lapse at CENT are read).
+ */
 #define NGRIDVARS 6
 // The function that actually writes the grid file
 void dump_grid(struct GridGeom *G)

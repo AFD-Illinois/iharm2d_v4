@@ -1,3 +1,18 @@
+/**
+ * @file u_to_p.c
+ * @brief Conservative-to-primitive variable inversion for ideal GRMHD.
+ *
+ * @details Implements the Mignone & McKinney (2007, MNRAS 378, 1118) scheme
+ * for recovering primitive variables @f$(\rho, u, v^i)@f$ from conserved
+ * variables @f$(D, \tau, S_i, B^i)@f$.
+ *
+ * The algorithm solves for the scalar @f$W' = (w+b^2)/D@f$ using a secant iteration.
+ * Tolerance is set by ERRTOL = 1e-8; maximum iterations by ITERMAX = 8.
+ *
+ * On success returns 0; on failure records the error code in pflag[j][i]
+ * and returns nonzero.  Failure zones are later repaired by fixup_utoprim().
+ */
+
 /*---------------------------------------------------------------------------------
 
   UTOP.C
@@ -18,7 +33,20 @@ double err_eqn(double Bsq, double D, double Ep, double QdB, double Qtsq, double 
 double gamma_func(double Bsq, double D, double QdB, double Qtsq, double Wp, int *eflag);
 double Wp_func(struct GridGeom *G, struct FluidState *S, int i, int j, int loc, int *eflag);
 
-// Invert conserved variables to primitives. Returns error code
+/**
+ * @brief Invert conserved variables to primitive variables at zone (i, j).
+ *
+ * @details Reads S->U[var][j][i] (already populated by the flux update),
+ * solves for W' using Wp_func() and back-substitutes to fill S->P[var][j][i].
+ * The magnetic field is recovered directly from the conserved B^i without iteration.
+ *
+ * @param G    Grid geometry.
+ * @param S    Fluid state; U[] is read, P[] is written.
+ * @param i    X1 zone index.
+ * @param j    X2 zone index.
+ * @param loc  Grid centering location (always CENT during time integration).
+ * @return     0 on success; nonzero error code (stored in pflag[j][i]) on failure.
+ */
 int U_to_P(struct GridGeom *G, struct FluidState *S, int i, int j, int loc)
 {
 

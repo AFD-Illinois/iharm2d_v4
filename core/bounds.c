@@ -1,3 +1,33 @@
+/**
+ * @file bounds.c
+ * @brief Physical boundary conditions for the fluid primitives and fluxes.
+ *
+ * @details Implements set_bounds() which fills ghost zone primitive variables
+ * using one of four strategies per boundary (configured in parameters.h):
+ *
+ * - **OUTFLOW**: Copy the outermost active zone into all ghost zones. For MKS,
+ *   rescale the magnetic field by the ratio of sqrt(-g) values to approximately
+ *   conserve magnetic flux.
+ * - **PERIODIC**: Map ghost zones to the corresponding real zone on the other side.
+ * - **POLAR** (X2 only): Reflect the fluid state across the axis.  U2 and B2
+ *   change sign because they are the θ-direction components of their fields:
+ *   the θ-direction reverses under the reflection θ → −θ, so these components
+ *   are odd functions of θ (they vanish at the axis).  The r- and φ-components
+ *   (U1, U3, B1, B3) are even in θ and do not change sign.
+ * - **USER** (X1R only): Delegate to the problem-specific function bound_gas_prob_x1r().
+ *
+ * For MKS the radial boundaries additionally enforce:
+ * - **Inflow check** (inflow_check()): If X1L_INFLOW=0 (X1R_INFLOW=0),
+ *   the ghost-zone velocity is adjusted so that u^r = 0 when the fluid would flow
+ *   inward (outward) through the inner (outer) boundary.
+ * - **Flux fix** (fix_flux()): Called by advance_fluid() before the conservative
+ *   update. Zeros the X2 fluxes at the poles, reflects B2 flux across them,
+ *   and clips the mass flux to enforce the inflow/outflow condition.
+ *
+ * @note set_bounds() is called after every U_to_P() inversion and after fixup()
+ * during both the predictor and corrector substeps.
+ */
+
 /*---------------------------------------------------------------------------------
 
   BOUNDS.C
@@ -35,6 +65,18 @@
 void inflow_check(struct GridGeom *G, struct FluidState *S, int i, int j, int type);
 
 // Apply boundary conditions along X1 and X2
+/**
+ * @brief Apply all configured boundary conditions to the primitive variable array.
+ *
+ * @details Fills ghost zones on all four boundaries of the 2D grid in order:
+ * X1 left, X1 right, X2 left, X2 right.  For each boundary, the behavior is
+ * determined by the compile-time flags X1L_BOUND, X1R_BOUND, X2L_BOUND, X2R_BOUND.
+ * An optional inflow-check pass (MKS only) ensures no fluid enters through radial
+ * boundaries if X1L_INFLOW or X1R_INFLOW is set to 0.
+ *
+ * @param G  Grid geometry.
+ * @param S  Fluid state (P[] is read and ghost zones are written).
+ */
 void set_bounds(struct GridGeom *G, struct FluidState *S)
 {
   timer_start(TIMER_BOUND);
@@ -181,8 +223,25 @@ void set_bounds(struct GridGeom *G, struct FluidState *S)
 }
 
 #if METRIC == MKS
-// Ensure there is no inflow at radial boundaries
-// Reset the radial velocity primitives so that ucon[1] is zero at the boundary
+/**
+ * @brief Enforce a no-inflow (or no-outflow) condition on a single ghost zone.
+ *
+ * @details If the radial 4-velocity u^r points the wrong way for the given
+ * boundary type, resets U1 so that u^r = 0 (the fluid is at rest in the
+ * normal-observer frame radially):
+ *  - type == 0 (inner boundary): Zero u^r when fluid would flow inward (u^r > 0).
+ *  - type == 1 (outer boundary): Zero u^r when fluid would flow outward (u^r < 0).
+ *
+ * The algorithm strips gamma from the 3-velocities, sets U1 = beta^r/alpha
+ * (the value that makes u^r = 0), then re-applies the new Lorentz factor to
+ * keep the primitive velocities normalised.
+ *
+ * @param G     Grid geometry.
+ * @param S     Fluid state (P[U1-U3] is read and possibly modified).
+ * @param i     X1 zone index (ghost zone).
+ * @param j     X2 zone index.
+ * @param type  0 = inner (X1 left) boundary; 1 = outer (X1 right) boundary.
+ */
 void inflow_check(struct GridGeom *G, struct FluidState *S, int i, int j, int type)
 {
   double alpha, beta1, vsq;
@@ -222,10 +281,25 @@ void inflow_check(struct GridGeom *G, struct FluidState *S, int i, int j, int ty
   }
 }
 
-// Fix flux at the X1 and X2 boundaries
-// Set particle number flux along X1 at radial boundaries to zero if inflow is not permitted
-// Set flux of all primitives at poles along X2 to zero since there is no surface there in spherical KS coordinates
-// Reflect B2 flux (along X1) about the poles (for 1 zone)
+/**
+ * @brief Apply flux corrections at radial and polar boundaries before the conservative update.
+ *
+ * @details Called by advance_fluid() before the divergence-form conservative update.
+ * Performs three independent fixups:
+ *
+ * 1. **Inflow clip at inner boundary** (if X1L_INFLOW == 0):
+ *    F^{X1}_{RHO}[j][NG] = min(F, 0) — ensures mass can only flow outward through the inner face.
+ *
+ * 2. **Outflow clip at outer boundary** (if X1R_INFLOW == 0):
+ *    F^{X1}_{RHO}[j][N1+NG] = max(F, 0) — ensures mass can only flow inward through the outer face.
+ *
+ * 3. **Polar axis:**
+ *    - All X2 fluxes at both poles are zeroed (no transport perpendicular to the pole in spherical KS).
+ *    - The X1 flux of B2 is anti-reflected across the poles (one ghost zone) to maintain the
+ *      field topology expected by constrained transport.
+ *
+ * @param F  Fluid flux struct; X1[] and X2[] arrays are modified in-place.
+ */
 void fix_flux(struct FluidFlux *F)
 {
   if (X1L_INFLOW == 0)

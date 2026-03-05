@@ -1,19 +1,43 @@
-/*---------------------------------------------------------------------------------
-
-  DIAG.C
-
-  -Diagnostic output. Also used for writing dumps
-  -Computes mass, magnetic, angular momentum and energy flux at first physical
-   zone and at EH
-  -Computes total mass, angular momentum and energy
-  -Computes divB
-  -Computes pseudo-emissivity for thermal synchrotron radiation and luminosity
-  -Write out diagnostics to dumps/log.out
-
----------------------------------------------------------------------------------*/
+/**
+ * @file diag.c
+ * @brief Simulation diagnostics: accretion rates, energy integrals, div-B, and log output.
+ *
+ * @details Provides two public diagnostic functions and one helper:
+ *
+ * - **diag_flux()**: Accumulates the mass accretion rate (mdot), energy flux
+ *   (edot), and angular-momentum flux (ldot) through the innermost active
+ *   radial face (i=NG) and through i=NG+5 (event horizon proxy) by summing
+ *   the X1 fluxes over all j zones.
+ *
+ * - **diag()**: Called at initialisation (DIAG_INIT), each log step
+ *   (DIAG_LOG), dump steps (DIAG_DUMP), abort (DIAG_ABORT), and end-of-run
+ *   (DIAG_FINAL).  Computes grid-integrated conserved mass, angular momentum,
+ *   internal energy, mass-weighted radius, magnetic flux Φ at r=5, and the
+ *   EHT (2019) synchrotron proxy luminosity.  Writes a row of diagnostics
+ *   to `dumps/log.out` and (at appropriate call codes) triggers dump() or
+ *   dump_backend().
+ *
+ * - **flux_ct_divb()**: Returns the cell-centred estimate of |∇·B| using the
+ *   standard Constrained-Transport stencil (four-zone difference).
+ *
+ * @note All reduction loops are OpenMP-parallelised with appropriate reduction
+ * clauses.
+ */
 
 #include "decs.h"
 
+/**
+ * @brief Compute flux-based accretion diagnostics at the inner boundary and EH proxy.
+ *
+ * @details Integrates the X1 fluxes of RHO, UU (minus RHO), and U3 over all
+ * j zones at:
+ * - The innermost active face (i = NG): sets mdot, edot, ldot.
+ * - The proxy event-horizon face (i = NG+5): sets mdot_eh, edot_eh, ldot_eh.
+ * Each flux is multiplied by dx[2] to convert to a line integral.
+ * The results are stored in the corresponding global variables.
+ *
+ * @param F  Fluid flux struct; X1 face fluxes are read (not modified).
+ */
 // Evaluate flux based diagnostics; put results in global variables
 void diag_flux(struct FluidFlux *F)
 {
@@ -34,6 +58,28 @@ void diag_flux(struct FluidFlux *F)
     }
 }
 
+/**
+ * @brief Main diagnostic routine: compute integrals, write log, trigger dumps.
+ *
+ * @details Behaviour depends on call_code:
+ * - **DIAG_INIT**: Opens `dumps/log.out`, performs initial integrals, writes
+ *   first log row, and calls dump() (unless restarting).
+ * - **DIAG_LOG**: Recomputes integrals and writes a row to the log file.
+ * - **DIAG_DUMP**: Calls dump() and increments dump_cnt.
+ * - **DIAG_ABORT**: Calls dump_backend() with IO_ABORT.
+ * - **DIAG_FINAL**: Computes integrals, writes final log row, and calls dump().
+ *
+ * Computed quantities (for LOG and FINAL call codes):
+ *   - Grid-integrated conserved RHO (rmed), U3 (pp), UU (e).
+ *   - Max |div B| across all active zones (via flux_ct_divb()).
+ *   - Total mass (mass) and gas energy (egas).
+ *   - Magnetic flux Φ = 0.5 * ∫|B1| gdet dx2 at i = NG+5 (EH proxy).
+ *   - EHT 2019 synchrotron luminosity proxy j_eht.
+ *
+ * @param G          Grid geometry.
+ * @param S          Fluid state.
+ * @param call_code  One of DIAG_INIT, DIAG_LOG, DIAG_DUMP, DIAG_ABORT, DIAG_FINAL.
+ */
 // Additional diagnostics: divB, conserved quantities: rho*u^t, T^_t, T^t_k,
 // jet luminosity (see EHT CC'19), total integrated conserved mass and conserved energy
 // Calls dump_backend to write out dump
@@ -133,6 +179,27 @@ void diag(struct GridGeom *G, struct FluidState *S, int call_code)
   }
 }
 
+/**
+ * @brief Compute the cell-centred constrained-transport estimate of |div B| at zone (i, j).
+ *
+ * @details Uses the standard four-zone stencil for the CT magnetic flux divergence:
+ * @f[
+ *   (\nabla \cdot B)_{ij} = \frac{1}{2\Delta X^1}
+ *     \left[ B^1_{ij}\,g_{ij} + B^1_{i,j-1}\,g_{i,j-1}
+ *          - B^1_{i-1,j}\,g_{i-1,j} - B^1_{i-1,j-1}\,g_{i-1,j-1} \right]
+ *   + \frac{1}{2\Delta X^2}
+ *     \left[ B^2_{ij}\,g_{ij} + B^2_{i-1,j}\,g_{i-1,j}
+ *          - B^2_{i,j-1}\,g_{i,j-1} - B^2_{i-1,j-1}\,g_{i-1,j-1} \right]
+ * @f]
+ * where @f$g = \sqrt{-g}@f$ (gdet).  In Constrained Transport, this measure should
+ * remain at machine precision if the induction equation is evolved exactly.
+ *
+ * @param G  Grid geometry (gdet at CENT is read at four neighbouring zones).
+ * @param S  Fluid state (P[B1] and P[B2] are read at the same four zones).
+ * @param i  X1 zone index (must satisfy i > NG).
+ * @param j  X2 zone index (must satisfy j > NG).
+ * @return   |∇·B| at zone (i, j).
+ */
 // Calculate divB
 double flux_ct_divb(struct GridGeom *G, struct FluidState *S, int i, int j)
 {

@@ -1,3 +1,34 @@
+/**
+ * @file phys.c
+ * @brief GRMHD physics: stress-energy tensor, primitive-to-flux transforms, wave speeds, and source terms.
+ *
+ * @details This is the core physics module.  It implements the ideal GRMHD equations
+ * in the 3+1 (ADM) split with a gamma-law equation of state P = (gamma-1)*u.
+ *
+ * **Key quantities:**
+ * - Total enthalpy: @f$w = \rho + u + P + b^2 = \rho + u + (\gamma-1)u + b^2@f$
+ * - Total pressure: @f$P_\text{tot} = P + b^2/2@f$
+ * - Stress-energy tensor:
+ *   @f[ T^\mu{}_\nu = w\, u^\mu u_\nu + P_\text{tot}\, \delta^\mu_\nu - b^\mu b_\nu @f]
+ * - Conserved variables (all multiplied by @f$\sqrt{-g}@f$):
+ *   - @f$D = \rho u^t \sqrt{-g}@f$
+ *   - @f$\tau = -(T^t{}_t + D)@f$
+ *   - @f$S_i = T^t{}_i \sqrt{-g}@f$
+ *   - @f$B^i = B^i \sqrt{-g}@f$ (directly advected)
+ * - Geometric source term: @f$\delta_T = T^\mu{}_\nu \Gamma^\nu_{\mu\lambda} \sqrt{-g}@f$
+ *
+ * **Magnetic 4-vector:**
+ * @f[
+ *   b^0 = B^i u_i / u^0, \quad b^i = (B^i + b^0 u^i) / u^0
+ * @f]
+ *
+ * **Wave speeds:** The fast magnetosonic speed is computed from the combined
+ * Alfvén+sound speed formula of Gammie, McKinney & Toth (2003).
+ *
+ * **Optional wind term:** When WIND_TERM=1, a small mass/energy injection is added
+ * near the polar axis to prevent floors from repeatedly activating there.
+ */
+
 /*---------------------------------------------------------------------------------
 
   PHYS.C
@@ -14,7 +45,22 @@
 
 #include "decs.h"
 
-// MHD stress-energy tensor with first index up, second index down. A factor of sqrt(4 pi) is absorbed into the definition of b.
+// MHD stress-energy tensor with first index up, second index down.
+// A factor of sqrt(4 pi) is absorbed into the definition of b.
+/**
+ * @brief Compute one row of the MHD stress-energy tensor T^dir_mu at zone (i,j).
+ *
+ * @details Evaluates
+ * @f[ T^{\text{dir}}{}_\mu = w\, u^{\text{dir}} u_\mu + P_\text{tot}\,\delta^{\text{dir}}_\mu - b^{\text{dir}} b_\mu @f]
+ * where @f$w = \rho + u + P + b^2@f$ and @f$P_\text{tot} = P + b^2/2@f$.
+ * The 4-vectors ucon, ucov, bcon, bcov must already be populated in S (via get_state()).
+ *
+ * @param S    Fluid state with precomputed 4-vectors.
+ * @param i    X1 zone index.
+ * @param j    X2 zone index.
+ * @param dir  Direction of the first (raised) index.
+ * @param[out] mhd  Output array of length NDIM storing @f$T^{\text{dir}}{}_\mu@f$.
+ */
 inline void mhd_calc(struct FluidState *S, int i, int j, int dir, double *mhd)
 {
   double u, pres, w, bsq, eta, ptot;
@@ -30,7 +76,22 @@ inline void mhd_calc(struct FluidState *S, int i, int j, int dir, double *mhd)
     mhd[mu] = eta*S->ucon[dir][j][i]*S->ucov[mu][j][i] + ptot*delta(dir, mu) - S->bcon[dir][j][i]*S->bcov[mu][j][i];
 }
 
-// Convert primitives to corresponding fluxes
+/**
+ * @brief Compute all primitive-to-flux contributions at a single zone (i, j).
+ *
+ * @details Fills flux[var][j][i] with the @c dir-direction flux of each variable,
+ * multiplied by sqrt(-g) = G->gdet[loc][j][i].  For dir=0 this gives the conserved
+ * variable vector U.  Electron entropy variables (if enabled) are advected passively
+ * as specific quantities (KEL * rho * u^dir).
+ *
+ * @param G    Grid geometry.
+ * @param S    Fluid state with precomputed ucon, ucov, bcon, bcov.
+ * @param i    X1 zone index.
+ * @param j    X2 zone index.
+ * @param dir  Flux direction (0 = conserved, 1 = X1, 2 = X2).
+ * @param loc  Grid centering location.
+ * @param flux Output flux array (GridPrim).
+ */
 void prim_to_flux(struct GridGeom *G, struct FluidState *S, int i, int j, int dir, int loc, GridPrim flux)
 {
   double mhd[NDIM];
@@ -58,7 +119,22 @@ void prim_to_flux(struct GridGeom *G, struct FluidState *S, int i, int j, int di
   PLOOP flux[ip][j][i] *= G->gdet[loc][j][i];
 }
 
-// Convert primitives to corresponding fluxes
+/**
+ * @brief OpenMP-parallelized prim_to_flux() over a rectangular zone range.
+ *
+ * @details Equivalent to calling prim_to_flux() for every zone in the range
+ * [jstart,jstop] x [istart,istop] but parallelized with collapsed OpenMP loops.
+ *
+ * @param G      Grid geometry.
+ * @param S      Fluid state with precomputed 4-vectors.
+ * @param dir    Flux direction (0 = conserved, 1 = X1, 2 = X2).
+ * @param loc    Grid centering location.
+ * @param jstart First j index (active-zone relative, i.e., 0 = first active zone).
+ * @param jstop  Last j index (inclusive).
+ * @param istart First i index.
+ * @param istop  Last i index (inclusive).
+ * @param flux   Output flux array.
+ */
 void prim_to_flux_vec(struct GridGeom *G, struct FluidState *S, int dir, int loc, int jstart, int jstop, int istart, int istop, GridPrim flux)
 {
 #pragma omp parallel
@@ -100,7 +176,19 @@ void prim_to_flux_vec(struct GridGeom *G, struct FluidState *S, int dir, int loc
 }
 }
 
-// Calculate magnetic field four-vector
+/**
+ * @brief Compute the contravariant magnetic 4-vector b^mu from primitive B fields.
+ *
+ * @details Uses the ideal MHD relation and the already-computed 4-velocity u^mu:
+ * @f[
+ *   b^0 = B^i u_i / u^0, \quad b^k = (B^k + b^0 u^k) / u^0
+ * @f]
+ * The 4-velocity ucov must already be set in S.
+ *
+ * @param S  Fluid state (reads P[B1-B3], ucon, ucov; writes bcon).
+ * @param i  X1 zone index.
+ * @param j  X2 zone index.
+ */
 inline void bcon_calc(struct FluidState *S, int i, int j)
 {
   S->bcon[0][j][i] = S->P[B1][j][i]*S->ucov[1][j][i] + S->P[B2][j][i]*S->ucov[2][j][i] + S->P[B3][j][i]*S->ucov[3][j][i];
@@ -108,7 +196,20 @@ inline void bcon_calc(struct FluidState *S, int i, int j)
     S->bcon[mu][j][i] = (S->P[B1-1+mu][j][i] + S->bcon[0][j][i]*S->ucon[mu][j][i])/S->ucon[0][j][i];
 }
 
-// Find gamma-factor wrt normal observer
+/**
+ * @brief Compute the Lorentz factor gamma with respect to the normal observer.
+ *
+ * @details Evaluates @f$\gamma = \sqrt{1 + q^2}@f$ where
+ * @f$q^2 = g_{ij} v^i v^j@f$ (spatial metric contracted with 3-velocity).
+ * If @f$q^2 < 0@f$ due to numerical error, applies a floor of 1e-10 in DEBUG mode.
+ *
+ * @param G   Grid geometry.
+ * @param S   Fluid state (reads P[U1-U3]).
+ * @param i   X1 zone index.
+ * @param j   X2 zone index.
+ * @param loc Grid centering location.
+ * @return    Lorentz factor gamma >= 1.
+ */
 inline double mhd_gamma_calc(struct GridGeom *G, struct FluidState *S, int i, int j, int loc)
 {
   double qsq = G->gcov[loc][1][1][j][i]*S->P[U1][j][i]*S->P[U1][j][i]
@@ -135,7 +236,22 @@ inline double mhd_gamma_calc(struct GridGeom *G, struct FluidState *S, int i, in
   return sqrt(1. + qsq);
 }
 
-// Find contravariant four-velocity
+/**
+ * @brief Compute the contravariant 4-velocity u^mu from primitive velocities.
+ *
+ * @details The primitive velocities U^i = v^i are the 3-velocity components
+ * in the coordinate frame (= gamma * u^i - gamma * alpha * g^0i).
+ * This function recovers the full u^mu using:
+ * @f[
+ *   u^0 = \gamma / \alpha, \quad u^i = V^i - \gamma \alpha g^{0i}
+ * @f]
+ *
+ * @param G   Grid geometry.
+ * @param S   Fluid state (reads P[U1-U3]; writes ucon).
+ * @param i   X1 zone index.
+ * @param j   X2 zone index.
+ * @param loc Grid centering location.
+ */
 inline void ucon_calc(struct GridGeom *G, struct FluidState *S, int i, int j, int loc)
 {
   double gamma = mhd_gamma_calc(G, S, i, j, loc);
@@ -156,6 +272,17 @@ inline void get_state(struct GridGeom *G, struct FluidState *S, int i, int j, in
 
 // Calculate ucon, ucov, bcon, bcov from primitive variables, over given range
 // Note same range convention as ZSLOOP and other *_vec functions
+/**
+ * @brief OpenMP-parallelized get_state() over a rectangular zone range.
+ *
+ * @param G      Grid geometry.
+ * @param S      Fluid state.
+ * @param loc    Grid centering location.
+ * @param jstart First j index (active-zone relative).
+ * @param jstop  Last j index (inclusive).
+ * @param istart First i index.
+ * @param istop  Last i index (inclusive).
+ */
 void get_state_vec(struct GridGeom *G, struct FluidState *S, int loc, int jstart, int jstop, int istart, int istop)
 {
 #pragma omp parallel
@@ -178,7 +305,26 @@ void get_state_vec(struct GridGeom *G, struct FluidState *S, int loc, int jstart
   }
 }
 
-// Calculate components of magnetosonic velocity from primitive variables
+/**
+ * @brief Compute the fast magnetosonic wave speeds at zone (i, j) in direction dir.
+ *
+ * @details Follows Gammie, McKinney & Toth (2003, ApJ 589, 444), Section 4.
+ * The combined fast magnetosonic + Alfvén speed squared is:
+ * @f[ c_\text{ms}^2 = c_s^2 + v_A^2 - c_s^2 v_A^2 @f]
+ * where @f$c_s^2 = \gamma(\gamma-1)u / (\rho + \gamma u)@f$ and
+ * @f$v_A^2 = b^2 / (\rho + u + P + b^2)@f$.
+ * The wave speeds are then roots of a quadratic in the observer frame.
+ * If the discriminant is negative (numerical artifact) it is clamped to zero.
+ *
+ * @param G    Grid geometry.
+ * @param S    Fluid state with precomputed 4-vectors.
+ * @param i    X1 zone index.
+ * @param j    X2 zone index.
+ * @param loc  Grid centering location.
+ * @param dir  Wave propagation direction (1 = X1, 2 = X2).
+ * @param[out] cmax  Grid array; receives the forward (max) wave speed at [j][i].
+ * @param[out] cmin  Grid array; receives the reverse (min) wave speed at [j][i].
+ */
 inline void mhd_vchar(struct GridGeom *G, struct FluidState *S, int i, int j, int loc, int dir, GridDouble cmax, GridDouble cmin)
 {
   double discr, vp, vm, bsq, ee, ef, va2, cs2, cms2, rho, u;
@@ -248,7 +394,20 @@ inline void mhd_vchar(struct GridGeom *G, struct FluidState *S, int i, int j, in
   cmin[j][i] = (vp > vm) ? vm : vp;
 }
 
-// Source terms for equations of motion
+/**
+ * @brief Compute the geometric source terms for the GRMHD equations.
+ *
+ * @details The source terms arise from the Christoffel connection coefficients
+ * in curved spacetime.  For the energy-momentum equations:
+ * @f[ \delta U^\nu = T^\mu{}_\lambda \Gamma^\lambda_{\mu\nu} \sqrt{-g} \, \Delta V @f]
+ * The baryon number equation has no source.  Magnetic field equations are also sourceless.
+ * If WIND_TERM is enabled, an additional mass/energy injection rate is added near
+ * the coordinate axis to stabilize the funnel region.
+ *
+ * @param G    Grid geometry (provides Christoffel symbols and gdet).
+ * @param S    Fluid state with precomputed 4-vectors.
+ * @param dU   Output source term array (GridPrim pointer); accumulated in-place by advance_fluid().
+ */
 inline void get_fluid_source(struct GridGeom *G, struct FluidState *S, GridPrim *dU)
 {
 #if WIND_TERM
@@ -308,7 +467,18 @@ inline void get_fluid_source(struct GridGeom *G, struct FluidState *S, GridPrim 
 #endif
 }
 
-// Returns b.b (twice magnetic pressure)
+/**
+ * @brief Compute @f$b^\mu b_\mu@f$ (twice the magnetic pressure) at zone (i, j).
+ *
+ * @details Sums @f$b^\mu b_\mu = b^0 b_0 + b^1 b_1 + b^2 b_2 + b^3 b_3@f$.
+ * The 4-vectors bcon and bcov must already be set in S (via get_state()).
+ * Returns max(bsq, SMALL) to prevent division by zero in floor calculations.
+ *
+ * @param S  Fluid state with precomputed bcon, bcov.
+ * @param i  X1 zone index.
+ * @param j  X2 zone index.
+ * @return   @f$b^\mu b_\mu \ge \text{SMALL}@f$.
+ */
 inline double bsq_calc(struct FluidState *S, int i, int j)
 {
   double bsq = 0.;

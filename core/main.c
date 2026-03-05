@@ -1,7 +1,32 @@
+/**
+ * @file main.c
+ * @brief Program entry point and top-level simulation driver.
+ *
+ * @details The main() function orchestrates the entire simulation lifecycle:
+ *
+ * 1. **Argument parsing** – accepts @c -p /path/to/param.dat and @c -o /path/to/output/dir.
+ * 2. **Parameter initialization** – calls set_core_params() and set_problem_params() to
+ *    register all parameters, then read_params() to load values from the ASCII param.dat file.
+ * 3. **Directory setup** – changes to the output directory and creates @c dumps/ and
+ *    @c restarts/ subdirectories.
+ * 4. **Thread count** – queries OpenMP for the number of active threads.
+ * 5. **Memory allocation** – heap-allocates the GridGeom and FluidState structs (both are
+ *    too large for the stack at typical production resolutions).
+ * 6. **Initialization or restart** – calls restart_init(); if no restart file is found,
+ *    calls the problem-specific init().
+ * 7. **Main time loop** – advances the simulation step-by-step:
+ *    - Checks for an 'abort' sentinel file (allows graceful termination).
+ *    - Calls step() to advance by one timestep.
+ *    - Triggers dump, log, restart, and performance-report output based on cadence flags.
+ * 8. **Final dump** – writes the terminal fluid state if the loop ended without a step-aligned dump.
+ *
+ * @note The code has no MPI parallelism; all parallelism is via OpenMP shared-memory threads.
+ */
+
 /*---------------------------------------------------------------------------------
 
   MAIN.C (Driver routine)
- 
+
   -Read command line arguments
   -Call PARAMETERS.C and PROBLEM.C to read and set parameters
   -Memory allocation for grid and fluid state objects

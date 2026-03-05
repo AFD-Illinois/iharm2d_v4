@@ -1,3 +1,30 @@
+/**
+ * @file bl_coord.c
+ * @brief Boyer-Lindquist coordinate tools for problem initialisation.
+ *
+ * @details Provides standalone BL metric quantities and coordinate transformations
+ * that are used by problem setup routines (e.g., `problem/torus`) but are NOT
+ * called by the core time-integration functions (which use the MKS metric via
+ * coord.c / metric.c).
+ *
+ * A lightweight `struct of_geom` (defined in bl_coord.h) holds the BL metric
+ * determinant and covariant/contravariant tensors for a single zone.
+ *
+ * **Functions:**
+ * - **blgset()**: Fill a `struct of_geom` with the BL metric at zone (i, j).
+ * - **bl_gdet_func()**: Compute sqrt(-g) in Boyer-Lindquist coordinates:
+ *   @f[ \sqrt{-g} = r^2 |\sin\theta| \left(1 + \frac{a^2}{2r^2}(1+\cos 2\theta)\right) @f]
+ * - **bl_gcov_func()**: Evaluate g_μν in BL (covariant Kerr metric).
+ * - **bl_gcon_func()**: Evaluate g^μν in BL (contravariant Kerr metric).
+ * - **bl_to_ks()**: Apply the BL→KS transformation matrix to a contravariant
+ *   4-velocity.
+ * - **coord_transform()**: Convert a BL 4-velocity (from a problem setup) to
+ *   the MKS/FMKS 3-velocity primitive variable V^i stored in S->P[U1-U3].
+ *
+ * @note Some routines partially duplicate coord.c; the file comment acknowledges
+ * this and flags it for future cleanup.
+ */
+
 /*---------------------------------------------------------------------------------
 
   BL_COORDS.C
@@ -14,6 +41,17 @@
 
 #include "bl_coord.h"
 
+/**
+ * @brief Fill a BL geometry struct for grid zone (i, j) at cell centre.
+ *
+ * @details Calls coord() to get code coordinates, bl_coord() to get (r, θ),
+ * then fills geom->g = bl_gdet_func(r, θ), geom->gcov, geom->gcon.
+ * Folds θ into [0, π] if it is out of range.
+ *
+ * @param i     X1 zone index.
+ * @param j     X2 zone index.
+ * @param geom  Output BL geometry struct (g, gcov, gcon set at CENT).
+ */
 // Sets up grid in BL coordinates
 void blgset(int i, int j, struct of_geom *geom)
 {
@@ -32,6 +70,13 @@ void blgset(int i, int j, struct of_geom *geom)
   bl_gcon_func(r, th, geom->gcon);
 }
 
+/**
+ * @brief Compute the Boyer-Lindquist metric determinant @f$\sqrt{-g^{\rm BL}}@f$.
+ *
+ * @param r   Boyer-Lindquist radius.
+ * @param th  Boyer-Lindquist polar angle θ.
+ * @return    @f$r^2|\sin\theta|(1 + \frac{a^2}{2r^2}(1+\cos 2\theta))@f$.
+ */
 // Computes gdet in BL coordinates
 double bl_gdet_func(double r, double th)
 {
@@ -43,6 +88,13 @@ double bl_gdet_func(double r, double th)
     (1. + 0.5 * (a2 / r2) * (1. + cos(2. * th))));
 }
 
+/**
+ * @brief Compute the covariant Boyer-Lindquist (Kerr) metric tensor.
+ *
+ * @param r     Boyer-Lindquist radius.
+ * @param th    Boyer-Lindquist polar angle θ.
+ * @param gcov  Output 4x4 covariant metric g_μν in BL coordinates.
+ */
 // Computes covariant BL metric
 void bl_gcov_func(double r, double th, double gcov[NDIM][NDIM])
 {
@@ -66,6 +118,13 @@ void bl_gcov_func(double r, double th, double gcov[NDIM][NDIM])
 
 }
 
+/**
+ * @brief Compute the contravariant Boyer-Lindquist (Kerr) metric tensor.
+ *
+ * @param r     Boyer-Lindquist radius.
+ * @param th    Boyer-Lindquist polar angle θ.
+ * @param gcon  Output 4x4 contravariant metric g^μν in BL coordinates.
+ */
 // Computes contravariant BL metric
 void bl_gcon_func(double r, double th, double gcon[NDIM][NDIM])
 {
@@ -99,6 +158,20 @@ void bl_gcon_func(double r, double th, double gcon[NDIM][NDIM])
   gcon[3][3] = (1. - 2./(r*mu))/(r2*sth*sth*DD);
 }
 
+/**
+ * @brief Transform a contravariant 4-velocity from Boyer-Lindquist to Kerr-Schild.
+ *
+ * @details Applies the BL→KS Jacobian:
+ * @f[ u^t_{\rm KS} = u^t_{\rm BL}, \quad
+ *     u^r_{\rm KS} = u^r_{\rm BL}, \quad
+ *     u^\phi_{\rm KS} = u^\phi_{\rm BL} + \frac{a}{r^2 - 2r + a^2} u^r_{\rm BL}
+ * @f]
+ * with the additional off-diagonal term for the time component.
+ *
+ * @param X        Code coordinate vector at the zone (used to get r, θ).
+ * @param ucon_bl  Contravariant 4-velocity in BL coordinates (input).
+ * @param ucon_ks  Contravariant 4-velocity in KS coordinates (output).
+ */
 // Converts contravariant velocity from Bl to KS coordinates
 void bl_to_ks(double X[NDIM], double ucon_bl[NDIM], double ucon_ks[NDIM])
 {
@@ -115,6 +188,24 @@ void bl_to_ks(double X[NDIM], double ucon_bl[NDIM], double ucon_ks[NDIM])
   DLOOP2 ucon_ks[mu] += trans[mu][nu]*ucon_bl[nu];
 }
 
+/**
+ * @brief Convert a BL 4-velocity to MKS/FMKS primitive 3-velocity in-place.
+ *
+ * @details Used by problem setup routines which specify velocities in
+ * Boyer-Lindquist coordinates.  The conversion steps are:
+ * 1. Treat S->P[U1-U3] as the BL spatial components u^r, u^θ, u^φ.
+ * 2. Solve the BL normalisation constraint for u^t (quadratic formula).
+ * 3. Apply the BL→KS transformation matrix.
+ * 4. Apply the KS→MKS transformation (invert set_dxdX() Jacobian).
+ * 5. Extract the MKS 3-velocity V^i = u^i + γ α g^{0i} and store back
+ *    into S->P[U1-U3].
+ *
+ * @param G  Grid geometry (lapse, gcon at CENT used for the KS→MKS→V^i step).
+ * @param S  Fluid state; P[U1-U3] are read as BL velocities on input
+ *           and overwritten with MKS 3-velocity primitives on output.
+ * @param i  X1 zone index.
+ * @param j  X2 zone index.
+ */
 // Convert Boyer-Lindquist four-velocity to MKS 3-velocity
 void coord_transform(struct GridGeom *G, struct FluidState *S, int i, int j)
 {

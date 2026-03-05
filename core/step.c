@@ -1,3 +1,29 @@
+/**
+ * @file step.c
+ * @brief Second-order predictor-corrector time integration.
+ *
+ * @details Implements a two-stage Runge-Kutta (RK2) algorithm to advance the
+ * GRMHD equations from time @f$t^n@f$ to @f$t^{n+1} = t^n + \Delta t@f$.
+ *
+ * **Algorithm overview:**
+ * 1. **Save** primitives at @f$t^n@f$ into Ssave (needed for 4-current calculation).
+ * 2. **Predictor** – advance_fluid(S, S, Stmp, dt/2):
+ *    - Reconstruct primitives at faces from @f$P^n@f$.
+ *    - Solve the LLF Riemann problem to obtain fluxes @f$F^{n+1/2}@f$.
+ *    - Apply flux-CT to maintain @f$\nabla \cdot B = 0@f$.
+ *    - Update conserved variables: @f$U^* = U^n + \frac{\Delta t}{2}(\nabla \cdot F + S)@f$.
+ *    - Invert @f$U^*@f$ to @f$P^*@f$ (U_to_P).
+ *    - Heat electrons (if ELECTRONS is enabled).
+ *    - Apply floors/ceilings (fixup), then boundary conditions (set_bounds).
+ * 3. **Corrector** – advance_fluid(S, Stmp, S, dt):
+ *    - Same sequence using @f$P^*@f$ as the source state and @f$P^n@f$ as the base.
+ *    - Result is @f$P^{n+1}@f$ stored back in S.
+ * 4. **4-current** – computed from @f$(P^n + P^{n+1})/2@f$ if a dump is imminent.
+ * 5. **Timestep update** – new dt = min(ndt, SAFE * dt_old).
+ *
+ * @note The function advance_fluid() is declared @c inline and is local to this file.
+ */
+
 /*---------------------------------------------------------------------------------
 
   STEP.C
@@ -11,8 +37,17 @@
 // Declarations
 double advance_fluid(struct GridGeom *G, struct FluidState *Si, struct FluidState *Ss, struct FluidState *Sf, double Dt);
 
-// Driver function that calls advance_fluid twice (predictor and corrector), heats electrons,
-// applies boundary conditions, calculate 4-current at ened of timestep, and updates timestep value
+/**
+ * @brief Advance the simulation state by one full timestep.
+ *
+ * @details Executes the predictor-corrector (RK2) integration scheme.
+ * Allocates Stmp and Ssave on the first call (static; persists across calls).
+ * After the corrector, increments the global time @c t by @c dt and
+ * updates @c dt for the next step using the CFL estimate from advance_fluid().
+ *
+ * @param G  Pointer to the precomputed grid geometry.
+ * @param S  Pointer to the fluid state (updated in-place to @f$P^{n+1}@f$).
+ */
 void step(struct GridGeom *G, struct FluidState *S)
 {
   static struct FluidState *Stmp;
@@ -92,7 +127,24 @@ void step(struct GridGeom *G, struct FluidState *S)
     dt = ndt;
 }
 
-// Updates conserved and primitives each substep
+/**
+ * @brief Perform a single sub-step of the time integration.
+ *
+ * @details Updates the fluid state from Si (base) using fluxes evaluated from Ss
+ * (source), and stores the result in Sf.  The update equation is:
+ * @f[
+ *   U_f = U_i + \Delta t \left(\frac{F^{X1}_{i,j} - F^{X1}_{i+1,j}}{\Delta X^1}
+ *       + \frac{F^{X2}_{i,j} - F^{X2}_{i,j+1}}{\Delta X^2} + S_{ij}\right)
+ * @f]
+ * After updating conserved variables, inverts back to primitives via U_to_P().
+ *
+ * @param G   Grid geometry.
+ * @param Si  Initial fluid state (provides base conserved variables U_i).
+ * @param Ss  Source fluid state (primitives used for reconstruction and flux evaluation).
+ * @param Sf  Output fluid state (receives updated primitives P_f and conserved U_f).
+ * @param Dt  Sub-step size in code time units.
+ * @return    CFL-limited next timestep estimate.
+ */
 inline double advance_fluid(struct GridGeom *G, struct FluidState *Si, struct FluidState *Ss, struct FluidState *Sf, double Dt)
 {
   static GridPrim *dU;

@@ -1,3 +1,27 @@
+/**
+ * @file fluxes.c
+ * @brief Numerical flux computation, constrained transport, and CFL timestep.
+ *
+ * @details This module is responsible for:
+ *
+ * - **Reconstruction + Riemann solve** (get_flux()): For each coordinate direction,
+ *   reconstructs left/right primitive states at cell faces via reconstruct(), then
+ *   calls lr_to_flux() to compute the Local Lax-Friedrichs (LLF/Rusanov) flux:
+ *   @f[ F_{i+1/2} = \frac{1}{2}\left(F_L + F_R - c_\text{max}(U_R - U_L)\right) @f]
+ *   where @f$c_\text{max}@f$ is the maximum fast magnetosonic wave speed at the face.
+ *
+ * - **Constrained transport** (flux_ct()): Implements the Toth (2000) flux-CT scheme
+ *   to maintain the divergence-free condition @f$\nabla \cdot B = 0@f$ to machine precision.
+ *   Computes the electric field (EMF) at cell corners from the face-centered magnetic flux,
+ *   then rewrites the @f$B@f$-component fluxes using those EMFs.
+ *
+ * - **CFL timestep** (ndt_min()): Computes the next timestep as the global minimum of
+ *   @f$ \Delta t = \text{cour} / \sum_i c_{\text{max},i} / \Delta X^i @f$ over all zones.
+ *
+ * @see reconstruction.c for the spatial interpolation methods.
+ * @see phys.c for mhd_vchar() which supplies the wave speeds.
+ */
+
 /*---------------------------------------------------------------------------------
 
   FLUXES.C
@@ -12,7 +36,16 @@
 void lr_to_flux(struct GridGeom *G, struct FluidState *Sl, struct FluidState *Sr, int dir, int loc, GridPrim *flux, GridVector *ctop);
 double ndt_min(GridVector *ctop);
 
-// Compute the timestep by considering the global minimum based on local wavespeed values
+/**
+ * @brief Compute the CFL-limited next timestep from the maximum wave speed grid.
+ *
+ * @details Performs a parallel reduction over all active zones to find the zone that
+ * constrains the timestep the most.  For each zone the local constraint is:
+ * @f[ \Delta t_{\rm zone} = \frac{1}{\sum_{i=1}^{2} c_{{\rm top},i} / (\text{cour} \cdot \Delta X^i)} @f]
+ *
+ * @param ctop  Grid of maximum wave speeds in each direction: (*ctop)[mu][j][i].
+ * @return      CFL-limited timestep.
+ */
 double ndt_min(GridVector *ctop)
 {
   timer_start(TIMER_CMAX);
@@ -48,7 +81,19 @@ double ndt_min(GridVector *ctop)
   return ndt_min;
 }
 
-// Reconstruct primitives at zones faces and compute flux by solving a Riemann problem
+/**
+ * @brief Reconstruct primitives at faces and compute LLF numerical fluxes.
+ *
+ * @details For each coordinate direction (X1 and X2):
+ * 1. Calls reconstruct() to build left and right primitive states at all faces.
+ * 2. Calls lr_to_flux() to evaluate the LLF Riemann flux and fill ctop.
+ * 3. Returns the minimum CFL timestep from ndt_min().
+ *
+ * @param G  Grid geometry.
+ * @param S  Current fluid state (source for reconstruction).
+ * @param F  Output flux struct; filled with X1 and X2 fluxes.
+ * @return   CFL-limited next timestep.
+ */
 double get_flux(struct GridGeom *G, struct FluidState *S, struct FluidFlux *F)
 {
   static struct FluidState *Sl, *Sr;
@@ -82,8 +127,30 @@ double get_flux(struct GridGeom *G, struct FluidState *S, struct FluidFlux *F)
   return ndt_min(ctop);
 }
 
-// Compute the LLF flux from the left- and right-reconstructed values
-// Note that the sense of L/R flips from zone to interface during function call
+/**
+ * @brief Compute the Local Lax-Friedrichs (LLF) flux from left and right reconstructed states.
+ *
+ * @details Given the reconstructed left (Sl) and right (Sr) primitive state arrays,
+ * this function:
+ * 1. Shifts the left-state array so that Sl[i] refers to the left interface of zone i.
+ * 2. Computes 4-velocities and magnetic 4-vectors for both states (get_state_vec()).
+ * 3. Computes physical fluxes FL and FR and conserved variables UL, UR (prim_to_flux_vec()).
+ * 4. Computes maximum and minimum characteristic speeds cmax, cmin (mhd_vchar()).
+ * 5. Assembles the LLF flux:
+ *    @f[ F = \frac{1}{2}\left(F_L + F_R - c_{\rm top}(U_R - U_L)\right) @f]
+ *    where @f$c_{\rm top} = \max(|c_{\rm max}|, |c_{\rm min}|)@f$.
+ *
+ * @note The argument order (Sr before Sl) is intentional – the caller passes
+ *       the "right" state first, matching the convention used in reconstruction.c.
+ *
+ * @param G     Grid geometry.
+ * @param Sr    Right reconstructed state (before shifting).
+ * @param Sl    Left reconstructed state (before shifting).
+ * @param dir   Direction (1 = X1, 2 = X2).
+ * @param loc   Grid centering location (FACE1 or FACE2).
+ * @param flux  Output array for the assembled fluxes.
+ * @param ctop  Output grid of maximum wave speeds (used for CFL).
+ */
 void lr_to_flux(struct GridGeom *G, struct FluidState *Sr, struct FluidState *Sl, int dir, int loc, GridPrim *flux, GridVector *ctop)
 {
   timer_start(TIMER_LR_TO_F);
@@ -188,7 +255,22 @@ void lr_to_flux(struct GridGeom *G, struct FluidState *Sr, struct FluidState *Sl
   timer_stop(TIMER_LR_TO_F);
 }
 
-// Perform Flux-CT (Toth 2000)
+/**
+ * @brief Apply the flux-CT (constrained transport) scheme to enforce @f$\nabla \cdot B = 0@f$.
+ *
+ * @details Implements the method of Toth (2000, JCP 161, 605).
+ * 1. Computes the electromotive force (EMF) at each cell corner:
+ *    @f[ \mathcal{E}_{i,j} = \frac{1}{4}\left(F^{X1}_{B2,i,j} + F^{X1}_{B2,i,j-1}
+ *        - F^{X2}_{B1,i,j} - F^{X2}_{B1,i-1,j}\right) @f]
+ * 2. Rewrites the B-component fluxes so that the discrete curl of the face-integrated
+ *    EMF exactly cancels numerical divergence:
+ *    - @f$F^{X1}_{B1} = 0@f$ (no X1 transport of B1 through X1 faces).
+ *    - @f$F^{X1}_{B2}@f$ replaced by corner-averaged EMF.
+ *    - @f$F^{X2}_{B1}@f$ replaced by negative corner-averaged EMF.
+ *    - @f$F^{X2}_{B2} = 0@f$.
+ *
+ * @param F  Flux struct to modify in-place.
+ */
 void flux_ct(struct FluidFlux *F)
 {
   timer_start(TIMER_FLUX_CT);

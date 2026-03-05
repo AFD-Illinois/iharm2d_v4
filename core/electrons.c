@@ -1,3 +1,34 @@
+/**
+ * @file electrons.c
+ * @brief Electron thermodynamics: entropy initialization, viscous heating, and fixups.
+ *
+ * @details Implements the sub-grid electron heating models described in
+ * Sadowski et al. (2017, MNRAS 456, 1837) and related papers.  All code in
+ * this file is conditionally compiled with `#if ELECTRONS`.
+ *
+ * The electron state is tracked via specific entropy variables K_el per model:
+ * @f[ K_{\rm el} = \frac{(\gamma_e - 1)\,u_e}{\rho^{\gamma_e}} @f]
+ * and a total-gas entropy K_tot:
+ * @f[ K_{\rm tot} = \frac{(\gamma - 1)\,u}{\rho^\gamma} @f]
+ *
+ * **Functions:**
+ * - **init_electrons()**: Sets K_tot and all K_el[] from the initial primitive
+ *   state using a constant electron fraction fel0 of the total internal energy.
+ * - **heat_electrons()**: After each time step, for each zone computes the
+ *   heating fraction f_el (from one of four models) and updates K_el via the
+ *   entropy jump as fluid elements are compressed/shocked.
+ * - **heat_electrons_1zone()**: Per-zone kernel for heat_electrons().
+ * - **get_fels()**: Computes the electron heating fraction f_el for a given
+ *   zone and model index (KAWAZURA, WERNER, ROWAN, or SHARMA).
+ * - **fixup_electrons()**: Clamps K_el to lie within [kelmin, kelmax] to
+ *   enforce T_i/T_e bounds (tptemin ≤ T_i/T_e ≤ tptemax) and replace NANs.
+ * - **fixup_electrons_1zone()**: Per-zone kernel for fixup_electrons().
+ *
+ * @note When ALLMODELS=1, all four heating models are evolved simultaneously
+ * as separate primitive variables KEL0, KEL1, KEL2, KEL3.  When ALLMODELS=0,
+ * only KAWAZURA is used.
+ */
+
 /*---------------------------------------------------------------------------------
 
   ELECTRONS.C
@@ -23,6 +54,18 @@ void fixup_electrons_1zone(struct FluidState *S, int i, int j);
 void heat_electrons_1zone(struct GridGeom *G, struct FluidState *Sh, struct FluidState *S, int i, int j);
 double get_fels(struct GridGeom *G, struct FluidState *S, int i, int j, int model);
 
+/**
+ * @brief Initialize electron and total entropy variables from the initial primitives.
+ *
+ * @details For every zone, sets:
+ * - K_tot = (γ-1)*u / ρ^γ  (total gas entropy).
+ * - All K_el (KEL0..NVAR-1) = (γ_e-1)*fel0*u / ρ^γ_e
+ *   (all models start at a constant fraction fel0 of the total internal energy).
+ * Calls set_bounds() at the end to propagate initial values into ghost zones.
+ *
+ * @param G  Grid geometry.
+ * @param S  Fluid state (P[RHO], P[UU] read; P[KTOT] and P[KEL*] written).
+ */
 // Initialize electron entropies like (k = P / rho^gam)
 void init_electrons(struct GridGeom *G, struct FluidState *S)
 {
@@ -43,6 +86,16 @@ void init_electrons(struct GridGeom *G, struct FluidState *S)
   set_bounds(G, S);
 }
 
+/**
+ * @brief Apply electron heating to all active zones.
+ *
+ * @details OpenMP-parallelised loop over ZLOOP that calls heat_electrons_1zone()
+ * for each active zone.
+ *
+ * @param G   Grid geometry.
+ * @param Ss  Fluid state at start of step (used to compute heating fraction f_el).
+ * @param Sf  Fluid state at end of step (K_el and K_tot are updated here).
+ */
 // Heat electrons over the physical domain
 void heat_electrons(struct GridGeom *G, struct FluidState *Ss, struct FluidState *Sf)
 {
@@ -72,6 +125,28 @@ inline void heat_electrons_1zone(struct GridGeom *G, struct FluidState *Ss, stru
   Sf->P[KTOT][j][i] = kHarm;
 }
 
+/**
+ * @brief Compute the electron heating fraction f_el at a single zone.
+ *
+ * @details Implements four published sub-grid models, selected by the `model`
+ * parameter (which equals the primitive index KEL0, KEL1, etc.):
+ * - **KAWAZURA** (model == 9): Eq. (2) of Kawazura et al. (2019, PNAS).
+ *   Uses T_p/T_e ratio and plasma β to determine Q_i/Q_e.
+ * - **WERNER** (model == 10): Eq. (3) of Werner et al. (2018, MNRAS).
+ *   Uses magnetisation σ = b²/ρ.
+ * - **ROWAN** (model == 11): Eq. (34) of Rowan et al. (2017, ApJ).
+ *   Uses β and σ relative to a maximum β.
+ * - **SHARMA** (model == 12): Section 4 of Sharma et al. (2007, ApJ).
+ *   Uses T_e/T_p ratio (inverse of KAWAZURA convention).
+ * When SUPPRESS_HIGHB_HEAT is defined, f_el is set to 0 for σ > 1.
+ *
+ * @param G      Grid geometry.
+ * @param S      Fluid state (P[RHO], P[UU], P[model] read).
+ * @param i      X1 zone index.
+ * @param j      X2 zone index.
+ * @param model  Primitive index corresponding to the heating model.
+ * @return       Electron heating fraction 0 ≤ f_el ≤ 0.5.
+ */
 // New function for ALLMODELS runs.
 inline double get_fels(struct GridGeom *G, struct FluidState *S, int i, int j, int model)
 {
@@ -126,7 +201,15 @@ if (model == KAWAZURA) {
   return fel;
 }
 
-// Fix electron if either (i) the heating prescription provied NaN for some reason, or 
+/**
+ * @brief Clamp electron entropy variables to physical bounds in all active zones.
+ *
+ * @details Parallelised over ZLOOP; calls fixup_electrons_1zone() per zone to
+ * enforce tptemin ≤ T_p/T_e ≤ tptemax and replace any NaN values.
+ *
+ * @param S  Fluid state (P[KEL*] modified in-place).
+ */
+// Fix electron if either (i) the heating prescription provied NaN for some reason, or
 // (ii) the ratio of ion to electron temperature was too large, or
 // (iii) the ratio of ion to electron temperature was too small
 void fixup_electrons(struct FluidState *S)

@@ -1,8 +1,38 @@
+/**
+ * @file coord.c
+ * @brief Coordinate system setup, metric evaluation, and grid initialization.
+ *
+ * @details Supports two metrics selectable at compile time via the METRIC macro:
+ *
+ * **MINKOWSKI** (flat Cartesian):
+ * - @f$g_{\mu\nu} = \text{diag}(-1, +1, +1, +1)@f$.
+ * - Code X^1, X^2 map directly to Cartesian x, y over [x1Min, x1Max] x [x2Min, x2Max].
+ *
+ * **MKS** (Modified Kerr-Schild):
+ * - @f$X^1 = \log r@f$, so equal zones span equal factors in radius.
+ * - @f$X^2 \in [0,1]@f$ maps to @f$\theta \in [0, \pi]@f$ via:
+ *   @f[ \theta = \pi X^2 + \frac{1-h_\text{slope}}{2}\sin(2\pi X^2) @f]
+ *   where @c hslope = 1 gives uniform @f$\theta@f$ and small @c hslope concentrates
+ *   zones near the equatorial plane.
+ * - The metric is the Kerr metric in Kerr-Schild coordinates transformed to MKS.
+ *
+ * **FMKS** (DEREFINE_POLES=1): An additional polynomial mapping de-refines the
+ * polar regions to reduce the CFL constraint there.
+ *
+ * **Grid initialization (set_grid()):**
+ * For every zone and every grid-centering location (FACE1, FACE2, CORN, CENT),
+ * set_grid() calls:
+ * 1. coord() to get X at that location.
+ * 2. gcov_func() to evaluate the covariant metric tensor.
+ * 3. gcon_func() to invert and store gcon, gdet, lapse.
+ * 4. conn_func() to compute Christoffel symbols at CENT.
+ */
+
 /*---------------------------------------------------------------------------------
 
   COORD.C
 
-  -SET GRID POINTS AT CENTER, CORNER AND FACES 
+  -SET GRID POINTS AT CENTER, CORNER AND FACES
   -EVALUATE BL R AND TH FROM KS
   -COMPUTE TRANSFORMATION MATRIX FOR KS->MKS OR KS->FMKS
   -COMPUTE METRIC COEFFICIENTS IN MKS/FMKS
@@ -33,6 +63,22 @@ double r_of_X(const double X[NDIM]);
 double th_of_X(const double X[NDIM]);
 
 // Set coordinate values at grid loc [i,j,LOC]
+/**
+ * @brief Return the code-coordinate vector X at grid location (i, j, loc).
+ *
+ * @details The active domain starts at index NG (ghost zones occupy 0..NG-1).
+ * For each centering:
+ * - FACE1: half-integer in X1 (face between i-1 and i), integer in X2.
+ * - FACE2: integer in X1, half-integer in X2.
+ * - CENT:  half-integer in both.
+ * - CORN:  integer in both.
+ * X[0] is always set to zero (code time coordinate not used here).
+ *
+ * @param i    X1 zone index (includes ghost zones).
+ * @param j    X2 zone index.
+ * @param loc  Grid centering: FACE1, FACE2, CENT, or CORN.
+ * @param X    Output coordinate array of length NDIM; X[1] and X[2] are set.
+ */
 inline void coord(int i, int j, int loc, double *X)
 {
   X[0] = 0; // Make sure all memory passed in is initialized
@@ -102,6 +148,18 @@ inline double th_of_X(const double X[NDIM])
 
 // Boyer-Lindquist/Kerr-Schild coordinate of point X
 // Equivalently, this can also be called ks_coord since the radial and colatitude angle are the same in BL and KS
+/**
+ * @brief Convert code coordinate X to Boyer-Lindquist (r, theta).
+ *
+ * @details For MKS: @f$r = \exp(X^1)@f$ and @f$\theta@f$ is determined by
+ * the MKS/FMKS mapping.  For MINKOWSKI: @f$r = X^1@f$, @f$\theta = X^2@f$.
+ * Coordinate singularity avoidance: if |theta| < SINGSMALL or |pi - theta| < SINGSMALL,
+ * theta is clamped to SINGSMALL above the limit.
+ *
+ * @param X    Input code coordinate (len NDIM).
+ * @param r    Output Boyer-Lindquist radius r.
+ * @param th   Output Boyer-Lindquist colatitude theta.
+ */
 inline void bl_coord(const double X[NDIM], double *r, double *th)
 {
   *r = r_of_X(X);
@@ -125,6 +183,16 @@ inline void bl_coord(const double X[NDIM], double *r, double *th)
 }
 
 // Computes transformation matrix for KS->MKS and KS->FMKS
+/**
+ * @brief Compute the Jacobian @f$\partial X^{\rm code}_\mu / \partial X^{\rm KS}_\nu@f$ at point X.
+ *
+ * @details This transform is applied in gcov_func() to convert the KS metric to code-coordinate
+ * metric by the chain rule:
+ * @f[ g^\text{code}_{\mu\nu} = g^\text{KS}_{\lambda\kappa}\, \frac{\partial X^\lambda}{\partial x^\mu}\, \frac{\partial X^\kappa}{\partial x^\nu} @f]
+ *
+ * @param X      Code-coordinate vector.
+ * @param dxdX   Output 4x4 Jacobian matrix.
+ */
 inline void set_dxdX(double X[NDIM], double dxdX[NDIM][NDIM])
 {
   memset(dxdX, 0, NDIM*NDIM*sizeof(double));
@@ -218,6 +286,14 @@ void gcov_func(double X[NDIM], double gcov[NDIM][NDIM])
 }
 
 // Establish X coordinates
+/**
+ * @brief Set up the coordinate grid: compute startx[], dx[], and the poly_norm factor.
+ *
+ * @details For MKS, places the inner boundary Rin so that 5.5 zones lie completely
+ * inside the event horizon, then sets dx[1] = log(Rout/Rin)/N1TOT.
+ * For MINKOWSKI, sets startx and dx from x1Min/x1Max/x2Min/x2Max.
+ * Called once at startup from set_grid().
+ */
 void set_points()
 {
 #if METRIC == MINKOWSKI
@@ -246,6 +322,18 @@ void set_points()
 }
 
 // Sets the grid struct G
+/**
+ * @brief Initialize the full GridGeom struct: metric tensors, lapse, gdet, and connection.
+ *
+ * @details For every zone (including ghost zones) and every grid centering location,
+ * calls set_grid_loc() to fill g_cov, g^cov, gdet, and lapse.  Then computes the
+ * Christoffel connection at zone centers via conn_func().  Also sets the global
+ * dV = dx[1]*dx[2] and computes dt_light (informational).
+ *
+ * Uses OpenMP collapsed over (j, i) for parallel execution.
+ *
+ * @param G  Output GridGeom struct (all fields overwritten).
+ */
 void set_grid(struct GridGeom *G)
 {
 

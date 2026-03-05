@@ -1,7 +1,33 @@
+/**
+ * @file current.c
+ * @brief Compute the electromagnetic 4-current j^μ from the fluid state.
+ *
+ * @details Evaluates the 4-current density by taking finite differences of
+ * the contravariant Maxwell tensor @f$\sqrt{-g}\,F^{\mu\nu}@f$:
+ * @f[
+ *   4\pi\,j^\mu = \frac{1}{\sqrt{-g}}
+ *     \left(\partial_0 (\sqrt{-g} F^{0\mu}) + \partial_i (\sqrt{-g} F^{i\mu})\right)
+ * @f]
+ * The time derivative uses the two saved primitive states (current and previous
+ * step), i.e. the result is centred at the half-timestep.  The spatial
+ * derivatives use second-order centred differences of the time-centred
+ * (averaged) state.
+ *
+ * Helper routines:
+ * - **gFcon_calc()**: Computes @f$\sqrt{-g}\,F^{\mu\nu}@f$ from the ideal MHD
+ *   expression @f$F^{\mu\nu} = -\epsilon^{\mu\nu\kappa\lambda}\,u_\kappa b_\lambda / g@f$.
+ * - **antisym()**: Returns the value of the completely antisymmetric Levi-Civita
+ *   symbol @f$\epsilon^{abcd}@f$ as +1, -1, or 0.
+ * - **pp()**: Determines the parity of a permutation (Hardy's algorithm).
+ *
+ * @note The 4-current output is stored in S->jcon[mu][j][i] and written to
+ * dump files for post-processing (e.g., computing resistive dissipation).
+ */
+
 /*---------------------------------------------------------------------------------
 
   CURRENT.C
-  
+
   -Calculate 4-current from fluid variables
 
 -----------------------------------------------------------------------------------*/
@@ -15,6 +41,28 @@ int pp(int n, int *P);
 
 static struct FluidState *Sa;
 
+/**
+ * @brief Compute the contravariant 4-current j^μ over all active zones.
+ *
+ * @details Uses a staggered time-centring scheme:
+ * - Time derivative terms use S (end of step) and Ssave (beginning of step).
+ * - Spatial derivative terms use Sa = (S + Ssave)/2 (time-centred average).
+ * get_state_vec() is called on all three states before the differentiation loop
+ * so that ucov and bcov are consistent.
+ * The final j^μ at each zone is:
+ * @f[
+ *   j^\mu = \frac{1}{\sqrt{4\pi}\,\sqrt{-g}}
+ *     \left[\frac{\sqrt{-g}F^{0\mu}_{\rm new} - \sqrt{-g}F^{0\mu}_{\rm old}}{\Delta t}
+ *         + \frac{\sqrt{-g}F^{1\mu}(i+1) - \sqrt{-g}F^{1\mu}(i-1)}{2\Delta X^1}
+ *         + \frac{\sqrt{-g}F^{2\mu}(j+1) - \sqrt{-g}F^{2\mu}(j-1)}{2\Delta X^2}
+ *     \right]
+ * @f]
+ *
+ * @param G       Grid geometry.
+ * @param S       Fluid state at current time (end of step); jcon is written here.
+ * @param Ssave   Fluid state at previous time (beginning of step).
+ * @param dtsave  Physical time step Δt used to form the time derivative.
+ */
 // Calculate the current
 void current_calc(struct GridGeom *G, struct FluidState *S, struct FluidState *Ssave, double dtsave)
 {
@@ -89,6 +137,25 @@ void current_calc(struct GridGeom *G, struct FluidState *S, struct FluidState *S
   timer_stop(TIMER_CURRENT);
 }
 
+/**
+ * @brief Compute @f$\sqrt{-g}\,F^{\mu\nu}@f$ at zone (i, j).
+ *
+ * @details Uses the ideal MHD relation @f$F^{\mu\nu} = b^\mu u^\nu - b^\nu u^\mu@f$
+ * (equivalent to the Levi-Civita form) via:
+ * @f[
+ *   \sqrt{-g}\,F^{\mu\nu} = -\frac{1}{\sqrt{-g}}\sum_{\kappa,\lambda}
+ *     \epsilon^{\mu\nu\kappa\lambda}\,u_\kappa\,b_\lambda \cdot \sqrt{-g}
+ * @f]
+ * Returns 0 immediately if mu == nu (antisymmetry).
+ *
+ * @param G   Grid geometry (gdet at CENT used for normalisation).
+ * @param S   Fluid state (ucov, bcov must be pre-calculated via get_state()).
+ * @param mu  First index.
+ * @param nu  Second index.
+ * @param i   X1 zone index.
+ * @param j   X2 zone index.
+ * @return    @f$\sqrt{-g}\,F^{\mu\nu}@f$ at zone (i, j).
+ */
 // Return mu, nu component of contravariant Maxwell tensor at grid zone i, j multiplied by gdet
 inline double gFcon_calc(struct GridGeom *G, struct FluidState *S, int mu, int nu, int i, int j)
 {
@@ -108,6 +175,19 @@ inline double gFcon_calc(struct GridGeom *G, struct FluidState *S, int mu, int n
   return Fcon*G->gdet[CENT][j][i];
 }
 
+/**
+ * @brief Evaluate the 4D Levi-Civita symbol @f$\epsilon^{abcd}@f$.
+ *
+ * @details Returns +1 if (a,b,c,d) is an even permutation of (0,1,2,3),
+ * -1 if an odd permutation, and 0 if any two indices are equal.
+ * Returns 100 if any index is out of [0,3].
+ *
+ * @param a  First index (0–3).
+ * @param b  Second index.
+ * @param c  Third index.
+ * @param d  Fourth index.
+ * @return +1, -1, 0, or 100 (invalid).
+ */
 // Completely antisymmetric 4D symbol
 inline int antisym(int a, int b, int c, int d)
 {

@@ -1,3 +1,28 @@
+/**
+ * @file reconstruction.c
+ * @brief Spatial reconstruction algorithms for obtaining left/right interface states.
+ *
+ * @details Implements three reconstruction schemes selectable at compile time via the
+ * RECONSTRUCTION macro in parameters.h:
+ *
+ * - **LINEAR** (linear_mc()): Piecewise-linear reconstruction with the Monotonized
+ *   Central (MC) slope limiter.  Second-order accurate, TVD.
+ *
+ * - **WENO** (weno()): 5th-order Weighted Essentially Non-Oscillatory reconstruction
+ *   based on Tchekhovskoy et al. (2007) and Shu (2011).  Uses three candidate
+ *   stencils and smoothness indicators to weight them optimally.
+ *
+ * - **MP5** (mp5()): 5th-order Monotonicity Preserving reconstruction imported from
+ *   the PLUTO code (Suresh & Huynh 1997).  Uses a flux-limiting approach to preserve
+ *   monotonicity while achieving high-order accuracy away from extrema.
+ *
+ * The main entry point reconstruct() dispatches to the selected algorithm via the
+ * preprocessor macro RECON_ALGO and is parallelized with OpenMP over primitive variables
+ * and zones.  All schemes require a 5-point stencil, needing NG >= 3 ghost zones.
+ *
+ * @note WENO and MP5 require NG >= 3.  A compile-time check enforces this.
+ */
+
 /*---------------------------------------------------------------------------------
 
   RECONSTRUCTION.C
@@ -31,7 +56,27 @@ double median(double a, double b, double c);
 double mp5_subcalc(double Fjm2, double Fjm1, double Fj, double Fjp1, double Fjp2);
 void mp5(double x1, double x2, double x3, double x4, double x5, double *lout, double *rout);
 
-// Linear reconstruction with MC slope limiter
+/**
+ * @brief Linear reconstruction with Monotonized Central (MC) slope limiter.
+ *
+ * @details Computes the limited slope and reconstructs the left and right interface
+ * values from cell-centered values x1, x2, x3 (at i-1, i, i+1):
+ * @f{align*}{
+ *   \Delta q_m &= 2(q_i - q_{i-1}),\quad
+ *   \Delta q_p = 2(q_{i+1} - q_i),\quad
+ *   \Delta q_c = \frac{1}{2}(q_{i+1} - q_{i-1})\\
+ *   s &= \text{MC}(\Delta q_m, \Delta q_p, \Delta q_c)\\
+ *   q_L &= q_i - \tfrac{1}{2}s,\quad q_R = q_i + \tfrac{1}{2}s
+ * @f}
+ *
+ * @param unused1  Unused (padding for uniform 5-point API with WENO/MP5).
+ * @param x1  Value at i-1.
+ * @param x2  Value at i (cell center being reconstructed).
+ * @param x3  Value at i+1.
+ * @param unused2  Unused.
+ * @param[out] lout  Left face value @f$q_{i-1/2,L}@f$.
+ * @param[out] rout  Right face value @f$q_{i+1/2,R}@f$.
+ */
 inline void linear_mc(double unused1, double x1, double x2, double x3, double unused2, double *lout, double *rout)
 {
   double Dqm,Dqp,Dqc,s;
@@ -58,8 +103,22 @@ inline void linear_mc(double unused1, double x1, double x2, double x3, double un
   *rout = x2 + 0.5*s;
 }
 
-// WENO interpolation. See Tchekhovskoy et al. 2007 (T07), Shu 2011 (S11)
-// Implemented by Monika Moscibrodzka
+/**
+ * @brief 5th-order WENO reconstruction (Tchekhovskoy et al. 2007, Shu 2011).
+ *
+ * @details Uses three candidate 3-point stencils to reconstruct both left and
+ * right interface values.  The nonlinear weights are computed from smoothness
+ * indicators (beta) so that the scheme reduces to the optimal 5th-order stencil
+ * in smooth regions and degrades gracefully near discontinuities.
+ *
+ * @param x1  Value at i-2.
+ * @param x2  Value at i-1.
+ * @param x3  Value at i.
+ * @param x4  Value at i+1.
+ * @param x5  Value at i+2.
+ * @param[out] lout  Left interface value @f$q_{i-1/2,L}@f$.
+ * @param[out] rout  Right interface value @f$q_{i+1/2,R}@f$.
+ */
 inline void weno(double x1, double x2, double x3, double x4, double x5, double *lout, double *rout)
 {
   // S11 1, 2, 3
@@ -158,6 +217,16 @@ inline double mp5_subcalc(double Fjm2, double Fjm1, double Fj, double Fjp1, doub
   return f;
 }
 
+/**
+ * @brief MP5 reconstruction from PLUTO (Suresh & Huynh 1997). Imported by Mani Chandra.
+ * @param x1  Value at i-2.
+ * @param x2  Value at i-1.
+ * @param x3  Value at i.
+ * @param x4  Value at i+1.
+ * @param x5  Value at i+2.
+ * @param[out] lout  Left interface value.
+ * @param[out] rout  Right interface value.
+ */
 inline void mp5(double x1, double x2, double x3, double x4, double x5, double *lout,
   double *rout)
 {
@@ -166,7 +235,20 @@ inline void mp5(double x1, double x2, double x3, double x4, double x5, double *l
 }
 #undef MINMOD
 
-// Use the pre-processor for poor man's multiple dispatch
+/**
+ * @brief Reconstruct left and right primitive states at cell interfaces.
+ *
+ * @details Iterates over all primitive variables and zones (using OpenMP), applying
+ * the compile-time-selected reconstruction algorithm (RECON_ALGO) in the given
+ * coordinate direction to produce face-centered left (Pl) and right (Pr) states.
+ * For direction 1 (X1), uses the stencil [i-2, i-1, i, i+1, i+2].
+ * For direction 2 (X2), uses the stencil [j-2, j-1, j, j+1, j+2].
+ *
+ * @param S    Source fluid state (its P array provides the cell-centered values).
+ * @param Pl   Output left-reconstructed primitives at cell interfaces.
+ * @param Pr   Output right-reconstructed primitives at cell interfaces.
+ * @param dir  Direction of reconstruction: 1 (X1) or 2 (X2).
+ */
 void reconstruct(struct FluidState *S, GridPrim Pl, GridPrim Pr, int dir)
 {
   timer_start(TIMER_RECON);
