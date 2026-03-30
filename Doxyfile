@@ -6,7 +6,7 @@
 # Project metadata
 #---------------------------------------------------------------------------
 PROJECT_NAME           = "iharm2d_v4"
-PROJECT_BRIEF          = "2D ideal GRMHD code in Modified Kerr-Schild coordinates"
+PROJECT_BRIEF          = "2D ideal GRMHD code"
 PROJECT_NUMBER         = "v4"
 OUTPUT_DIRECTORY       = docs
 
