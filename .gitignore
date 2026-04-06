@@ -1,4 +1,5 @@
 .vscode
+.claude
 *.swp
 harm
 build_archive/
