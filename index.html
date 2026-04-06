@@ -501,7 +501,8 @@
 
 
 <h1 id="iharm2d-v4">iharm2d v4</h1>
-<p>Welcome to the docs.</p>
+<p><code>iharm2d_v4</code> is a 2D GRMHD black hole accretion code that implements the HARM algorithm in C. It has minimal dependencies, requiring only a C compiler with OpenMP support and the standard math library (<code>libm</code>). It is based on the 3D production code <code>iharm3d</code>, with the intention of providing a lightweight, more approachable codebase for development, testing, and teaching. Parallelism is handled entirely through OpenMP, targeting shared-memory execution on a single node. Data is written to ASCII dump files rather than HDF5.</p>
+<p>This documentation covers the structure of the code, the numerical algorithm and its implementation, and the format of the output data.</p>
 
 
 
