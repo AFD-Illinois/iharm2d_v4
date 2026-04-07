@@ -9,10 +9,8 @@
       
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../theory/">
       
-      
-        <link rel="next" href="../theory/">
       
       
         
@@ -23,7 +21,7 @@
     
     
       
-        <title>Getting Started - iharm2d v4: wiki</title>
+        <title>Control Flow - iharm2d v4: wiki</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#control-flow-for-iharm2d-v4" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started
+              Control Flow
             
           </span>
         </div>
@@ -286,37 +284,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Getting Started
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -332,70 +303,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#cloning-the-repository" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloning the repository
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compiling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compiling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -431,10 +338,19 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../iharm-control-flow/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -450,6 +366,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -592,58 +509,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#cloning-the-repository" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloning the repository
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compiling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compiling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -662,42 +527,152 @@
   
 
 
-<h1 id="getting-started">Getting started</h1>
-<p>This page walks through obtaining the code, compiling it, and running your first problem. By the end you should have a working <code>harm</code> executable and a set of output dumps from one of the bundled test problems.</p>
-<p><code>iharm2d_v4</code> has no external library dependencies beyond the C standard library, so getting up and running is straightforward, all you need is <code>gcc</code> with OpenMP support and GNU <code>make</code>.</p>
-<p>Before diving in, here are a few terms that will come up throughout this guide:</p>
-<ul>
-<li><strong>Repository (repo)</strong>: The folder containing all of the source code, downloaded from GitHub. While you can, it is recommended you don't run simulations from inside this folder, it just holds the original code.</li>
-<li><strong>Executable (harm)</strong>: The program that actually runs your simulation. It is produced by compiling the source code with make.</li>
-<li><strong>Output directory</strong>: A folder you create to hold everything related to a particular simulation run — the executable, parameter files, and all of the data the simulation produces. Keeping this separate from the repository means you can run many different simulations without cluttering or modifying the original source.</li>
-<li><strong>Compile-time parameters</strong>:Settings that get baked into the executable when you build it, so changing them means recompiling. Each problem has its own <code>parameters.h</code> file in its subdirectory under <code>prob/</code>, and these are the ones you will likely find yourself editing most often. Examples of compile-time parameters is the grid resolution: <code>N1TOT</code>, <code>N2TOT</code>.</li>
-<li><strong>Run-time parameters (param.dat)</strong>: Options that the executable reads from a file called <code>param.dat</code> each time it is executed. You can change these between runs wihtout recompiling the code. Each problem comes with a sample <code>param.dat</code> in its subdirectory <code>prob/</code> that you can use as a starting point.</li>
-<li><strong>Dumps</strong>: Snapshot files that the code writes out periodically during a simulation, containing the full fluid state (density, velocity, magnetic field, etc.) at that moment in time. These are what you analyze and plot after the run finishes.</li>
-</ul>
-<h2 id="cloning-the-repository">Cloning the repository</h2>
-<div class="language-text highlight"><pre><span></span><code>git clone https://github.com/AFD-Illinois/iharm2d_v4.git
-</code></pre></div>
-<h2 id="compiling">Compiling</h2>
-<p>It is recommended to compile the code from a separate output directory (<code>my_run</code> in the example below) rather than from inside the repository itself. This keeps your build artifacts, parameter files, and simulation output cleanly separated from the source. Just create a directory wherever you want your run to live, then call <code>make</code> from there:
-<div class="language-text highlight"><pre><span></span><code>mkdir my_run &amp;&amp; cd my_run
-make -f /path/to/iharm2d_v4/makefile PROB=orszag_tang
-</code></pre></div>
-<code>PROB</code> must match the name of a subdirectory under <code>prob/</code>—for example <code>torus</code>, <code>bondi</code>, <code>orszag_tang</code>. You can also write your own problem from scratch (see [TODO]). The makefile assumes <code>gcc</code> is in your <code>PATH</code>.</p>
-<p>This produces a <code>build_archive/</code> directory inside your output directory containing copies of all the source and header files, along with the compiled executable <code>harm</code>. A copy of <code>harm</code> is also placed in the output directory for convenience. If <code>build_archive/</code> already exists from a previous build, make will prefer any newer or modified files in that directory over their equivalents in the original repository. This is a handy feature — it means you can edit source files in <code>build_archive/</code> (for instance to tweak the grid resolution) without ever altering the original repo.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>iharm2d_v4</code> splits its configuration into compile-time and run-time parameters, following the same convention as <code>iharm3d</code>.</p>
-<p><strong>Compile-time parameters</strong> live in <code>build_archive/parameters.h</code>. These include, for example, the grid resolution (<code>N1TOT</code>, <code>N2TOT</code>), the coordinate system (<code>METRIC</code>, <code>DEREFINE_POLES</code>), the boundary conditions (<code>X1L_BOUND</code>, <code>X1R_BOUND</code>, <code>X2L_BOUND</code>, <code>X2R_BOUND</code>), and whether electron thermodynamics is enabled (<code>ELECTRONS</code>). Since these are baked into the code at compile time, changing any of them means you will need to rerun <code>make</code>.</p>
-<p><strong>Run-time parameters</strong> are read from <code>param.dat</code> when the executable is run. Each problem comes with a sample <code>param.dat</code> under <code>prob/PROBLEM/param.dat</code>—just copy it into your output directory before running:
-<div class="language-text highlight"><pre><span></span><code>cp /path/to/iharm2d_v4/prob/torus/param.dat .
-</code></pre></div></p>
-<h2 id="running">Running</h2>
-<p>Once everything is in place, run the code by calling the <code>harm</code> binary with the <code>-p</code> flag pointing to the parameter file:
-<div class="language-text highlight"><pre><span></span><code>./harm -p param.dat
-</code></pre></div>
-Runtime logs are printed to stdout. If you would like to save them to a file:
-<div class="language-text highlight"><pre><span></span><code>./harm -p param.dat &gt; run.log
-</code></pre></div></p>
-<p>You can also specify a separate output directory with the <code>-o</code> flag if you prefer not to run from within the output directory itself. The code will create <code>dumps/</code> and <code>restarts/</code> subdirectories automatically. Fluid state dumps are written as ASCII files at the cadence set by the <code>DTd</code> parameter in <code>param.dat</code>, and grid data is written once at the start of the run.</p>
+<h1 id="control-flow-for-iharm2d-v4">Control flow for iharm2d v4</h1>
+<pre class="mermaid"><code>flowchart TD
+    Start["Start"]
+    main_read["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Read command line arguments&lt;/small&gt;"]
+    read_params["&lt;code&gt;read_params()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Set runtime parameters&lt;/small&gt;"]
+    main_dirs["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Make dump and restart directories, set number of OpenMP threads&lt;/small&gt;"]
+    restart_check{"Restart file exists?"}
+    restart_init["&lt;code&gt;restart_init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Read restart file, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;&lt;/small&gt;"]
+    init["&lt;code&gt;init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Initialize Fishbone-Moncrief torus, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;&lt;/small&gt;"]
+    main_loop["&lt;code&gt;main()&lt;/code&gt;&lt;br&gt;Integrate until user-provided timestamp &lt;code&gt;tf&lt;/code&gt;&lt;br&gt;while t &amp;leq; tf"]
+    step_save["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;Save a copy of primitive variables in &lt;code&gt;FluidState S&lt;/code&gt; in &lt;code&gt;Ssave&lt;/code&gt;; will be used for computing the 4-current at the end of the substep."]
+    advance1["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;Advance fluid state by half timestep (0.5*dt). &lt;code&gt;Sf&lt;/code&gt;→P=Si→P."]
+    get_flux["&lt;code&gt;get_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Allocate memory for Sl, Sr&lt;/small&gt;"]
+    reconstruct["&lt;code&gt;reconstruct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute Pl and Pr&lt;/small&gt;"]
+    lr_to_flux["&lt;code&gt;lr_to_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Ul, Ur, Fl, Fr from Pl, Pr&lt;br/&gt;Compute ctop and LLF flux F&lt;/small&gt;"]
+    advance2["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Return dt for corrector step&lt;/small&gt;"]
+    fix_flux["&lt;code&gt;fix_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;No F→X2 at poles, no inflow flux&lt;/small&gt;"]
+    flux_ct["&lt;code&gt;flux_ct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Flux-interpolated CT reset&lt;/small&gt;"]
+    get_source["&lt;code&gt;get_fluid_source()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute source term dU&lt;/small&gt;"]
+    advance3["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Obtain Si→U, update Sf→P&lt;br/&gt;Obtain Sf→U via u_to_p()&lt;/small&gt;"]
+    step_post["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Heat electrons, fixups&lt;br/&gt;Boundary conditions, corrector&lt;/small&gt;"]
+    dump_check{"Writing dump file?"}
+    current_calc["&lt;code&gt;current_calc()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute S→jcon&lt;/small&gt;"]
+    increment["t += dt"]
+    main_write["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Write dump/restart if conditions met&lt;/small&gt;"]
+    loop_check{"t &amp;lt; tf?"}
+    Stop["Stop"]
+
+    Start --&gt; main_read
+    main_read --&gt; read_params
+    read_params --&gt; main_dirs
+    main_dirs --&gt; restart_check
+    restart_check --&gt;|Yes| restart_init
+    restart_check --&gt;|No| init
+    restart_init --&gt; main_loop
+    init --&gt; main_loop
+    main_loop --&gt; step_save
+    step_save --&gt; advance1
+    advance1 --&gt; get_flux
+    get_flux --&gt; reconstruct
+    reconstruct --&gt; lr_to_flux
+    lr_to_flux --&gt; advance2
+    advance2 --&gt; fix_flux
+    fix_flux --&gt; flux_ct
+    flux_ct --&gt; get_source
+    get_source --&gt; advance3
+    advance3 --&gt; step_post
+    step_post --&gt; dump_check
+    dump_check --&gt;|Yes| current_calc
+    dump_check --&gt;|No| increment
+    current_calc --&gt; increment
+    increment --&gt; main_write
+    main_write --&gt; loop_check
+    loop_check --&gt;|Yes| step_save
+    loop_check --&gt;|No| Stop
+
+    %% main.c — purple 200
+    style main_read fill:#AFA9EC,stroke:#444,color:#26215C
+    style main_dirs fill:#AFA9EC,stroke:#444,color:#26215C
+    style main_loop fill:#AFA9EC,stroke:#444,color:#26215C
+    style main_write fill:#AFA9EC,stroke:#444,color:#26215C
+
+    %% parameters.c — pink 200
+    style read_params fill:#ED93B1,stroke:#444,color:#4B1528
+
+    %% step.c — teal 200
+    style step_save fill:#5DCAA5,stroke:#444,color:#04342C
+    style advance1 fill:#5DCAA5,stroke:#444,color:#04342C
+    style advance2 fill:#5DCAA5,stroke:#444,color:#04342C
+    style advance3 fill:#5DCAA5,stroke:#444,color:#04342C
+    style step_post fill:#5DCAA5,stroke:#444,color:#04342C
+
+    %% fluxes.c — coral 200
+    style get_flux fill:#F0997B,stroke:#444,color:#4A1B0C
+    style reconstruct fill:#F0997B,stroke:#444,color:#4A1B0C
+    style lr_to_flux fill:#F0997B,stroke:#444,color:#4A1B0C
+    style flux_ct fill:#F0997B,stroke:#444,color:#4A1B0C
+
+    %% bounds.c — blue 200
+    style fix_flux fill:#85B7EB,stroke:#444,color:#042C53
+
+    %% phys.c — green 200
+    style get_source fill:#97C459,stroke:#444,color:#173404
+
+    %% restart.c / problem.c / current.c — amber 200
+    style restart_init fill:#FAC775,stroke:#444,color:#412402
+    style init fill:#FAC775,stroke:#444,color:#412402
+    style current_calc fill:#FAC775,stroke:#444,color:#412402
+
+    %% Decisions — red 200
+    style restart_check fill:#F09595,stroke:#444,color:#501313
+    style dump_check fill:#F09595,stroke:#444,color:#501313
+    style loop_check fill:#F09595,stroke:#444,color:#501313
+
+    %% Start / Stop — gray 200
+    style Start fill:#B4B2A9,stroke:#444,color:#2C2C2A
+    style Stop fill:#B4B2A9,stroke:#444,color:#2C2C2A
+
+    %% Neutral
+    style increment fill:#B4B2A9,stroke:#444,color:#2C2C2A</code></pre>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Source file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#AFA9EC;border:1px solid #444;border-radius:3px"></span></td>
+<td>main.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#ED93B1;border:1px solid #444;border-radius:3px"></span></td>
+<td>parameters.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#5DCAA5;border:1px solid #444;border-radius:3px"></span></td>
+<td>step.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#F0997B;border:1px solid #444;border-radius:3px"></span></td>
+<td>fluxes.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#85B7EB;border:1px solid #444;border-radius:3px"></span></td>
+<td>bounds.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#97C459;border:1px solid #444;border-radius:3px"></span></td>
+<td>phys.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#FAC775;border:1px solid #444;border-radius:3px"></span></td>
+<td>restart.c / problem.c / current.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#F09595;border:1px solid #444;border-radius:3px"></span></td>
+<td>decisions</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#B4B2A9;border:1px solid #444;border-radius:3px"></span></td>
+<td>start / stop / neutral</td>
+</tr>
+</tbody>
+</table>
 
 
 
