@@ -9,6 +9,7 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - GRMHD Theory: theory.md
+  - Control Flow: iharm-control-flow.md
   - API Reference:
     - main.c: api/main.md
     - fluxes.c: api/fluxes.md
@@ -28,8 +29,8 @@ markdown_extensions:
 
   - pymdownx.superfences:       # Enhanced code blocks
       custom_fences:
-        - name: mermaid-diagram   # Lets them embed Mermaid diagrams
-          class: mermaid-diagram  # (flowcharts, sequence diagrams) in code blocks
+        - name: mermaid   # Lets them embed Mermaid diagrams
+          class: mermaid  # (flowcharts, sequence diagrams) in code blocks
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 theme:
