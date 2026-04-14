@@ -9,17 +9,19 @@ flowchart TD
     restart_check{"Restart file exists?"}
     restart_init["<code>restart_init()</code><br/><small>Read restart file, set <code>GridGeom</code> struct <code>G</code> and <code>FluidState</code> struct <code>S</code></small>"]
     init["<code>init()</code><br/><small>Initialize Fishbone-Moncrief torus, set <code>GridGeom</code> struct <code>G</code> and <code>FluidState</code> struct <code>S</code></small>"]
-    main_loop["<code>main()</code><br>Integrate until user-provided timestamp <code>tf</code><br>while t &leq; tf"]
-    step_save["<code>step()</code><br/>Save a copy of primitive variables in <code>FluidState S</code> in <code>Ssave</code>; will be used for computing the 4-current at the end of the substep."]
-    advance1["<code>advance_fluid()</code><br/>Advance fluid state by half timestep (0.5*dt). <code>Sf</code>→P=Si→P."]
-    get_flux["<code>get_flux()</code><br/><small>Allocate memory for Sl, Sr</small>"]
-    reconstruct["<code>reconstruct()</code><br/><small>Compute Pl and Pr</small>"]
-    lr_to_flux["<code>lr_to_flux()</code><br/><small>Ul, Ur, Fl, Fr from Pl, Pr<br/>Compute ctop and LLF flux F</small>"]
-    advance2["<code>advance_fluid()</code><br/><small>Return dt for corrector step</small>"]
-    fix_flux["<code>fix_flux()</code><br/><small>No F→X2 at poles, no inflow flux</small>"]
-    flux_ct["<code>flux_ct()</code><br/><small>Flux-interpolated CT reset</small>"]
-    get_source["<code>get_fluid_source()</code><br/><small>Compute source term dU</small>"]
-    advance3["<code>advance_fluid()</code><br/><small>Obtain Si→U, update Sf→P<br/>Obtain Sf→U via u_to_p()</small>"]
+    main_loop["<code>main()</code><br><small>Integrate until user-provided timestamp <code>tf</code></small><br>while t &leq; tf."]
+    step_save["<code>step()</code><br/><small>Driver function.</small>"]
+    advance1["<code>advance_fluid()</code><br/><small>Advance fluid state by half timestep (0.5*<code>dt</code>).</small>"]
+    get_flux["<code>get_flux()</code>"]
+    reconstruct["<code>reconstruct()</code><br/><small>Reconstruct left (<code>Pl</code>) and right (<code>Pr</code>) primitives at zone faces</small>"]
+    lr_to_flux["<code>lr_to_flux()</code><br/><small>Compute left (<code>Fl</code>) and right (<code>Fr</code>) fluxes, evaluate wavespeed (<code>ctop</code>), and LLF flux (<code>F</code>).</small>"]
+    ndt_min["<code>ndt_min()</code><br/><small>Compute timestep <code>dt_min</code></small>"]
+    advance2["<code>advance_fluid()</code>"]
+    fix_flux["<code>fix_flux()</code><br/><small>Ensure 1. no ingoing rest-mass flux at radial boundaries, 2. no flux across polar boundaries, 3. X1 flux of B2 is anti-reflected across the poles </small>"]
+    flux_ct["<code>flux_ct()</code><br/><small>Rewrite magnetic fluxes to preserve corner-centered representation of divB following flux-CT (Toth 2000)</small>"]
+    get_source["<code>get_fluid_source()</code><br/><small>Compute source term <code>dU</code></small>"]
+    advance3["<code>advance_fluid()</code><br/><small>Compute the end-of-substep conserved variables <code>U</code>.</small>"]
+    u_to_p["<code>U_to_P()</code><br/><small>Compute end-of-substep primitive variables  <code>P</code> using the 1Dw scheme.</small>"]
     step_post["<code>step()</code><br/><small>Heat electrons, fixups<br/>Boundary conditions, corrector</small>"]
     dump_check{"Writing dump file?"}
     current_calc["<code>current_calc()</code><br/><small>Compute S→jcon</small>"]
@@ -41,12 +43,14 @@ flowchart TD
     advance1 --> get_flux
     get_flux --> reconstruct
     reconstruct --> lr_to_flux
-    lr_to_flux --> advance2
+    lr_to_flux --> ndt_min
+    ndt_min --> advance2
     advance2 --> fix_flux
     fix_flux --> flux_ct
     flux_ct --> get_source
     get_source --> advance3
-    advance3 --> step_post
+    advance3 --> u_to_p
+    u_to_p --> step_post
     step_post --> dump_check
     dump_check -->|Yes| current_calc
     dump_check -->|No| increment
@@ -76,6 +80,7 @@ flowchart TD
     style get_flux fill:#F0997B,stroke:#444,color:#4A1B0C
     style reconstruct fill:#F0997B,stroke:#444,color:#4A1B0C
     style lr_to_flux fill:#F0997B,stroke:#444,color:#4A1B0C
+    style ndt_min fill:#F0997B,stroke:#444,color:#4A1B0C
     style flux_ct fill:#F0997B,stroke:#444,color:#4A1B0C
 
     %% bounds.c — blue 200
@@ -83,6 +88,9 @@ flowchart TD
 
     %% phys.c — green 200
     style get_source fill:#97C459,stroke:#444,color:#173404
+
+    %% u_to_p.c sky 200
+    style u_to_p fill:#86D4E0,stroke:#444,color:#1A2F42
 
     %% restart.c / problem.c / current.c — amber 200
     style restart_init fill:#FAC775,stroke:#444,color:#412402
@@ -110,6 +118,9 @@ flowchart TD
 | <span style="display:inline-block;width:16px;height:16px;background:#F0997B;border:1px solid #444;border-radius:3px"></span> | fluxes.c |
 | <span style="display:inline-block;width:16px;height:16px;background:#85B7EB;border:1px solid #444;border-radius:3px"></span> | bounds.c |
 | <span style="display:inline-block;width:16px;height:16px;background:#97C459;border:1px solid #444;border-radius:3px"></span> | phys.c |
+| <span style="display:inline-block;width:16px;height:16px;background:#86D4E0;border:1px solid #444;border-radius:3px"></span> | u_to_p.c |
 | <span style="display:inline-block;width:16px;height:16px;background:#FAC775;border:1px solid #444;border-radius:3px"></span> | restart.c / problem.c / current.c |
 | <span style="display:inline-block;width:16px;height:16px;background:#F09595;border:1px solid #444;border-radius:3px"></span> | decisions |
 | <span style="display:inline-block;width:16px;height:16px;background:#B4B2A9;border:1px solid #444;border-radius:3px"></span> | start / stop / neutral |
+
+Save a copy of primitive variables in <code>FluidState S</code> in <code>Ssave</code>; will be used for computing the 4-current at the end of the substep.
