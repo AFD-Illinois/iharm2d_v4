@@ -121,15 +121,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
-    
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
       </label>
     
@@ -137,7 +131,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
@@ -536,17 +530,19 @@
     restart_check{"Restart file exists?"}
     restart_init["&lt;code&gt;restart_init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Read restart file, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;&lt;/small&gt;"]
     init["&lt;code&gt;init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Initialize Fishbone-Moncrief torus, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;&lt;/small&gt;"]
-    main_loop["&lt;code&gt;main()&lt;/code&gt;&lt;br&gt;Integrate until user-provided timestamp &lt;code&gt;tf&lt;/code&gt;&lt;br&gt;while t &amp;leq; tf"]
-    step_save["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;Save a copy of primitive variables in &lt;code&gt;FluidState S&lt;/code&gt; in &lt;code&gt;Ssave&lt;/code&gt;; will be used for computing the 4-current at the end of the substep."]
-    advance1["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;Advance fluid state by half timestep (0.5*dt). &lt;code&gt;Sf&lt;/code&gt;→P=Si→P."]
-    get_flux["&lt;code&gt;get_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Allocate memory for Sl, Sr&lt;/small&gt;"]
-    reconstruct["&lt;code&gt;reconstruct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute Pl and Pr&lt;/small&gt;"]
-    lr_to_flux["&lt;code&gt;lr_to_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Ul, Ur, Fl, Fr from Pl, Pr&lt;br/&gt;Compute ctop and LLF flux F&lt;/small&gt;"]
-    advance2["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Return dt for corrector step&lt;/small&gt;"]
-    fix_flux["&lt;code&gt;fix_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;No F→X2 at poles, no inflow flux&lt;/small&gt;"]
-    flux_ct["&lt;code&gt;flux_ct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Flux-interpolated CT reset&lt;/small&gt;"]
-    get_source["&lt;code&gt;get_fluid_source()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute source term dU&lt;/small&gt;"]
-    advance3["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Obtain Si→U, update Sf→P&lt;br/&gt;Obtain Sf→U via u_to_p()&lt;/small&gt;"]
+    main_loop["&lt;code&gt;main()&lt;/code&gt;&lt;br&gt;&lt;small&gt;Integrate until user-provided timestamp &lt;code&gt;tf&lt;/code&gt;&lt;/small&gt;&lt;br&gt;while t &amp;leq; tf."]
+    step_save["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Driver function.&lt;/small&gt;"]
+    advance1["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Advance fluid state by half timestep (0.5*&lt;code&gt;dt&lt;/code&gt;).&lt;/small&gt;"]
+    get_flux["&lt;code&gt;get_flux()&lt;/code&gt;"]
+    reconstruct["&lt;code&gt;reconstruct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Reconstruct left (&lt;code&gt;Pl&lt;/code&gt;) and right (&lt;code&gt;Pr&lt;/code&gt;) primitives at zone faces&lt;/small&gt;"]
+    lr_to_flux["&lt;code&gt;lr_to_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute left (&lt;code&gt;Fl&lt;/code&gt;) and right (&lt;code&gt;Fr&lt;/code&gt;) fluxes, evaluate wavespeed (&lt;code&gt;ctop&lt;/code&gt;), and LLF flux (&lt;code&gt;F&lt;/code&gt;).&lt;/small&gt;"]
+    ndt_min["&lt;code&gt;ndt_min()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute timestep &lt;code&gt;dt_min&lt;/code&gt;&lt;/small&gt;"]
+    advance2["&lt;code&gt;advance_fluid()&lt;/code&gt;"]
+    fix_flux["&lt;code&gt;fix_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Ensure 1. no ingoing rest-mass flux at radial boundaries, 2. no flux across polar boundaries, 3. X1 flux of B2 is anti-reflected across the poles &lt;/small&gt;"]
+    flux_ct["&lt;code&gt;flux_ct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Rewrite magnetic fluxes to preserve corner-centered representation of divB following flux-CT (Toth 2000)&lt;/small&gt;"]
+    get_source["&lt;code&gt;get_fluid_source()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute source term &lt;code&gt;dU&lt;/code&gt;&lt;/small&gt;"]
+    advance3["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute the end-of-substep conserved variables &lt;code&gt;U&lt;/code&gt;.&lt;/small&gt;"]
+    u_to_p["&lt;code&gt;U_to_P()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute end-of-substep primitive variables  &lt;code&gt;P&lt;/code&gt; using the 1Dw scheme.&lt;/small&gt;"]
     step_post["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Heat electrons, fixups&lt;br/&gt;Boundary conditions, corrector&lt;/small&gt;"]
     dump_check{"Writing dump file?"}
     current_calc["&lt;code&gt;current_calc()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute S→jcon&lt;/small&gt;"]
@@ -568,12 +564,14 @@
     advance1 --&gt; get_flux
     get_flux --&gt; reconstruct
     reconstruct --&gt; lr_to_flux
-    lr_to_flux --&gt; advance2
+    lr_to_flux --&gt; ndt_min
+    ndt_min --&gt; advance2
     advance2 --&gt; fix_flux
     fix_flux --&gt; flux_ct
     flux_ct --&gt; get_source
     get_source --&gt; advance3
-    advance3 --&gt; step_post
+    advance3 --&gt; u_to_p
+    u_to_p --&gt; step_post
     step_post --&gt; dump_check
     dump_check --&gt;|Yes| current_calc
     dump_check --&gt;|No| increment
@@ -603,6 +601,7 @@
     style get_flux fill:#F0997B,stroke:#444,color:#4A1B0C
     style reconstruct fill:#F0997B,stroke:#444,color:#4A1B0C
     style lr_to_flux fill:#F0997B,stroke:#444,color:#4A1B0C
+    style ndt_min fill:#F0997B,stroke:#444,color:#4A1B0C
     style flux_ct fill:#F0997B,stroke:#444,color:#4A1B0C
 
     %% bounds.c — blue 200
@@ -610,6 +609,9 @@
 
     %% phys.c — green 200
     style get_source fill:#97C459,stroke:#444,color:#173404
+
+    %% u_to_p.c sky 200
+    style u_to_p fill:#86D4E0,stroke:#444,color:#1A2F42
 
     %% restart.c / problem.c / current.c — amber 200
     style restart_init fill:#FAC775,stroke:#444,color:#412402
@@ -660,6 +662,10 @@
 <td>phys.c</td>
 </tr>
 <tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#86D4E0;border:1px solid #444;border-radius:3px"></span></td>
+<td>u_to_p.c</td>
+</tr>
+<tr>
 <td><span style="display:inline-block;width:16px;height:16px;background:#FAC775;border:1px solid #444;border-radius:3px"></span></td>
 <td>restart.c / problem.c / current.c</td>
 </tr>
@@ -673,6 +679,7 @@
 </tr>
 </tbody>
 </table>
+<p>Save a copy of primitive variables in <code>FluidState S</code> in <code>Ssave</code>; will be used for computing the 4-current at the end of the substep.</p>
 
 
 
