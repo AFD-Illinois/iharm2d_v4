@@ -21,7 +21,7 @@
     
     
       
-        <title>Control Flow - iharm2d v4: wiki</title>
+        <title>Control flow and FluidState mapping - iharm2d v4: wiki</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#control-flow-for-iharm2d-v4" class="md-skip">
+        <a href="#control-flow-and-fluidstate-mapping" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Control Flow
+              Control flow and FluidState mapping
             
           </span>
         </div>
@@ -344,6 +344,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control flow and FluidState mapping
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -351,7 +369,7 @@
   <span class="md-ellipsis">
     
   
-    Control Flow
+    Control flow and FluidState mapping
   
 
     
@@ -361,123 +379,118 @@
 
       </a>
       
-    </li>
-  
+        
 
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
     
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
+        <li class="md-nav__item">
+  <a href="#iharm-control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
       
-  
-  
-  
-  
-    
-    
+        iharm control flow
       
-        
+    </span>
+  </a>
+  
+</li>
       
-        
+        <li class="md-nav__item">
+  <a href="#fluidstate-reference" class="md-nav__link">
+    <span class="md-ellipsis">
       
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
+        FluidState reference
       
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FluidState reference">
+      <ul class="md-nav__list">
         
+          <li class="md-nav__item">
+  <a href="#stepc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        step.c
+      
+    </span>
+  </a>
+  
+</li>
         
-          
+          <li class="md-nav__item">
+  <a href="#fluxesc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fluxes.c
+      
+    </span>
+  </a>
+  
+</li>
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+          <li class="md-nav__item">
+  <a href="#reconstructionc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reconstruction.c
+      
+    </span>
+  </a>
+  
+</li>
         
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
+          <li class="md-nav__item">
+  <a href="#currentc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current.c
+      
+    </span>
+  </a>
   
-  
-  <span class="md-ellipsis">
-    
-  
-    API Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+</li>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
+          <li class="md-nav__item">
+  <a href="#electronsc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        electrons.c
+      
+    </span>
+  </a>
   
-    API Reference
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/main.md" class="md-nav__link">
+</li>
         
+          <li class="md-nav__item">
+  <a href="#fixupc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fixup.c
+      
+    </span>
+  </a>
   
-  
-  <span class="md-ellipsis">
-    
-  
-    main.c
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/fluxes.md" class="md-nav__link">
+</li>
         
+      </ul>
+    </nav>
   
+</li>
+      
+    </ul>
   
-  <span class="md-ellipsis">
-    
-  
-    fluxes.c
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
+</nav>
       
     </li>
   
@@ -503,6 +516,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#iharm-control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iharm control flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluidstate-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FluidState reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FluidState reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stepc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        step.c
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluxesc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fluxes.c
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reconstructionc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reconstruction.c
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#currentc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        current.c
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#electronsc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        electrons.c
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixupc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fixup.c
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -521,33 +636,41 @@
   
 
 
-<h1 id="control-flow-for-iharm2d-v4">Control flow for iharm2d v4</h1>
+<h1 id="control-flow-and-fluidstate-mapping">Control flow and <code>FluidState</code> mapping</h1>
+<p>This page provides an overview of the <code>iharm</code> control flow, color-coded by source file, followed by a reference for <code>FluidState</code> usage across functions. The flowchart shows the sequence of function calls from initialization through the main integration loop. The <code>FluidState</code> reference documents how <code>FluidState</code> structs are passed, aliased, and modified as control flows from caller to callee — each function's entry lists its parameters, local states, and outgoing calls with the arguments passed. Only functions that receive or define more than one <code>FluidState</code> are listed — single-state functions, e.g., like <code>fixup()</code> or <code>prim_to_flux()</code> are straightforward and omitted for brevity.</p>
+<h3 id="iharm-control-flow"><code>iharm</code> control flow</h3>
 <pre class="mermaid"><code>flowchart TD
     Start["Start"]
-    main_read["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Read command line arguments&lt;/small&gt;"]
-    read_params["&lt;code&gt;read_params()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Set runtime parameters&lt;/small&gt;"]
-    main_dirs["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Make dump and restart directories, set number of OpenMP threads&lt;/small&gt;"]
+    main_read["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Read command line arguments.&lt;/small&gt;"]
+    read_params["&lt;code&gt;read_params()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Set runtime parameters.&lt;/small&gt;"]
+    main_dirs["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Make dump and restart directories, set number of OpenMP threads.&lt;/small&gt;"]
     restart_check{"Restart file exists?"}
-    restart_init["&lt;code&gt;restart_init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Read restart file, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;&lt;/small&gt;"]
-    init["&lt;code&gt;init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Initialize Fishbone-Moncrief torus, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;&lt;/small&gt;"]
+    restart_init["&lt;code&gt;restart_init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Read restart file, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;.&lt;/small&gt;"]
+    init["&lt;code&gt;init()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Initialize Fishbone-Moncrief torus, set &lt;code&gt;GridGeom&lt;/code&gt; struct &lt;code&gt;G&lt;/code&gt; and &lt;code&gt;FluidState&lt;/code&gt; struct &lt;code&gt;S&lt;/code&gt;.&lt;/small&gt;"]
     main_loop["&lt;code&gt;main()&lt;/code&gt;&lt;br&gt;&lt;small&gt;Integrate until user-provided timestamp &lt;code&gt;tf&lt;/code&gt;&lt;/small&gt;&lt;br&gt;while t &amp;leq; tf."]
     step_save["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Driver function.&lt;/small&gt;"]
     advance1["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Advance fluid state by half timestep (0.5*&lt;code&gt;dt&lt;/code&gt;).&lt;/small&gt;"]
     get_flux["&lt;code&gt;get_flux()&lt;/code&gt;"]
-    reconstruct["&lt;code&gt;reconstruct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Reconstruct left (&lt;code&gt;Pl&lt;/code&gt;) and right (&lt;code&gt;Pr&lt;/code&gt;) primitives at zone faces&lt;/small&gt;"]
+    reconstruct["&lt;code&gt;reconstruct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Reconstruct left (&lt;code&gt;Pl&lt;/code&gt;) and right (&lt;code&gt;Pr&lt;/code&gt;) primitives at zone faces.&lt;/small&gt;"]
     lr_to_flux["&lt;code&gt;lr_to_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute left (&lt;code&gt;Fl&lt;/code&gt;) and right (&lt;code&gt;Fr&lt;/code&gt;) fluxes, evaluate wavespeed (&lt;code&gt;ctop&lt;/code&gt;), and LLF flux (&lt;code&gt;F&lt;/code&gt;).&lt;/small&gt;"]
-    ndt_min["&lt;code&gt;ndt_min()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute timestep &lt;code&gt;dt_min&lt;/code&gt;&lt;/small&gt;"]
+    ndt_min["&lt;code&gt;ndt_min()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute timestep &lt;code&gt;dt_min&lt;/code&gt;.&lt;/small&gt;"]
     advance2["&lt;code&gt;advance_fluid()&lt;/code&gt;"]
-    fix_flux["&lt;code&gt;fix_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Ensure 1. no ingoing rest-mass flux at radial boundaries, 2. no flux across polar boundaries, 3. X1 flux of B2 is anti-reflected across the poles &lt;/small&gt;"]
-    flux_ct["&lt;code&gt;flux_ct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Rewrite magnetic fluxes to preserve corner-centered representation of divB following flux-CT (Toth 2000)&lt;/small&gt;"]
+    fix_flux["&lt;code&gt;fix_flux()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Ensure 1. no ingoing rest-mass flux at radial boundaries, 2. no flux across polar boundaries, 3. X1 flux of B2 is anti-reflected across the poles.&lt;/small&gt;"]
+    flux_ct["&lt;code&gt;flux_ct()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Rewrite magnetic fluxes to preserve corner-centered representation of divB following flux-CT (Toth 2000).&lt;/small&gt;"]
     get_source["&lt;code&gt;get_fluid_source()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute source term &lt;code&gt;dU&lt;/code&gt;&lt;/small&gt;"]
     advance3["&lt;code&gt;advance_fluid()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute the end-of-substep conserved variables &lt;code&gt;U&lt;/code&gt;.&lt;/small&gt;"]
     u_to_p["&lt;code&gt;U_to_P()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute end-of-substep primitive variables  &lt;code&gt;P&lt;/code&gt; using the 1Dw scheme.&lt;/small&gt;"]
-    step_post["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Heat electrons, fixups&lt;br/&gt;Boundary conditions, corrector&lt;/small&gt;"]
-    dump_check{"Writing dump file?"}
-    current_calc["&lt;code&gt;current_calc()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute S→jcon&lt;/small&gt;"]
-    increment["t += dt"]
-    main_write["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Write dump/restart if conditions met&lt;/small&gt;"]
+    step_post["&lt;code&gt;step()&lt;/code&gt;"]
+    electrons_check{"Are electrons being tracked passively?"}
+    heat_electrons["&lt;code&gt;heat_electrons()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Update electron entropy based on subgrid heating prescription chosen.&lt;/small&gt;"]
+    apply_floors["&lt;code&gt;fixup()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Apply numerical floors and track any added material by updating &lt;code&gt;fflag&lt;/code&gt;.&lt;/small&gt;"]
+    apply_bounds["&lt;code&gt;set_bounds()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Apply boundary conditions along X1 and X2.&lt;/small&gt;"]
+    fix_utop_failures["&lt;code&gt;fixup_utoprim()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Replace U-to-P inversion failures with weighted interpolation from neighbors.&lt;/small&gt;"]
+    apply_bounds_again["&lt;code&gt;set_bounds()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Apply boundary conditions along X1 and X2. An additional pass is needed to propagate updates from the fixup of U-to-P failures.&lt;/small&gt;"]
+    step_corrector["&lt;code&gt;step()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Perform the corrector step. This follows the same sequence of operations as above, but advances the fluid state by the full timestep (&lt;code&gt;dt&lt;/code&gt;).&lt;/small&gt;&lt;br/&gt;&lt;small&gt;&lt;code&gt;t += dt&lt;/code&gt;&lt;/small&gt;"]
+    dump_check{"Is a dump file going to written at the end of this time step?&lt;br/&gt;&lt;code&gt;if (t &gt;= tdump)&lt;/code&gt;"}
+    current_calc["&lt;code&gt;current_calc()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Compute four current &lt;code&gt;jcon&lt;/code&gt;&lt;/small&gt;"]
+    main_write["&lt;code&gt;main()&lt;/code&gt;&lt;br/&gt;&lt;small&gt;Update timestep counter &lt;br/&gt;Write dump/restart if conditions are met.&lt;/small&gt;"]
     loop_check{"t &amp;lt; tf?"}
     Stop["Stop"]
 
@@ -572,11 +695,18 @@
     get_source --&gt; advance3
     advance3 --&gt; u_to_p
     u_to_p --&gt; step_post
-    step_post --&gt; dump_check
+    step_post --&gt; electrons_check
+    electrons_check --&gt;|Yes| heat_electrons
+    electrons_check --&gt;|No| apply_floors
+    heat_electrons --&gt; apply_floors
+    apply_floors --&gt; apply_bounds
+    apply_bounds --&gt; fix_utop_failures
+    fix_utop_failures --&gt; apply_bounds_again
+    apply_bounds_again --&gt; step_corrector
+    step_corrector --&gt; dump_check
     dump_check --&gt;|Yes| current_calc
-    dump_check --&gt;|No| increment
-    current_calc --&gt; increment
-    increment --&gt; main_write
+    dump_check --&gt;|No| main_write
+    current_calc --&gt; main_write
     main_write --&gt; loop_check
     loop_check --&gt;|Yes| step_save
     loop_check --&gt;|No| Stop
@@ -596,6 +726,7 @@
     style advance2 fill:#5DCAA5,stroke:#444,color:#04342C
     style advance3 fill:#5DCAA5,stroke:#444,color:#04342C
     style step_post fill:#5DCAA5,stroke:#444,color:#04342C
+    style step_corrector fill:#5DCAA5,stroke:#444,color:#04342C
 
     %% fluxes.c — coral 200
     style get_flux fill:#F0997B,stroke:#444,color:#4A1B0C
@@ -605,13 +736,22 @@
     style flux_ct fill:#F0997B,stroke:#444,color:#4A1B0C
 
     %% bounds.c — blue 200
-    style fix_flux fill:#85B7EB,stroke:#444,color:#042C53
+    style fix_flux fill: #85B7EB,stroke:#444,color:#042C53
+    style apply_bounds fill: #85B7EB,stroke:#444,color:#042C53
+    style apply_bounds_again fill: #85B7EB,stroke:#444,color:#042C53
 
     %% phys.c — green 200
     style get_source fill:#97C459,stroke:#444,color:#173404
 
-    %% u_to_p.c sky 200
+    %% u_to_p.c - sky 200
     style u_to_p fill:#86D4E0,stroke:#444,color:#1A2F42
+
+    %% electrons.c - buttercup 200
+    style heat_electrons fill: #F7E08A, stroke:#444, color:#3D3204
+
+    %% fixup.c - plum 200
+    style apply_floors fill: #CDA0D4,stroke:#444,color:#3A1542
+    style fix_utop_failures fill: #CDA0D4,stroke:#444,color:#3A1542
 
     %% restart.c / problem.c / current.c — amber 200
     style restart_init fill:#FAC775,stroke:#444,color:#412402
@@ -622,13 +762,11 @@
     style restart_check fill:#F09595,stroke:#444,color:#501313
     style dump_check fill:#F09595,stroke:#444,color:#501313
     style loop_check fill:#F09595,stroke:#444,color:#501313
+    style electrons_check fill:#F09595,stroke:#444,color:#501313
 
     %% Start / Stop — gray 200
     style Start fill:#B4B2A9,stroke:#444,color:#2C2C2A
-    style Stop fill:#B4B2A9,stroke:#444,color:#2C2C2A
-
-    %% Neutral
-    style increment fill:#B4B2A9,stroke:#444,color:#2C2C2A</code></pre>
+    style Stop fill:#B4B2A9,stroke:#444,color:#2C2C2A</code></pre>
 <table>
 <thead>
 <tr>
@@ -666,6 +804,14 @@
 <td>u_to_p.c</td>
 </tr>
 <tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#86D4E0;border:1px solid #444;border-radius:3px"></span></td>
+<td>electrons.c</td>
+</tr>
+<tr>
+<td><span style="display:inline-block;width:16px;height:16px;background:#86D4E0;border:1px solid #444;border-radius:3px"></span></td>
+<td>fixup.c</td>
+</tr>
+<tr>
 <td><span style="display:inline-block;width:16px;height:16px;background:#FAC775;border:1px solid #444;border-radius:3px"></span></td>
 <td>restart.c / problem.c / current.c</td>
 </tr>
@@ -675,11 +821,779 @@
 </tr>
 <tr>
 <td><span style="display:inline-block;width:16px;height:16px;background:#B4B2A9;border:1px solid #444;border-radius:3px"></span></td>
-<td>start / stop / neutral</td>
+<td>start / stop</td>
 </tr>
 </tbody>
 </table>
-<p>Save a copy of primitive variables in <code>FluidState S</code> in <code>Ssave</code>; will be used for computing the 4-current at the end of the substep.</p>
+<h3 id="fluidstate-reference">FluidState reference</h3>
+<h4 id="stepc">step.c</h4>
+<details>
+<summary><code>step(G, S)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td><code>FluidState*</code></td>
+<td>Primary simulation state, read and updated in-place</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Local variables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Stmp</code></td>
+<td><code>FluidState*</code></td>
+<td>Scratch buffer for predictor output</td>
+</tr>
+<tr>
+<td><code>Ssave</code></td>
+<td><code>FluidState*</code></td>
+<td>Snapshot of <code>S→P</code> before the step, used for current calculation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls (predictor):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>advance_fluid()</code></td>
+<td><code>G, Si=S, Ss=S, Sf=Stmp, Dt=0.5*dt</code></td>
+</tr>
+<tr>
+<td><code>heat_electrons()</code></td>
+<td><code>G, Ss=S, Sf=Stmp</code></td>
+</tr>
+<tr>
+<td><code>fixup()</code></td>
+<td><code>G, Stmp</code></td>
+</tr>
+<tr>
+<td><code>fixup_electrons()</code></td>
+<td><code>Stmp</code></td>
+</tr>
+<tr>
+<td><code>set_bounds()</code></td>
+<td><code>G, Stmp</code></td>
+</tr>
+<tr>
+<td><code>fixup_utoprim()</code></td>
+<td><code>G, Stmp</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls (corrector):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>advance_fluid()</code></td>
+<td><code>G, Si=S, Ss=Stmp, Sf=S, Dt=dt</code></td>
+</tr>
+<tr>
+<td><code>heat_electrons()</code></td>
+<td><code>G, Ss=Stmp, Sf=S</code></td>
+</tr>
+<tr>
+<td><code>fixup()</code></td>
+<td><code>G, S</code></td>
+</tr>
+<tr>
+<td><code>fixup_electrons()</code></td>
+<td><code>S</code></td>
+</tr>
+<tr>
+<td><code>set_bounds()</code></td>
+<td><code>G, S</code></td>
+</tr>
+<tr>
+<td><code>fixup_utoprim()</code></td>
+<td><code>G, S</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls (post-step):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>current_calc()</code></td>
+<td><code>G, S, Ssave, dt</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> The predictor step advances <code>S</code> into <code>Stmp</code> using half-timestep. The corrector then uses <code>Stmp</code> as the source state and writes the full-timestep result back into <code>S</code>. Notice how <code>Ss</code> and <code>Sf</code> swap between the two stages — in the predictor <code>S</code> is both input and source while <code>Stmp</code> receives the output, but in the corrector <code>Stmp</code> becomes the source and <code>S</code> receives the output.</p>
+</blockquote>
+</details>
+<details>
+<summary><code>advance_fluid(G, Si, Ss, Sf, Dt)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>Si</code></td>
+<td><code>FluidState*</code></td>
+<td>Initial state — conserved variables <code>Si→U</code> computed from this</td>
+</tr>
+<tr>
+<td><code>Ss</code></td>
+<td><code>FluidState*</code></td>
+<td>Source state — fluxes and source terms evaluated from this</td>
+</tr>
+<tr>
+<td><code>Sf</code></td>
+<td><code>FluidState*</code></td>
+<td>Final state — updated primitives <code>Sf→P</code> and conserved <code>Sf→U</code> written here</td>
+</tr>
+<tr>
+<td><code>Dt</code></td>
+<td><code>double</code></td>
+<td>Substep duration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Local variables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dU</code></td>
+<td><code>GridPrim*</code></td>
+<td>Fluid source term (allocated once)</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td><code>FluidFlux*</code></td>
+<td>Flux struct for X1 and X2 directions</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_flux()</code></td>
+<td><code>G, Ss, F</code></td>
+</tr>
+<tr>
+<td><code>fix_flux()</code></td>
+<td><code>F</code></td>
+</tr>
+<tr>
+<td><code>flux_ct()</code></td>
+<td><code>F</code></td>
+</tr>
+<tr>
+<td><code>get_state_vec()</code></td>
+<td><code>G, Ss, ...</code> for <code>Ss</code> 4-vectors</td>
+</tr>
+<tr>
+<td><code>get_fluid_source()</code></td>
+<td><code>G, Ss, dU</code></td>
+</tr>
+<tr>
+<td><code>get_state_vec()</code></td>
+<td><code>G, Si, ...</code> for <code>Si</code> 4-vectors</td>
+</tr>
+<tr>
+<td><code>prim_to_flux_vec()</code></td>
+<td><code>G, Si, ...</code></td>
+</tr>
+<tr>
+<td><code>U_to_P()</code></td>
+<td><code>G, Sf, ...</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong>: <code>Sf→P</code> is initialized as a copy of <code>Si→P</code> at the start. Then <code>Sf→U</code> is computed from <code>Si→U</code> plus flux divergence and source terms. Finally <code>U_to_P()</code> inverts <code>Sf→U</code> back to <code>Sf→P</code>.</p>
+</details>
+<h4 id="fluxesc">fluxes.c</h4>
+<details>
+<summary><code>get_flux(G, S, F)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td><code>FluidState*</code></td>
+<td>Current fluid state — source for reconstruction</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td><code>FluidFlux*</code></td>
+<td>Output flux struct — <code>F→X1</code> and <code>F→X2</code> filled here</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Local variables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sl</code></td>
+<td><code>FluidState*</code></td>
+<td>Left reconstructed state at zone faces</td>
+</tr>
+<tr>
+<td><code>Sr</code></td>
+<td><code>FluidState*</code></td>
+<td>Right reconstructed state at zone faces</td>
+</tr>
+<tr>
+<td><code>ctop</code></td>
+<td><code>GridVector*</code></td>
+<td>Maximum wave speed grid, used for CFL</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reconstruct()</code></td>
+<td><code>S, Sl→P, Sr→P, dir</code> (called once per direction)</td>
+</tr>
+<tr>
+<td><code>lr_to_flux()</code></td>
+<td><code>G, Sl, Sr, dir, loc, &amp;(F→X1), ctop</code> for X1; <code>G, Sl, Sr, dir, loc, &amp;(F→X2), ctop</code> for X2</td>
+</tr>
+<tr>
+<td><code>ndt_min()</code></td>
+<td><code>ctop</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> <code>S</code> is the <code>Ss</code> (source state) passed by <code>advance_fluid()</code>. Reconstruction reads <code>S→P</code> and fills <code>Sl→P</code> and <code>Sr→P</code>, which are then read by <code>lr_to_flux()</code>. The same <code>Sl</code> and <code>Sr</code> are reused for both X1 and X2 directions.</p>
+</blockquote>
+</details>
+<details>
+<summary><code>lr_to_flux(G, Sr, Sl, dir, loc, flux, ctop)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>Sr</code></td>
+<td><code>FluidState*</code></td>
+<td>Right reconstructed state — <code>Sr→P</code> read, <code>Sr→U</code> computed and used</td>
+</tr>
+<tr>
+<td><code>Sl</code></td>
+<td><code>FluidState*</code></td>
+<td>Left reconstructed state — <code>Sl→P</code> shifted in-place, <code>Sl→U</code> computed and used</td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td><code>int</code></td>
+<td>Coordinate direction (1 = X1, 2 = X2)</td>
+</tr>
+<tr>
+<td><code>loc</code></td>
+<td><code>int</code></td>
+<td>Location (FACE1 or FACE2)</td>
+</tr>
+<tr>
+<td><code>flux</code></td>
+<td><code>GridPrim*</code></td>
+<td>Output array — LLF flux written here</td>
+</tr>
+<tr>
+<td><code>ctop</code></td>
+<td><code>GridVector*</code></td>
+<td>Output — maximum wave speed per zone per direction written here</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Local variables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fluxL</code></td>
+<td><code>GridPrim*</code></td>
+<td>Physical flux from left state</td>
+</tr>
+<tr>
+<td><code>fluxR</code></td>
+<td><code>GridPrim*</code></td>
+<td>Physical flux from right state</td>
+</tr>
+<tr>
+<td><code>cmaxL</code>, <code>cmaxR</code></td>
+<td><code>GridDouble*</code></td>
+<td>Maximum characteristic speed from left/right states</td>
+</tr>
+<tr>
+<td><code>cminL</code>, <code>cminR</code></td>
+<td><code>GridDouble*</code></td>
+<td>Minimum characteristic speed from left/right states</td>
+</tr>
+<tr>
+<td><code>cmax</code>, <code>cmin</code></td>
+<td><code>GridDouble*</code></td>
+<td>Combined max/min wave speeds across both states</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_state_vec()</code></td>
+<td><code>G, Sl, loc, ...</code> and <code>G, Sr, loc, ...</code></td>
+</tr>
+<tr>
+<td><code>prim_to_flux_vec()</code></td>
+<td><code>G, Sl, ...</code> → <code>Sl→U</code> and <code>fluxL</code>; <code>G, Sr, ...</code> → <code>Sr→U</code> and <code>fluxR</code></td>
+</tr>
+<tr>
+<td><code>mhd_vchar()</code></td>
+<td><code>G, Sl, i, j, loc, dir, cmaxL, cminL</code> and <code>G, Sr, ..., cmaxR, cminR</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> <code>Sl→P</code> is shifted by one zone in the <code>dir</code> direction at the start of this function so that <code>Sl→P[i]</code> corresponds to the left interface of zone <code>i</code>. The parameter order (<code>Sr</code> before <code>Sl</code>) is intentional since the left reconstructed primitives for zone center index <code>i</code> correspond to the right primitives for interface index <code>i</code>. The LLF flux is assembled as <code>0.5 * (fluxL + fluxR - ctop * (Sr→U - Sl→U))</code>.</p>
+</blockquote>
+</details>
+<!-- <details markdown="1">
+<summary><code>flux_ct(F)</code></summary>
+
+**Parameters:**
+
+| Name | Type | Role |
+|------|------|------|
+| `F` | `FluidFlux*` | Flux struct — `F→X1` and `F→X2` magnetic components modified in-place |
+
+**Local variables:**
+
+| Name | Type | Role |
+|------|------|------|
+| `emf` | `GridDouble` | Corner-centered electromotive force (stack-allocated) |
+
+**Calls:**
+
+None — operates directly on `F`.
+
+> **Note:** No `FluidState` is involved. This function only modifies the magnetic field components of the flux struct: `F→X1[B1]` is zeroed, `F→X1[B2]` is replaced by corner-averaged EMF, `F→X2[B1]` is replaced by negative corner-averaged EMF, and `F→X2[B2]` is zeroed. This enforces the divergence-free constraint on B to machine precision.
+
+</details> -->
+
+<h4 id="reconstructionc">reconstruction.c</h4>
+<details>
+<summary><code>reconstruct(S, Pl, Pr, dir)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S</code></td>
+<td><code>FluidState*</code></td>
+<td>Source state — <code>S-&gt;P</code> provides cell-centered primitives (read-only)</td>
+</tr>
+<tr>
+<td><code>Pl</code></td>
+<td><code>GridPrim</code></td>
+<td>Output — left-reconstructed primitives at cell interfaces</td>
+</tr>
+<tr>
+<td><code>Pr</code></td>
+<td><code>GridPrim</code></td>
+<td>Output — right-reconstructed primitives at cell interfaces</td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td><code>int</code></td>
+<td>Direction of reconstruction: 1 (X1) or 2 (X2)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RECON_ALGO</code></td>
+<td>5-point stencil from <code>S-&gt;P</code>, output to <code>Pl</code>, <code>Pr</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> <code>RECON_ALGO</code> is a compile-time macro that dispatches to <code>linear_mc()</code>, <code>weno()</code>, or <code>mp5()</code> depending on the <code>RECONSTRUCTION</code> parameter in <code>parameters.h</code>. All three share the same 5-point interface <code>(x1, x2, x3, x4, x5, *lout, *rout)</code>. No <code>FluidState</code> is modified — <code>S-&gt;P</code> is read and the results are written into the <code>Pl</code> and <code>Pr</code> arrays, which are <code>Sl-&gt;P</code> and <code>Sr-&gt;P</code> as passed by <code>get_flux()</code>.</p>
+</blockquote>
+</details>
+<h4 id="currentc">current.c</h4>
+<details>
+<summary><code>current_calc(G, S, Ssave, dtsave)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td><code>FluidState*</code></td>
+<td>State at end of step — <code>S-&gt;ucov</code>, <code>S-&gt;bcov</code> read; <code>S-&gt;jcon</code> written here</td>
+</tr>
+<tr>
+<td><code>Ssave</code></td>
+<td><code>FluidState*</code></td>
+<td>State at beginning of step — <code>Ssave-&gt;P</code>, <code>Ssave-&gt;ucov</code>, <code>Ssave-&gt;bcov</code> read</td>
+</tr>
+<tr>
+<td><code>dtsave</code></td>
+<td><code>double</code></td>
+<td>Timestep used for the time derivative</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Local variables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Sa</code></td>
+<td><code>FluidState*</code></td>
+<td>Time-centred average state: <code>Sa-&gt;P = 0.5*(S-&gt;P + Ssave-&gt;P)</code> — used for spatial derivatives</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_state_vec</code></td>
+<td><code>G, S, ...</code> for <code>S</code> 4-vectors</td>
+</tr>
+<tr>
+<td><code>get_state_vec</code></td>
+<td><code>G, Ssave, ...</code> for <code>Ssave</code> 4-vectors</td>
+</tr>
+<tr>
+<td><code>get_state_vec</code></td>
+<td><code>G, Sa, ...</code> for <code>Sa</code> 4-vectors</td>
+</tr>
+<tr>
+<td><code>gFcon_calc</code></td>
+<td><code>G, S, ...</code> and <code>G, Ssave, ...</code> for time derivatives; <code>G, Sa, ...</code> for spatial derivatives</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> Three distinct <code>FluidState</code> structs are in play: <code>S</code> (current), <code>Ssave</code> (previous), and the locally constructed <code>Sa</code> (their average). <code>get_state_vec()</code> is called on all three before the differentiation loop so that 4-vectors are consistent. The time derivative uses <code>S</code> and <code>Ssave</code> directly, while spatial derivatives use <code>Sa</code> at neighboring zones. The output <code>j^mu</code> is stored in <code>S-&gt;jcon</code>.</p>
+</blockquote>
+</details>
+<h4 id="electronsc">electrons.c</h4>
+<details>
+<summary><code>heat_electrons(G, Ss, Sf)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>Ss</code></td>
+<td><code>FluidState*</code></td>
+<td>State at start of substep — Needed to compute heating fraction and entropy update</td>
+</tr>
+<tr>
+<td><code>Sf</code></td>
+<td><code>FluidState*</code></td>
+<td>State at end of substep — <code>Sf-&gt;P[KEL*]</code> and <code>Sf-&gt;P[KTOT]</code> updated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>heat_electrons_1zone</code></td>
+<td><code>G, Ss, Sf, i, j</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> Called twice per timestep by <code>step()</code> — once during the predictor as <code>heat_electrons(G, S, Stmp)</code> and once during the corrector as <code>heat_electrons(G, Stmp, S)</code>. The heating fraction <code>fel</code> is evaluated from <code>Ss</code> (via <code>get_fels(G, Ss, ...)</code>), while the entropy variables are updated in <code>Sf</code>.</p>
+</blockquote>
+</details>
+<h4 id="fixupc">fixup.c</h4>
+<details>
+<summary><code>fixup(G, S)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td><code>FluidState*</code></td>
+<td>Fluid state — <code>S-&gt;P</code> and <code>S-&gt;U</code> read and modified in-place by floors/ceilings</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Local variables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Stmp</code></td>
+<td><code>FluidState*</code></td>
+<td>Zero-velocity dummy parcel used to inject floor mass/energy conservatively</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fixup_ceiling</code></td>
+<td><code>G, S, i, j</code></td>
+</tr>
+<tr>
+<td><code>get_state_vec</code></td>
+<td><code>G, S, ...</code></td>
+</tr>
+<tr>
+<td><code>fixup_floor</code></td>
+<td><code>G, S, i, j</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> <code>fixup_floor()</code> is where the second <code>FluidState</code> matters — when a floor is triggered, <code>Stmp</code> is initialized as a zero-velocity parcel with the deficit in <code>RHO</code>/<code>UU</code>, converted to conserved form via <code>get_state()</code> and <code>prim_to_flux()</code>, then added to <code>S-&gt;U</code> before re-inverting with <code>U_to_P()</code>. This conservative injection avoids simply overwriting primitives, which would violate conservation.</p>
+</blockquote>
+</details>
+<details>
+<summary><code>fixup_utoprim(G, S)</code></summary>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>G</code></td>
+<td><code>GridGeom*</code></td>
+<td>Grid geometry (read-only)</td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td><code>FluidState*</code></td>
+<td>Fluid state — <code>S-&gt;P</code> for bad zones is replaced by neighbor-weighted average, then re-floored</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calls:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Callee</th>
+<th>Arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fixup_ceiling</code></td>
+<td><code>G, S, i, j</code> — applied to each repaired zone</td>
+</tr>
+<tr>
+<td><code>get_state</code></td>
+<td><code>G, S, i, j, CENT</code> — recomputes 4-vectors for the repaired zone</td>
+</tr>
+<tr>
+<td><code>fixup_floor</code></td>
+<td><code>G, S, i, j</code> — applied to each repaired zone</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> This function reads <code>S-&gt;P</code> from the 8-connected neighbors of each bad zone (where <code>pflag != 0</code>) and writes a distance-weighted average back into the bad zone's <code>S-&gt;P</code>. Only hydro primitives (indices <code>0..B1-1</code>) are interpolated. After interpolation, <code>fixup_ceiling()</code> and <code>fixup_floor()</code> are re-applied per zone, and the latter may again use the file-scoped <code>Stmp</code> to inject floor mass/energy conservatively.</p>
+</blockquote>
+</details>
 
 
 

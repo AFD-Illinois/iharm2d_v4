@@ -6,10 +6,7 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - GRMHD Theory: theory.md
-  - Control Flow: iharm-control-flow.md
-  - API Reference:
-    - main.c: api/main.md
-    - fluxes.c: api/fluxes.md
+  - Control flow and FluidState mapping: iharm-control-flow.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)
@@ -29,6 +26,9 @@ markdown_extensions:
         - name: mermaid   # Lets them embed Mermaid diagrams
           class: mermaid  # (flowcharts, sequence diagrams) in code blocks
           format: !!python/name:pymdownx.superfences.fence_code_format
+
+  - md_in_html
+  - tables
 
 theme:
   name: material
