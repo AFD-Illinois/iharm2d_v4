@@ -77,8 +77,8 @@ def plot(dumpno):
     
     # plotting parameters
     # Expected entropy-wave density range: rho in [1-0.01, 1+0.01].
-    vmin_rho = np.log10(1.0 - 0.01)
-    vmax_rho = np.log10(1.0 + 0.01)
+    vmin_rho = np.log10(1.0 - 1.e-4)
+    vmax_rho = np.log10(1.0 + 1.e-4)
     cmap_rho = 'turbo'
     shading = 'gouraud'
 
@@ -96,7 +96,7 @@ def plot(dumpno):
     cax = divider.append_axes("right", size="5%", pad=0.05)
     plt.colorbar(rho_plot, cax=cax)
 
-    plt.savefig(os.path.join(plotsdir,'entropy_wave_{0:04d}.png'.format(dumpno)))
+    plt.savefig(os.path.join(plotsdir,'sound_wave_{0:04d}.png'.format(dumpno)))
     plt.close()
 
 if __name__=="__main__":

@@ -62,9 +62,9 @@ void init(struct GridGeom *G, struct FluidState *S)
 		double mode = amp*cos(k*cos(theta)*X[1] + k*sin(theta)*X[2]);
 
 		S->P[RHO][j][i]	= rho0 + drho*mode;
-		S->P[UU][j][i] 	= u0   + du*mode;
-		S->P[U1][j][i] 	= (u10 + du1*mode)*cos(theta);
-		S->P[U2][j][i] 	= (u10 + du1*mode)*sin(theta);
+		S->P[UU][j][i] 	= u0;
+		S->P[U1][j][i] 	= u10*cos(theta);
+		S->P[U2][j][i] 	= u10*sin(theta);
 		S->P[U3][j][i] 	= 0.;
 		S->P[B1][j][i] 	= 0.;
 		S->P[B2][j][i] 	= 0.;

@@ -1,7 +1,7 @@
 ### RUNTIME PARAMETERS FOR SOUND WAVE ###
 
 # COORDINATES
-[dbl] tf = 7.07106781187
+[dbl] tf = 1.62018168474531
 [dbl] dt = 1.0e-06
 [dbl] x1Min = 0.0
 [dbl] x1Max = 1.0
@@ -9,7 +9,7 @@
 [dbl] x2Max = 1.0
 
 # FLUID
-[dbl] gam = 1.666667
+[dbl] gam = 1.333333
 [dbl] cour = 0.9
 
 # OUTPUT
@@ -20,4 +20,4 @@
 [int] DTp = 100
 
 # PROBLEM
-[dbl] tscale = 1.e-2
+[dbl] tscale = 5.e-2

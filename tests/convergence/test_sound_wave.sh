@@ -17,7 +17,7 @@ PROB_DIR="$HARM_DIR/prob/$PROB"
 CURRENT_DIR=""
 
 RECONS=("LINEAR" "WENO")
-RESOLUTIONS=(64 128 256)
+RESOLUTIONS=(64 128 256 512)
 
 for rec in "${RECONS[@]}"; do
     echo "Reconstruction scheme: $rec"
