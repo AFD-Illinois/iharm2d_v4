@@ -9,28 +9,28 @@
       
       
       
-        <link rel="prev" href="../getting-started/output-data-format/">
+        <link rel="prev" href="../quickstart/">
       
       
-        <link rel="next" href="../iharm-control-flow/">
+        <link rel="next" href="../runtime-parameters/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>GRMHD Theory - iharm2d v4: wiki</title>
+        <title>Compile-time parameters - iharm2d v4: wiki</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +49,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#compile-time-parameters" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +90,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="iharm2d v4: wiki" class="md-header__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
+    <a href="../.." title="iharm2d v4: wiki" class="md-header__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -105,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GRMHD Theory
+              Compile-time parameters
             
           </span>
         </div>
@@ -221,7 +226,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="iharm2d v4: wiki" class="md-nav__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
+    <a href="../.." title="iharm2d v4: wiki" class="md-nav__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -251,7 +256,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -275,8 +280,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -292,13 +299,11 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -319,7 +324,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -337,7 +342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/quickstart/" class="md-nav__link">
+      <a href="../quickstart/" class="md-nav__link">
         
   
   
@@ -362,10 +367,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../getting-started/compile-time-parameters/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compile-time parameters
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -381,6 +413,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grid-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid resolution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metric-and-coordinate-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metric and coordinate system
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#floors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Floors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#electron-thermodynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Electron thermodynamics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reconstruction-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconstruction algorithm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -393,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/runtime-parameters/" class="md-nav__link">
+      <a href="../runtime-parameters/" class="md-nav__link">
         
   
   
@@ -421,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/output-data-format/" class="md-nav__link">
+      <a href="../output-data-format/" class="md-nav__link">
         
   
   
@@ -453,17 +571,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../theory/" class="md-nav__link">
         
   
   
@@ -479,7 +590,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -491,7 +601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../iharm-control-flow/" class="md-nav__link">
+      <a href="../../iharm-control-flow/" class="md-nav__link">
         
   
   
@@ -528,6 +638,82 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grid-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid resolution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metric-and-coordinate-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metric and coordinate system
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#floors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Floors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#electron-thermodynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Electron thermodynamics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reconstruction-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconstruction algorithm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boundary-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundary conditions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -547,9 +733,60 @@
   
 
 
-  <h1>GRMHD Theory</h1>
+<h1 id="compile-time-parameters">Compile-time parameters</h1>
+<p>As mentioned in the Quickstart guide, compile-time parameters are baked into the executable at build time — changing any of them requires a fresh <code>make</code>. They live in <code>parameters.h</code> inside your <code>build_archive/</code> directory (copied there from <code>prob/PROB/parameters.h</code> when you first compile), so you can edit them freely without touching the original repository.</p>
+<p>The torus problem (<code>prob/torus/parameters.h</code>) is a good representative example, and we will use it throughout this page.</p>
+<h2 id="grid-resolution">Grid resolution</h2>
+<div class="language-c highlight"><pre><span></span><code><span class="cp">#define N1TOT 256</span>
+<span class="cp">#define N2TOT 256</span>
+</code></pre></div>
+<p><code>N1TOT</code> and <code>N2TOT</code> set the total number of grid zones in the <span class="arithmatex">\(x^1\)</span> and <span class="arithmatex">\(x^2\)</span> coordinate directions, respectively. In Kerr-Schild coordinates, as used in the black hole accretion setup, these directions map to functions of the radial coordinate <span class="arithmatex">\(r\)</span> and polar angle <span class="arithmatex">\(\theta\)</span>. Unlike <a href="git@github.com:AFD-Illinois/iharm3d.git"><code>iharm3d</code></a>, there is no companion <code>NiCPU</code> parameter here — <code>iharm2d_v4</code> does not use MPI, so the <code>NiTOT</code> values fully describe the grid with no further decomposition.</p>
+<h2 id="metric-and-coordinate-system">Metric and coordinate system</h2>
+<div class="language-c highlight"><pre><span></span><code><span class="cp">#define METRIC MKS</span>
+<span class="cp">#define DEREFINE_POLES 1</span>
+</code></pre></div>
+<p><code>METRIC</code> defines the spacetime metric used in the simulation. The two supported values are:</p>
+<ul>
+<li><code>MINKOWSKI</code> — flat spacetime in Cartesian coordinates, appropriate for many test problems.</li>
+<li><code>MKS</code> — Modified Kerr-Schild coordinates, employing an exponential radial coordinate and a modified polar coordinate that increases the resolution close to the midplane. The exact transformation is given by Equation (F1) in <a href="https://ui.adsabs.harvard.edu/abs/2022ApJS..259...64W/abstract">the PATOKA paper</a>.</li>
+<li><code>DEREFINE_POLES</code> takes a value of <code>0</code> or <code>1</code>. Setting it to <code>1</code> activates FMKS (Funky MKS) coordinates, which enlarge zones in the <span class="arithmatex">\(\theta\)</span> direction near the polar axis and close to the event horizon. This relaxes the severe timestep restriction caused by very small cells, whose light-crossing times become extremely short. For torus problems, leaving this at <code>1</code> is strongly recommended.</li>
+</ul>
+<h2 id="floors">Floors</h2>
+<div class="language-c highlight"><pre><span></span><code><span class="cp">#define WIND_TERM    0</span>
+<span class="cp">#define BSQORHOMAX   100.</span>
+<span class="cp">#define UORHOMAX     100.</span>
+</code></pre></div>
+<p>Floors prevent the fluid state from reaching unphysical values in low-density regions. <code>BSQORHOMAX</code> and <code>UORHOMAX</code> cap the maximum allowed ratios of magnetic energy density to rest-mass density (plasma magnetization) and internal energy density to rest-mass density (proportional to temperature), respectively. The defaults of <code>100.</code> are appropriate for most torus runs; you may want to raise them if your problem has strongly magnetised jets or lower them to keep the floors from activating too aggressively. Additional floors include <code>BSQOUMAX</code> (which caps the inverse plasma beta), geometric floors (<code>RHOMIN</code> and <code>UUMIN</code>) that inject rest-mass density and internal energy as functions of radius, and a velocity ceiling (<code>GAMMAMAX</code>). If these are not set in <code>parameters.h</code>, their default values are taken from <code>decs.h</code>; see that file for the complete list. <code>WIND_TERM</code> enables a small mass-injection source term (<code>1</code>) that can help stabilise the evacuated funnel region in torus problems; it is off (<code>0</code>) by default.</p>
+<h2 id="electron-thermodynamics">Electron thermodynamics</h2>
+<div class="language-c highlight"><pre><span></span><code><span class="cp">#define ELECTRONS           0</span>
+<span class="cp">#define ALLMODELS           0</span>
+<span class="cp">#define SUPPRESS_HIGHB_HEAT 1</span>
+</code></pre></div>
+<p>Setting <code>ELECTRONS</code> to <code>1</code> activates a separate electron entropy equation, enabling two-temperature plasma modelling. This is based on the entropy-tracking procedure of <a href="https://ui.adsabs.harvard.edu/abs/2015MNRAS.454.1848R/abstract">Ressler et al. (2015)</a>. <code>ALLMODELS</code> (<code>0</code> or <code>1</code>) tracks separate electron entropies for all built-in heating prescriptions simultaneously, which avoids re-running the GRMHD simulation for each heating model. <code>SUPPRESS_HIGHB_HEAT</code> (<code>0</code> or <code>1</code>) disables electron heating in strongly magnetised regions (magnetisation <span class="arithmatex">\(\sigma &gt; 1\)</span>) when set to <code>1</code>. NOTE: The electron heating prescription is applicable to the black hole accretion problem for which it was devised.</p>
+<h2 id="reconstruction-algorithm">Reconstruction algorithm</h2>
+<div class="language-c highlight"><pre><span></span><code><span class="cp">#define RECONSTRUCTION WENO</span>
+</code></pre></div>
+<p>Controls the spatial interpolation scheme used to interpolate the primitive variables to zone faces for flux calculation. The two options are:</p>
+<ul>
+<li><code>LINEAR</code> — piecewise-linear reconstruction with monotonized central (MC) slope limiter; faster but more diffusive.</li>
+<li><code>WENO</code> — fifth-order weighted essentially non-oscillatory reconstruction; more accurate and the recommended default.</li>
+</ul>
+<h2 id="boundary-conditions">Boundary conditions</h2>
+<div class="language-c highlight"><pre><span></span><code><span class="cp">#define X1L_BOUND OUTFLOW</span>
+<span class="cp">#define X1R_BOUND OUTFLOW</span>
+<span class="cp">#define X2L_BOUND POLAR</span>
+<span class="cp">#define X2R_BOUND POLAR</span>
 
-
+<span class="cp">#define X1L_INFLOW 0</span>
+<span class="cp">#define X1R_INFLOW 0</span>
+</code></pre></div>
+<p>The four <code>_BOUND</code> parameters set the boundary condition at each face of the domain. Supported values are:</p>
+<ul>
+<li><code>OUTFLOW</code> — outflow boundary condition; copy the outermost active zone into all ghost zones. Material flows out freely of the domain. Standard for the radial (<code>X1</code>) boundaries in a black hole accretion simulation.</li>
+<li><code>POLAR</code> — reflective polar boundary; reflect the fluid state across the polar axis. The sign of <code>U2</code> and <code>B2</code> is flipped across the polar boundary. Required for the <code>X2</code> boundaries when using MKS coordinates.</li>
+<li><code>PERIODIC</code> — periodic boundary, used in most flat-space test problems.</li>
+</ul>
+<p><code>X1L_INFLOW</code> and <code>X1R_INFLOW</code> (<code>0</code> or <code>1</code>) control whether inflow through the corresponding <code>OUTFLOW</code> boundary is permitted. Setting either to <code>0</code> prevents matter from being pulled back into the domain if the velocity at that face reverses — a common safeguard at the inner radial boundary near the black hole horizon.</p>
 
 
 
@@ -599,10 +836,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tracking", "navigation.indexes", "navigation.expand", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.indexes", "navigation.expand", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
