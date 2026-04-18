@@ -1,19 +1,20 @@
 ### RUNTIME PARAMETERS FOR FISHBONE-MONCRIEF TORUS BLACK HOLE ACCRETION ###
 
-# COORDINATES
+# TIME
 [dbl] tf = 1000.0
 [dbl] dt = 1.0e-06
-[dbl] Rout = 50.0
+[dbl] cour = 0.9
 
+# COORDINATES
+[dbl] a = 0.9375
+[dbl] hslope = 0.3
 [dbl] mks_smooth = 0.5
 [dbl] poly_xt = 0.82
 [dbl] poly_alpha = 14.0
+[dbl] Rout = 50.0
 
 # FLUID
 [dbl] gam = 1.333333
-[dbl] cour = 0.9
-
-[dbl] u_jitter = 4.0e-02
 
 # OUTPUT
 [dbl] DTd = 5.0
@@ -22,7 +23,7 @@
 [int] DTr = 10000
 [int] DTp = 100
 
-# Electrons
+# ELECTRONS
 [dbl] game = 1.333333
 [dbl] gamp = 1.666667
 [dbl] fel0 = 0.01
@@ -30,10 +31,8 @@
 [dbl] tptemax = 1000.0
 
 # PROBLEM
-[dbl] a = 0.9375
-[dbl] hslope = 0.3
-
 [dbl] rin = 6.0
 [dbl] rmax = 12.0
-[int] mad_type = 0
+[dbl] u_jitter = 4.0e-02
 [dbl] beta = 100.0
+[int] mad_type = 0

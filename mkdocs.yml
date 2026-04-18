@@ -4,7 +4,11 @@ repo_name: iharm2d_v4
 
 nav:
   - Home: index.md
-  - Getting Started: getting-started.md
+  - Getting Started:
+    - getting-started/quickstart.md
+    - getting-started/compile-time-parameters.md
+    - getting-started/runtime-parameters.md
+    - getting-started/output-data-format.md
   - GRMHD Theory: theory.md
   - Control flow and FluidState mapping: iharm-control-flow.md
 
@@ -52,6 +56,9 @@ theme:
     - navigation.indexes      # Section pages (index.md inside folders become section landing pages)
     - navigation.expand       # Sidebar sections start expanded
     - content.code.annotate   # Add numbered annotations to code blocks
+
+extra_javascript:
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 plugins:
   - tags              # Tag pages and filter by tags

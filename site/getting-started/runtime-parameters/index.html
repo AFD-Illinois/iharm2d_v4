@@ -9,26 +9,28 @@
       
       
       
+        <link rel="prev" href="../compile-time-parameters/">
       
-        <link rel="next" href="getting-started/quickstart/">
+      
+        <link rel="next" href="../output-data-format/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>iharm2d v4: wiki</title>
+        <title>Runtime parameters - iharm2d v4: wiki</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +49,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#iharm2d-v4" class="md-skip">
+        <a href="#runtime-parameters" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +90,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="iharm2d v4: wiki" class="md-header__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
+    <a href="../.." title="iharm2d v4: wiki" class="md-header__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Runtime parameters
             
           </span>
         </div>
@@ -224,7 +226,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="iharm2d v4: wiki" class="md-nav__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
+    <a href="../.." title="iharm2d v4: wiki" class="md-nav__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -251,37 +253,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -297,37 +272,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -336,8 +280,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -353,13 +299,11 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -380,7 +324,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -398,7 +342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="getting-started/quickstart/" class="md-nav__link">
+      <a href="../quickstart/" class="md-nav__link">
         
   
   
@@ -426,7 +370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="getting-started/compile-time-parameters/" class="md-nav__link">
+      <a href="../compile-time-parameters/" class="md-nav__link">
         
   
   
@@ -451,10 +395,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="getting-started/runtime-parameters/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runtime parameters
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -470,6 +441,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#time-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-cadences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output cadences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem-specific
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluid-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluid parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coordinates-and-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinates and domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#electron-thermodynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Electron thermodynamics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -482,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="getting-started/output-data-format/" class="md-nav__link">
+      <a href="../output-data-format/" class="md-nav__link">
         
   
   
@@ -517,7 +574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="theory/" class="md-nav__link">
+      <a href="../../theory/" class="md-nav__link">
         
   
   
@@ -544,7 +601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="iharm-control-flow/" class="md-nav__link">
+      <a href="../../iharm-control-flow/" class="md-nav__link">
         
   
   
@@ -591,10 +648,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
+  <a href="#time-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        References
+        Time control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-cadences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output cadences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-specific" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem-specific
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluid-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluid parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coordinates-and-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinates and domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#electron-thermodynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Electron thermodynamics
       
     </span>
   </a>
@@ -621,14 +733,67 @@
   
 
 
-<h1 id="iharm2d-v4">iharm2d v4</h1>
-<p><code>iharm2d_v4</code> is a 2D GRMHD black hole accretion code that implements the HARM algorithm in C. It has minimal dependencies, requiring only a C compiler with OpenMP support and the standard math library (<code>libm</code>). It is based on the 3D production code <code>iharm3d</code>, with the intention of providing a lightweight, more approachable codebase for development, testing, and teaching. Parallelism is handled entirely through OpenMP, targeting shared-memory execution on a single node. Data is written to ASCII dump files rather than HDF5.</p>
-<p>This documentation covers the structure of the code, the numerical algorithm and its implementation, and the format of the output data.</p>
-<h2 id="references">References</h2>
+<h1 id="runtime-parameters">Runtime parameters</h1>
+<p>Runtime parameters are read from <code>param.dat</code> each time the executable is launched — you can change them between runs without recompiling. Each problem ships with a sample <code>param.dat</code> under <code>prob/PROB/param.dat</code>; copy it into your output directory before running.</p>
+<p>The parameter file format is straightforward: each line begins with a type tag (<code>[dbl]</code>, <code>[int]</code>, or <code>[str]</code>) that tells the parser which data type to read, followed by the parameter name and its value. Lines beginning with <code>#</code> are ignored.</p>
+<p>The torus problem (<code>prob/torus/param.dat</code>) is used as the running example throughout this page.</p>
+<h2 id="time-control">Time control</h2>
+<div class="language-text highlight"><pre><span></span><code>[dbl] tf     = 1000.0
+[dbl] dt     = 1.0e-06
+[dbl] cour   = 0.9
+</code></pre></div>
+<p><code>tf</code> is the simulation end time in code units (gravitational units <span class="arithmatex">\(GM/c^3\)</span> for black hole problems). <code>dt</code> sets the initial timestep; the code will adapt it quickly, so this value mainly prevents an enormous first step — <code>1e-6</code> is a safe conservative starting point. <code>cour</code> is the Courant–Friedrichs–Lewy (CFL) number: the timestep is set to <code>cour</code> times the minimum light-crossing time across all zones. Values between <code>0.5</code> and <code>0.9</code> are typical; smaller values are more stable but take more steps to reach <code>tf</code>.</p>
+<h2 id="output-cadences">Output cadences</h2>
+<div class="language-text highlight"><pre><span></span><code>[dbl] DTd  = 5.0
+[dbl] DTf  = 10.0
+[dbl] DTl  = 0.5
+[int] DTr  = 10000
+[int] DTp  = 100
+</code></pre></div>
+<p>These control how often different types of output are written. <code>DTd</code>, <code>DTf</code>, and <code>DTl</code> are measured in code time units; <code>DTr</code> and <code>DTp</code> are measured in timesteps.</p>
 <ul>
-<li>The original HARM paper: <a href="https://ui.adsabs.harvard.edu/abs/2003ApJ...589..444G/abstract">Gammie et al. (2003)</a></li>
-<li><code>iharm3d</code> code paper: <a href="https://ui.adsabs.harvard.edu/abs/2021JOSS....6.3336P/abstract">Prather et al. (2021)</a></li>
+<li><code>DTd</code> — interval between fluid-state dumps written to <code>dumps/</code>.</li>
+<li><code>DTf</code> — legacy "full" dump interval, retained for historical compatibility and unused in current runs.</li>
+<li><code>DTl</code> — interval between entries in <code>log.out</code> (for example, radial fluxes and maximum divergence error).</li>
+<li><code>DTr</code> — interval between restart files, written every N timesteps.</li>
+<li><code>DTp</code> — interval between performance reports printed to stdout, written every N timesteps.</li>
 </ul>
+<p>For black hole accretion problems in EHT production runs, a typical value is <code>DTd = 5.0</code>.</p>
+<h2 id="problem-specific">Problem-specific</h2>
+<p>In addition to the core parameters above, each problem registers its own parameters in <code>set_problem_params()</code> inside <code>prob/PROB/problem.c</code>. These are read from the same <code>param.dat</code> — there is no separate file — so what appears in <code>param.dat</code> depends entirely on the problem. For example, <code>mhdmodes2d</code> adds only a single parameter <code>nmode</code> (an integer selecting which linear MHD eigenmode to initialise), whereas the torus problem adds <code>rin</code>, <code>rmax</code>, <code>u_jitter</code>, <code>beta</code>, <code>mad_type</code>, explained below.</p>
+<div class="language-text highlight"><pre><span></span><code>[dbl] rin      = 6.0
+[dbl] rmax     = 12.0
+[dbl] u_jitter = 4.0e-02
+[dbl] beta     = 100.0
+[int] mad_type = 0
+</code></pre></div>
+<p><code>rin</code> and <code>rmax</code> define the <a href="https://ui.adsabs.harvard.edu/abs/1976ApJ...207..962F/abstract">Fishbone-Moncrief torus</a>: <code>rin</code> is the inner edge of the torus (in <span class="arithmatex">\(r_g\equiv GM/c^2\)</span>) and <code>rmax</code> is the radius of the pressure maximum (also in $r_g). It is a solution to the relativistic Euler equations in a stationary, axisymmetric background for an isentropic, axisymmetric, purely azimuthal flow. The solutions are parameterized by a constant angular momentum mass density, <span class="arithmatex">\(\ell\equiv u_{\phi}u^{t}\)</span>. The angular momentum of the torus is set analytically from <code>rmax</code>. Typically we set <code>rin</code> and <code>rmax</code> to 10 and 20 for SANE simulations, and 20 and 41 for MAD simulations.</p>
+<p><code>u_jitter</code> adds a small random perturbation to the initial internal energy field. This perturbs the equilibrium torus, seeds instabilities such as the magnetorotational instability (MRI), and helps trigger accretion.</p>
+<p><code>beta</code> is the target plasma <span class="arithmatex">\(\beta = P_{\rm gas} / P_{\rm mag}\)</span> used to normalise the initial magnetic field. <code>beta = 100</code> is the standard choice and it implies that the initial field is dynamically weak, which is standard for most GRMHD torus setups.</p>
+<p><code>mad_type</code> specifies the initial magnetic field configuration. <code>0</code> selects the standard and normal evolution (SANE), while <code>1</code> selects a magnetically arrested disk (MAD) setup. Although the steady-state magnetic flux is not trivially determined by the initial conditions, these configurations reflect setups identified in previous work as producing either SANE or MAD flows.</p>
+<h2 id="fluid-parameters">Fluid parameters</h2>
+<div class="language-text highlight"><pre><span></span><code>[dbl] gam = 1.333333
+</code></pre></div>
+<p><code>gam</code> is the adiabatic index <span class="arithmatex">\(\gamma\)</span> of the gas. For a relativistic gas, <span class="arithmatex">\(\gamma = 4/3 \approx 1.333\)</span>; for a non-relativistic monatomic gas, <span class="arithmatex">\(\gamma = 5/3 \approx 1.666667\)</span>. The latter is a good choice for single-temperature GRMHD.</p>
+<h2 id="coordinates-and-domain">Coordinates and domain</h2>
+<p><div class="language-text highlight"><pre><span></span><code>[dbl] a           = 0.9375
+[dbl] Rout        = 50.0
+[dbl] hslope = 0.3
+[dbl] mks_smooth  = 0.5
+[dbl] poly_xt     = 0.82
+[dbl] poly_alpha  = 14.0
+</code></pre></div>
+<code>a</code> is the dimensionless black hole spin parameter, <span class="arithmatex">\(a = J c / G M^2\)</span>, ranging from <code>0</code> (Schwarzschild) to <code>1</code> (maximally spinning Kerr).</p>
+<p><code>Rout</code> sets the outer radial boundary of the grid in gravitational radii (<span class="arithmatex">\(r_g = GM/c^2\)</span>). The inner boundary is calculated based on the outer boundary and the resolution in the radial direction so that there are five zones inside the event horizon. </p>
+<p><code>hslope</code> controls the degree of coordinate compression toward the midplane in MKS coordinates — smaller values concentrate more zones near <span class="arithmatex">\(\theta = \pi/2\)</span>; <code>0.3</code> is a common choice for torus problems. <code>mks_smooth</code>, <code>poly_xt</code>, and <code>poly_alpha</code> are FMKS coordinate shape parameters (only used when <code>DEREFINE_POLES = 1</code>).</p>
+<h2 id="electron-thermodynamics">Electron thermodynamics</h2>
+<div class="language-text highlight"><pre><span></span><code>[dbl] game    = 1.333333
+[dbl] gamp    = 1.666667
+[dbl] fel0    = 0.01
+[dbl] tptemin = 0.001
+[dbl] tptemax = 1000.0
+</code></pre></div>
+<p>These parameters are only read when <code>ELECTRONS = 1</code> is set in <code>parameters.h</code>. <code>game</code> and <code>gamp</code> are the adiabatic indices for electrons and ions respectively; the standard choices are <span class="arithmatex">\(\gamma_e = 4/3\)</span> (relativistic electrons) and <span class="arithmatex">\(\gamma_p = 5/3\)</span> (non-relativistic ions). <code>fel0</code> is the initial fraction of dissipated energy assigned to electrons; it also sets the electron entropy in the initial condition. <code>tptemin</code> and <code>tptemax</code> clamp the ion-to-electron temperature ratio <span class="arithmatex">\(T_p/T_e\)</span> to a physically reasonable range.</p>
 
 
 
@@ -678,10 +843,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tracking", "navigation.indexes", "navigation.expand", "content.code.annotate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tracking", "navigation.indexes", "navigation.expand", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       

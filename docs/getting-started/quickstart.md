@@ -1,4 +1,4 @@
-# Getting started
+# Quickstart
 
 This page walks through obtaining the code, compiling it, and running your first problem. By the end you should have a working `harm` executable and a set of output dumps from one of the bundled test problems.
 
