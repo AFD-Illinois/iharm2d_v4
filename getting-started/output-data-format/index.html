@@ -73,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#output-data-format" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -427,6 +432,26 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Output data format
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -444,6 +469,86 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grid-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dump-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dump files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dump files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zone-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-dumps-in-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading dumps in Python
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -528,6 +633,77 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grid-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dump-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dump files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dump files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zone-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-dumps-in-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading dumps in Python
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -547,9 +723,312 @@
   
 
 
-  <h1>Output data format</h1>
+<h1 id="output-data-format">Output data format</h1>
+<p><code>iharm2d_v4</code> writes all output as plain-text ASCII files. There are two file types: a <strong>grid file</strong> written once at the start of the run, and <strong>dump files</strong> written periodically throughout the simulation. Both are placed inside the <code>dumps/</code> subdirectory of your output directory, which the code creates automatically on the first dump.</p>
+<h2 id="grid-file">Grid file</h2>
+<p>The grid file is written to <code>dumps/grid</code> at the very start of the run (before the first timestep) and never updated again. It contains one line per physical zone, in <code>ZLOOP_OUT</code> order (X2 index varies fastest, X1 slowest), with the following columns:</p>
+<table>
+<thead>
+<tr>
+<th>Column(s)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code>, <code>z</code></td>
+<td>Cartesian coordinates (<span class="arithmatex">\(r\sin\theta\)</span>, <span class="arithmatex">\(r\cos\theta\)</span>) for MKS; code coordinates <span class="arithmatex">\(x\)</span>, <span class="arithmatex">\(y\)</span> for flat space</td>
+</tr>
+<tr>
+<td><code>r</code>, <code>th</code></td>
+<td>Spherical Kerr-Schild radius and polar angle (zero if <code>METRIC</code> was set to <code>MINKOWSKI</code>)</td>
+</tr>
+<tr>
+<td><code>X1</code>, <code>X2</code></td>
+<td>Native code coordinates</td>
+</tr>
+<tr>
+<td><code>gdet</code></td>
+<td><span class="arithmatex">\(\sqrt{-g}\)</span> at zone centre</td>
+</tr>
+<tr>
+<td><code>lapse</code></td>
+<td>Lapse function <span class="arithmatex">\(\alpha\)</span> at zone centre</td>
+</tr>
+<tr>
+<td><code>gcon</code></td>
+<td>All 16 components of the contravariant metric <span class="arithmatex">\(g^{\mu\nu}\)</span> at zone centre</td>
+</tr>
+<tr>
+<td><code>gcov</code></td>
+<td>All 16 components of the covariant metric <span class="arithmatex">\(g_{\mu\nu}\)</span> at zone centre</td>
+</tr>
+</tbody>
+</table>
+<p>Since the grid never changes, post-processing scripts read this file once and reuse it for every dump.</p>
+<h2 id="dump-files">Dump files</h2>
+<p>Fluid state dumps are written to <code>dumps/dump_NNNNNNNN</code> (zero-padded eight-digit counter) at the cadence set by <code>DTd</code> in <code>param.dat</code>. </p>
+<!-- If the code aborts unexpectedly, an emergency snapshot is written to `dumps/dump_abort` instead. -->
 
+<p>Each dump file has two parts: a single header line followed by one data line per physical zone.</p>
+<h3 id="header">Header</h3>
+<p>The header is a single line of space-separated fields in the following order:</p>
+<ol>
+<li>
+<p><strong>Problem-specific fields</strong> — written first by <code>save_problem_data()</code> in <code>prob/PROB/problem.c</code>. These vary by problem. For the torus, this is <code>mad_type</code>, <code>"torus"</code>, <code>rin</code>, <code>rmax</code>, <code>beta</code>, <code>u_jitter</code>; for <code>mhdmodes2d</code> it is just <code>nmode</code>. When reading a reader, you need to know which problem generated the file in order to parse this section correctly.</p>
+</li>
+<li>
+<p><strong>Core fields</strong> (always present, in this order):</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>Code version string</td>
+</tr>
+<tr>
+<td><code>has_electrons</code></td>
+<td>int</td>
+<td><code>1</code> if electron thermodynamics is active</td>
+</tr>
+<tr>
+<td><code>gridfile</code></td>
+<td>string</td>
+<td>Name of the companion grid file (<code>"grid"</code>)</td>
+</tr>
+<tr>
+<td><code>metric</code></td>
+<td>string</td>
+<td>Coordinate system: <code>MINKOWSKI</code>, <code>MKS</code>, or <code>FMKS</code></td>
+</tr>
+<tr>
+<td><code>reconstruction</code></td>
+<td>string</td>
+<td>Reconstruction scheme: <code>LINEAR</code> or <code>WENO</code></td>
+</tr>
+<tr>
+<td><code>N1</code>, <code>N2</code></td>
+<td>int</td>
+<td>Grid dimensions</td>
+</tr>
+<tr>
+<td><code>n_prims</code></td>
+<td>int</td>
+<td>Number of primitive variables (NVAR)</td>
+</tr>
+<tr>
+<td><code>n_prims_passive</code></td>
+<td>int</td>
+<td>Number of passive scalars (currently always <code>0</code>)</td>
+</tr>
+<tr>
+<td><code>game</code>, <code>gamp</code>, <code>fel0</code>, <code>tptemin</code>, <code>tptemax</code></td>
+<td>double</td>
+<td>Electron parameters (only present if <code>has_electrons = 1</code>)</td>
+</tr>
+<tr>
+<td><code>gam</code></td>
+<td>double</td>
+<td>Adiabatic index <span class="arithmatex">\(\gamma\)</span></td>
+</tr>
+<tr>
+<td><code>cour</code></td>
+<td>double</td>
+<td>CFL number</td>
+</tr>
+<tr>
+<td><code>tf</code></td>
+<td>double</td>
+<td>Simulation end time</td>
+</tr>
+<tr>
+<td><code>startx[1]</code>, <code>startx[2]</code></td>
+<td>double</td>
+<td>Starting coordinate values</td>
+</tr>
+<tr>
+<td><code>dx[1]</code>, <code>dx[2]</code></td>
+<td>double</td>
+<td>Zone spacing in each direction</td>
+</tr>
+<tr>
+<td><code>n_dim</code></td>
+<td>int</td>
+<td>Number of dimensions (<code>4</code>)</td>
+</tr>
+<tr>
+<td><code>poly_xt</code>, <code>poly_alpha</code>, <code>mks_smooth</code></td>
+<td>double</td>
+<td>FMKS shape parameters (<code>MKS</code> metric + <code>DEREFINE_POLES</code> only)</td>
+</tr>
+<tr>
+<td><code>Rin</code>, <code>Rout</code>, <code>Rhor</code>, <code>Risco</code></td>
+<td>double</td>
+<td>Radial domain boundaries and derived radii (<code>MKS</code> metric only)</td>
+</tr>
+<tr>
+<td><code>hslope</code></td>
+<td>double</td>
+<td>Midplane concentration parameter (<code>MKS</code> metric only)</td>
+</tr>
+<tr>
+<td><code>a</code></td>
+<td>double</td>
+<td>Black hole spin (MKS only)</td>
+</tr>
+<tr>
+<td><code>t</code></td>
+<td>double</td>
+<td>Current simulation time</td>
+</tr>
+<tr>
+<td><code>dt</code></td>
+<td>double</td>
+<td>Current timestep</td>
+</tr>
+<tr>
+<td><code>nstep</code></td>
+<td>int</td>
+<td>Total number of timesteps taken till dump output</td>
+</tr>
+<tr>
+<td><code>dump_cnt</code></td>
+<td>int</td>
+<td>Dump file index</td>
+</tr>
+<tr>
+<td><code>DTd</code>, <code>DTf</code></td>
+<td>double</td>
+<td>Dump cadences</td>
+</tr>
+</tbody>
+</table>
+<h3 id="zone-data">Zone data</h3>
+<p>After the header, there is one line per physical zone in the same <code>ZLOOP_OUT</code> order as the grid file (X2 fastest, X1 slowest). Each line contains:</p>
+<table>
+<thead>
+<tr>
+<th>Column(s)</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>P[0..NVAR-1]</code></td>
+<td>All primitive variables (see table below)</td>
+</tr>
+<tr>
+<td><code>jcon[0..3]</code></td>
+<td>Four-current <span class="arithmatex">\(j^\mu\)</span></td>
+</tr>
+<tr>
+<td><code>gamma</code></td>
+<td>Lorentz factor <span class="arithmatex">\(\Gamma\)</span></td>
+</tr>
+<tr>
+<td><code>divB</code></td>
+<td>Divergence-B estimate (zero for ghost-zone-adjacent cells)</td>
+</tr>
+<tr>
+<td><code>fail</code></td>
+<td><code>U_to_P</code> failure flag (<code>0</code> = success)</td>
+</tr>
+<tr>
+<td><code>fflag</code></td>
+<td>Floor/fixup flag</td>
+</tr>
+</tbody>
+</table>
+<p>The primitive variables in order are:</p>
+<table>
+<thead>
+<tr>
+<th>Index</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>RHO</code></td>
+<td>Rest-mass density <span class="arithmatex">\(\rho\)</span></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>UU</code></td>
+<td>Internal energy density <span class="arithmatex">\(u\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>U1</code></td>
+<td>Fluid velocity along X1 <span class="arithmatex">\(\tilde{u}^1\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>U2</code></td>
+<td>Fluid velocity along X2 <span class="arithmatex">\(\tilde{u}^2\)</span></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>U3</code></td>
+<td>Fluid velocity along X3 <span class="arithmatex">\(\tilde{u}^3\)</span></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>B1</code></td>
+<td>Magnetic field component <span class="arithmatex">\(B^1\)</span></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>B2</code></td>
+<td>Magnetic field component <span class="arithmatex">\(B^2\)</span></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>B3</code></td>
+<td>Magnetic field component <span class="arithmatex">\(B^3\)</span></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>KTOT</code></td>
+<td>Total entropy (electrons only)</td>
+</tr>
+<tr>
+<td>9+</td>
+<td><code>KEL0</code>, ...</td>
+<td>Per-model electron entropies (electrons only)</td>
+</tr>
+</tbody>
+</table>
+<p>The velocity primitives are <span class="arithmatex">\(\tilde{u}^i\equiv u^i + u^t g^{t1}\alpha^2\)</span>. These variables vary from <span class="arithmatex">\(-\infty\)</span> to <span class="arithmatex">\(\infty\)</span> and thus are more stable than fluid 3-velocity <span class="arithmatex">\(v^i=u^i/u^t\)</span>. The magnetic field primitives are <span class="arithmatex">\(B^i\equiv\hspace{0.1em}^*F^{it}\)</span>, where <span class="arithmatex">\(^*F^{\mu\nu}\)</span> is the dual of the Faraday tensor.</p>
+<h2 id="reading-dumps-in-python">Reading dumps in Python</h2>
+<p>A minimal reader that loads density from a torus dump might look like:</p>
+<div class="language-python highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="c1"># Read grid</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;dumps/grid&quot;</span><span class="p">)</span>
+<span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span>
+<span class="n">r</span>  <span class="o">=</span> <span class="n">grid</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+<span class="n">th</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+
+<span class="c1"># Read dump — skip 1-line header</span>
+<span class="c1"># Torus header has 6 problem-specific fields before the core fields;</span>
+<span class="c1"># adjust the skip count for other problems.</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;dumps/dump_00000000&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n_prims</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># NVAR without electrons</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>  <span class="c1"># RHO is the first primitive</span>
+</code></pre></div>
+<p>The <code>analysis/</code> directory in the repository contains more complete Python utilities for reading and plotting dump files.</p>
 
 
 
