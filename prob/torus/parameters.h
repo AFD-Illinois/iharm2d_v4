@@ -12,17 +12,14 @@
 #define N1TOT 256
 #define N2TOT 256
 
-
 // Metric: 'MINKOWSKI' or 'MKS'
 #define METRIC MKS
 // Set 'DEREFINE_POLES' to 1 for FMKS
 #define DEREFINE_POLES 1
 
-
 // Floors:
 // Wind term is a small source for torii only
 // Maximum magnetization parameters should be set high for most problems
- 
 #define WIND_TERM 0
 #define BSQORHOMAX (100.)
 #define UORHOMAX (100.)

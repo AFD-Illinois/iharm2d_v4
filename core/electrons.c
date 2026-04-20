@@ -3,8 +3,8 @@
  * @brief Electron thermodynamics: entropy initialization, viscous heating, and fixups.
  *
  * @details Implements the sub-grid electron heating models described in
- * Sadowski et al. (2017, MNRAS 456, 1837) and related papers.  All code in
- * this file is conditionally compiled with `#if ELECTRONS`.
+ * Ressler et al. (2015).  All code in this file is conditionally compiled with 
+ * `#if ELECTRONS`.
  *
  * The electron state is tracked via specific entropy variables K_el per model:
  * @f[ K_{\rm el} = \frac{(\gamma_e - 1)\,u_e}{\rho^{\gamma_e}} @f]
