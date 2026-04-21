@@ -6,6 +6,8 @@ SYSTEM_LIBDIR = /lib64
 CC=gcc
 # Example CFLAGS for going fast with GCC
 CFLAGS = -std=gnu99 -O3 -march=native -mtune=native -flto -fopenmp -funroll-loops
+# Math optimizations
+CFLAGS += -fno-math-errno -fno-trapping-math -fno-signed-zeros
 MATH_LIB = -lm
 
 # Name of the executable
