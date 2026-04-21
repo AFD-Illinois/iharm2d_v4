@@ -1,4 +1,4 @@
-### Plot density ###
+### Plot density for advection test ###
 
 import numpy as np
 import sys, glob, psutil, os
@@ -9,6 +9,9 @@ from matplotlib import gridspec
 import matplotlib as mpl
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import multiprocessing as mp
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 
 mpl.rcParams['figure.dpi'] = 120
 mpl.rcParams['savefig.dpi'] = 120
@@ -90,7 +93,7 @@ def plot(dumpno):
     cax = divider.append_axes("right", size="5%", pad=0.05)
     plt.colorbar(rho_plot, cax=cax)
 
-    plt.savefig(os.path.join(plotsdir,'orszag_tang_{0:04d}.png'.format(dumpno)))
+    plt.savefig(os.path.join(plotsdir,'advection_{0:04d}.png'.format(dumpno)))
     plt.close()
 
 if __name__=="__main__":

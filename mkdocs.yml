@@ -11,6 +11,8 @@ nav:
     - getting-started/output-data-format.md
   - GRMHD Theory: theory.md
   - Control flow and FluidState mapping: iharm-control-flow.md
+  - Tests:
+    - tests/advection.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)
