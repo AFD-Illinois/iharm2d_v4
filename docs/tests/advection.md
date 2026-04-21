@@ -19,7 +19,7 @@ $$
 v^x = v^y = \frac{v_{\rm init}}{\sqrt{2}},\qquad v^z = 0,\qquad \mathbf{B} = 0.
 $$
 
-Threfore, the corresponding fluid primtiives are $\tilde{u}^1=\gamma v^1,\,\tilde{u}^2=\gamma v^2$, where $\gamma = (1 - v_{\rm init}^2)^{-1/2}$ is the Lorentz factor. The final time is automatically set to $t_f = \sqrt{2}/v_{\rm init}$, i.e. exactly one diagonal crossing of the box, in `problem.c`, so the analytic solution at $t_f$ is identical to the initial condition.
+Threfore, the corresponding fluid primtiives are $\tilde{u}^x=\gamma v^x,\,\tilde{u}^y=\gamma v^y$, where $\gamma = (1 - v_{\rm init}^2)^{-1/2}$ is the Lorentz factor. The final time is automatically set to $t_f = \sqrt{2}/v_{\rm init}$, i.e. exactly one diagonal crossing of the box, in `problem.c`, so the analytic solution at $t_f$ is identical to the initial condition.
 
 ## Parameters
 
