@@ -9,10 +9,8 @@
       
       
       
-        <link rel="prev" href="../../iharm-control-flow/">
+        <link rel="prev" href="../advection/">
       
-      
-        <link rel="next" href="../entropy_wave/">
       
       
         
@@ -23,7 +21,7 @@
     
     
       
-        <title>Advection - iharm2d v4: wiki</title>
+        <title>Entropy wave - iharm2d v4: wiki</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#advection" class="md-skip">
+        <a href="#entropy-wave" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Advection
+              Entropy wave
             
           </span>
         </div>
@@ -567,6 +565,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../advection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -586,7 +612,7 @@
   <span class="md-ellipsis">
     
   
-    Advection
+    Entropy wave
   
 
     
@@ -604,7 +630,7 @@
   <span class="md-ellipsis">
     
   
-    Advection
+    Entropy wave
   
 
     
@@ -673,49 +699,10 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../entropy_wave/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entropy wave
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -798,17 +785,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -829,45 +805,25 @@
   
 
 
-<h1 id="advection">Advection</h1>
+<h1 id="entropy-wave">Entropy wave</h1>
 <h2 id="overview">Overview</h2>
-<p>A smooth Gaussian density pulse sits in a uniform, constant-pressure background and is advected diagonally across a doubly-periodic box at constant velocity for exactly one domain-crossing time. By comparing the final profile to the initial condition at multiple resolutions, the test measures the numerical diffusion and convergence order of the spatial reconstruction, verifies mass and energy conservation, and the implementation of the periodic boundary conditions. However, because all magnetic field components are zero, the metric is flat, and the flow remains smooth throughout, the test does not exercise any aspect of the MHD or general relativistic sector, and says nothing about how well the code handles discontinuities and shocks.</p>
+<p>A small-amplitude sinusoidal density perturbation propagates at 45° across a doubly-periodic box on a uniform background with no magnetic field. Because the perturbation is a pure entropy mode — there is no pressure perturbation and the magnetic field is zero — the wave simply advects with the background fluid velocity very similar to the 'advection' test. The analytic solution is known at all times making this a precise test of the code's ability to preserve linear wave structure over many crossing times. As with the advection test, this problem exercises only the hydrodynamic sector of the code.</p>
 <h2 id="setup">Setup</h2>
-<p>The domain is the unit square <span class="arithmatex">\([0,1]\times[0,1]\)</span> in Minkowski coordinates with periodic boundaries on all four sides. The initial state is</p>
+<p>The domain is the unit square <span class="arithmatex">\([0,1]\times[0,1]\)</span> in Minkowski coordinates with periodic boundaries on all four sides. The background state is uniform with <span class="arithmatex">\(\rho_0 = 1\)</span>, <span class="arithmatex">\(u_0 = 0.01\)</span>, and a bulk 3-velocity of magnitude <span class="arithmatex">\(u_{10} = 0.1\)</span> directed along the diagonal. The initial density perturbation is</p>
 <div class="arithmatex">\[
-\rho(x,y) = 1 + A\,\exp\!\left(-\frac{(x-0.5)^2 + (y-0.5)^2}{r_{\rm sq}}\right),
-\qquad u = 0.1,
+\rho(x,y,0) = \rho_0 + A\,\delta\rho\,\cos(k_1 x + k_2 y),
 \]</div>
-<p>with a uniform 3-velocity of magnitude <span class="arithmatex">\(v_{\rm init}\)</span> directed along the box diagonal,</p>
-<div class="arithmatex">\[
-v^x = v^y = \frac{v_{\rm init}}{\sqrt{2}},\qquad v^z = 0,\qquad \mathbf{B} = 0.
-\]</div>
-<p>Threfore, the corresponding fluid primtiives are <span class="arithmatex">\(\tilde{u}^x=\gamma v^x,\,\tilde{u}^y=\gamma v^y\)</span>, where <span class="arithmatex">\(\gamma = (1 - v_{\rm init}^2)^{-1/2}\)</span> is the Lorentz factor. The final time is automatically set to <span class="arithmatex">\(t_f = \sqrt{2}/v_{\rm init}\)</span>, i.e. exactly one diagonal crossing of the box, in <code>problem.c</code>, so the analytic solution at <span class="arithmatex">\(t_f\)</span> is identical to the initial condition.</p>
+<p>where <span class="arithmatex">\(A = 0.01\)</span>, <span class="arithmatex">\(\delta\rho = 1\)</span>, and the wave-vector components are <span class="arithmatex">\(k_1 = k_2 = 2\pi\)</span> (one full wavelength along each axis, giving a diagonal wavelength <span class="arithmatex">\(\lambda = 1/\sqrt{2}\)</span>). The background 3-velocity components are</p>
+<p>$$
+\tilde{u}^x = \tilde{u}^y = u_{10}\rm{cos}(\pi/4),\qquad \tilde{u}^z = 0,\qquad \mathbf{B} = 0,
+$$
+The analytic solution at time <span class="arithmatex">\(t\)</span> is</p>
+<p>$$
+\rho(x,y,t) = \rho_0 + A\,\delta\rho\,\cos!\bigl(k_1(x - v^x t) + k_2(y - v^y t)\bigr),
+$$
+where <span class="arithmatex">\(\gamma = \sqrt{1 + u_{10}^2}\)</span> is the Lorentz factor and <span class="arithmatex">\(v^i=\tilde{u}^i/\gamma\)</span>. </p>
 <h2 id="parameters">Parameters</h2>
-<p>Problem-specific runtime parameters are:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>A</code></td>
-<td>Amplitude of the Gaussian density perturbation</td>
-</tr>
-<tr>
-<td><code>r_sq</code></td>
-<td>Squared width of the Gaussian, <span class="arithmatex">\(r_{\rm sq}\)</span></td>
-</tr>
-<tr>
-<td><code>v_init</code></td>
-<td>Magnitude of the advection three-velocity</td>
-</tr>
-</tbody>
-</table>
-<p>Relevant compile-time parameters are: </p>
+<p>Relevant compile-time parameters are:</p>
 <table>
 <thead>
 <tr>
@@ -879,12 +835,17 @@ v^x = v^y = \frac{v_{\rm init}}{\sqrt{2}},\qquad v^z = 0,\qquad \mathbf{B} = 0.
 <tbody>
 <tr>
 <td><code>N1TOT</code>, <code>N2TOT</code></td>
-<td><code>128</code></td>
+<td><code>256</code></td>
 <td>Grid resolution; change for convergence study</td>
 </tr>
 <tr>
 <td><code>METRIC</code></td>
 <td><code>MINKOWSKI</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>RECONSTRUCTION</code></td>
+<td><code>LINEAR</code></td>
 <td></td>
 </tr>
 <tr>
@@ -895,22 +856,16 @@ v^x = v^y = \frac{v_{\rm init}}{\sqrt{2}},\qquad v^z = 0,\qquad \mathbf{B} = 0.
 </tbody>
 </table>
 <h2 id="output-and-convergence">Output and convergence</h2>
-<p>The video below shows <span class="arithmatex">\(\rho\)</span> over one full crossing at the default <span class="arithmatex">\(128\times128\)</span> resolution.</p>
-<video controls width="100%">   
-  <source src="../../assets/advection_web.mp4" type="video/mp4">
-</video>
+<p>The video below shows <span class="arithmatex">\(\rho\)</span> over the run at the default <span class="arithmatex">\(256\times256\)</span> resolution.</p>
+<!-- TODO: embed entropy wave video -->
 
-<p>A plotting script for individual dumps is provided at <code>prob/advection/plot_advection.py</code>.</p>
-<p>Because the exact solution at <span class="arithmatex">\(t_f\)</span> equals the initial condition, the L1 error is simply</p>
+<p>A plotting script for individual dumps is provided at <code>prob/entropy_wave/plot_entropy_wave.py</code>.</p>
+<p>Because the analytic solution is known at all times, the L1 error at the final dump is</p>
 <div class="arithmatex">\[
-L_1 = \frac{1}{N_1 N_2}\sum_{i,j}\left|\rho_{ij}(t_f) - \rho_{ij}(0)\right|.
+L_1 = \frac{1}{N_1 N_2}\sum_{i,j}\left|\rho_{ij}(t_f) - \rho^{\rm exact}_{ij}(t_f)\right|.
 \]</div>
-<p>Below is the convergence plot with WENO reconstruction; the expected slope is <span class="arithmatex">\(L_1 \propto N^{-2}\)</span>.</p>
-<p><img alt="Convergence" src="../../assets/advection_2d_convergence.png" /></p>
-<h2 id="references">References</h2>
-<ul>
-<li><a href="https://ui.adsabs.harvard.edu/abs/2003ApJ...589..444G/abstract">Gammie, McKinney &amp; Tóth (2003)</a>.</li>
-</ul>
+<p>Below is the convergence plot with <code>LINEAR</code> reconstruction; the expected slope is <span class="arithmatex">\(L_1 \propto N^{-2}\)</span>.</p>
+<p><img alt="Convergence" src="../../assets/entropy_wave_2d_convergence.png" /></p>
 
 
 
