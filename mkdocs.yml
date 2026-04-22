@@ -11,7 +11,6 @@ nav:
     - getting-started/output-data-format.md
   - GRMHD Theory: theory.md
   - Numerical Algorithm: numerical-algo.md
-  - Control flow and FluidState mapping: iharm-control-flow.md
   - Tests:
     - tests/advection.md
     - tests/entropy_wave.md
@@ -22,6 +21,7 @@ nav:
     - tests/mhdmodes2d.md
     - tests/bondi.md
     - tests/torus_equilibrium.md
+  - Control flow and FluidState mapping: iharm-control-flow.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)
