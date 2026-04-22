@@ -20,6 +20,8 @@ nav:
     - tests/mhdmodes1d.md
     - tests/mhdmodes2d.md
     - tests/kelvin_helmholtz.md
+    - tests/bondi.md
+    - tests/torus_equilibrium.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)
