@@ -8,7 +8,7 @@
 
 // Global resolution
 // Since there's no MPI, NiTOT==Ni
-#define N1TOT 2048
+#define N1TOT 256
 #define N2TOT 1
 
 

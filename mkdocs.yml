@@ -13,6 +13,7 @@ nav:
   - Control flow and FluidState mapping: iharm-control-flow.md
   - Tests:
     - tests/advection.md
+    - tests/entropy_wave.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)
