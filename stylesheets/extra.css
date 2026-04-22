@@ -1,0 +1,12 @@
+/* Override Mermaid node label text in dark mode.
+   Material injects .nodeLabel { color: var(--md-mermaid-label-fg-color) }
+   which wins over the color values set in diagram style directives. */
+[data-md-color-scheme="slate"] .nodeLabel,
+[data-md-color-scheme="slate"] .nodeLabel p {
+    color: #e0e0e0 !important;
+}
+
+/* SVG text elements (non-foreignObject nodes, e.g. decision diamonds) */
+[data-md-color-scheme="slate"] .mermaid svg text {
+    fill: #e0e0e0 !important;
+}

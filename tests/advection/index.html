@@ -18,7 +18,7 @@
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
@@ -48,6 +48,8 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -92,8 +94,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="iharm2d v4: wiki" class="md-header__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../../assets/favicon.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -228,8 +229,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="iharm2d v4: wiki" class="md-nav__button md-logo" aria-label="iharm2d v4: wiki" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../../assets/favicon.png" alt="logo">
 
     </a>
     iharm2d v4: wiki
@@ -523,6 +523,8 @@
       
         
       
+        
+      
     
     
     
@@ -721,6 +723,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sound_wave/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound wave
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -897,7 +927,7 @@ v^x = v^y = \frac{v_{\rm init}}{\sqrt{2}},\qquad v^z = 0,\qquad \mathbf{B} = 0.
 <h2 id="output-and-convergence">Output and convergence</h2>
 <p>The video below shows <span class="arithmatex">\(\rho\)</span> over one full crossing at the default <span class="arithmatex">\(128\times128\)</span> resolution.</p>
 <video controls width="100%">   
-  <source src="../../assets/advection_web.mp4" type="video/mp4">
+  <source src="../../assets/advection.mp4" type="video/mp4">
 </video>
 
 <p>A plotting script for individual dumps is provided at <code>prob/advection/plot_advection.py</code>.</p>
