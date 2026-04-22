@@ -44,7 +44,7 @@ Relevant compile-time parameters are:
 The video below shows $\rho$ over one full crossing at the default $128\times128$ resolution.
 
 <video controls width="100%">   
-  <source src="../../assets/advection_web.mp4" type="video/mp4">
+  <source src="../../assets/advection.mp4" type="video/mp4">
 </video>
 
 A plotting script for individual dumps is provided at `prob/advection/plot_advection.py`.

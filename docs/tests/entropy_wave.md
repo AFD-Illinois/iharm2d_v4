@@ -9,7 +9,7 @@ A small-amplitude sinusoidal density perturbation propagates at 45° across a do
 The domain is the unit square $[0,1]\times[0,1]$ in Minkowski coordinates with periodic boundaries on all four sides. The background state is uniform with $\rho_0 = 1$, $u_0 = 0.01$, and a bulk 3-velocity of magnitude $u_{10} = 0.1$ directed along the diagonal. The initial density perturbation is
 
 $$
-\rho(x,y,0) = \rho_0 + A\,\delta\rho\,\cos(k_1 x + k_2 y),
+\rho(x,y,t=0) = \rho_0 + A\,\delta\rho\,\cos(k_1 x + k_2 y),
 $$
 
 where $A = 0.01$, $\delta\rho = 1$, and the wave-vector components are $k_1 = k_2 = 2\pi$ (one full wavelength along each axis, giving a diagonal wavelength $\lambda = 1/\sqrt{2}$). The background 3-velocity components are
@@ -20,7 +20,7 @@ $$
 The analytic solution at time $t$ is
 
 $$
-\rho(x,y,t) = \rho_0 + A\,\delta\rho\,\cos\!\bigl(k_1(x - v^x t) + k_2(y - v^y t)\bigr),
+\rho(x,y,t) = \rho_0 + A\,\delta\rho\,\cos\\bigl(k_1(x - v^x t) + k_2(y - v^y t)\bigr),
 $$
 where $\gamma = \sqrt{1 + u_{10}^2}$ is the Lorentz factor and $v^i=\tilde{u}^i/\gamma$. 
 

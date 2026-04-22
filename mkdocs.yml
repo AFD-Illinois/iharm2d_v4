@@ -14,6 +14,7 @@ nav:
   - Tests:
     - tests/advection.md
     - tests/entropy_wave.md
+    - tests/sound_wave.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)
@@ -54,11 +55,17 @@ theme:
     text: Roboto
     code: Roboto Mono
 
+  favicon: assets/favicon.png
+  logo: assets/favicon.png
+
   features:
     - navigation.tracking     # URL updates as you scroll through sections
     - navigation.indexes      # Section pages (index.md inside folders become section landing pages)
     - navigation.expand       # Sidebar sections start expanded
     - content.code.annotate   # Add numbered annotations to code blocks
+
+extra_css:
+  - stylesheets/extra.css
 
 extra_javascript:
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
