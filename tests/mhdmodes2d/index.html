@@ -949,24 +949,54 @@
 
 <h1 id="linear-mhd-modes-2d">Linear MHD modes (2D)</h1>
 <h2 id="overview">Overview</h2>
-<p>The same four MHD eigenmodes as in the 1D test are initialized here as oblique waves propagating at 45° in the <span class="arithmatex">\(x_1\)</span>–<span class="arithmatex">\(x_2\)</span> plane. Because the wave is no longer aligned with the background magnetic field, the slow, Alfvén, and fast modes all have distinct phase speeds and involve non-trivial couplings between all eight primitives. This makes the 2D mode test a more stringent check of the multi-dimensional MHD transport: errors in the treatment of off-axis wave propagation, the divergence-free constraint on <span class="arithmatex">\(\mathbf{B}\)</span>, and the flux-CT update of the magnetic field all show up as deviations from the analytic eigenmode solution.</p>
+<p>The same four MHD eigenmodes as in the 1D test are initialized here as small-amplitude sinusoidal perturbations propagating obliquely at 45° through a magnetized background. Unlike the 1D test where propagation is along <span class="arithmatex">\(\mathbf{B}\)</span>, here the oblique geometry breaks the degeneracy between the Alfvén and fast speeds, so all three modes propagate at different speeds. It also means the slow and fast eigenvectors simultaneously perturb density, internal energy, both in-plane velocity components, and both in-plane magnetic field components. This makes the 2D test a more stringent check of the code. The analytic solution is known at all times, and the test exercises multi-dimensional MHD transport as well as the flux-CT update of the magnetic field.</p>
 <h2 id="setup">Setup</h2>
 <p>The domain is the unit square <span class="arithmatex">\([0,1]\times[0,1]\)</span> in Minkowski coordinates with periodic boundaries. The background state is</p>
 <div class="arithmatex">\[
-\rho_0 = 1,\quad u_0 = 1,\quad B^1_0 = 1,\quad B^2_0 = B^3_0 = 0,\quad \tilde{u}^i_0 = 0.
+\rho_0 = 1,\quad u_0 = 1,\quad \mathbf{B}_0 = \hat{x},\quad \tilde{u}^i_0 = 0,
 \]</div>
-<p>The initial perturbation is a plane wave with wave-vector <span class="arithmatex">\((k_1, k_2) = (2\pi, 2\pi)\)</span>, giving one wavelength along each axis and a diagonal wavelength <span class="arithmatex">\(\lambda = 1/\sqrt{2}\)</span>,</p>
+<p>with the wave propagating at 45° to the field. The initial state is</p>
 <div class="arithmatex">\[
-q(x,y,0) = q_0 + A\,\delta q\,\cos(k_1 x + k_2 y),\qquad A = 10^{-4}.
+q(x,y,t=0) = q_0 + A\,\delta q\,\cos(k_1 x + k_2 y),
 \]</div>
-<p>The perturbation eigenvector <span class="arithmatex">\(\delta q\)</span> for each mode is:</p>
-<p>| <code>nmode</code> | Mode | Primary perturbations | <span class="arithmatex">\(|\omega|\)</span> |
-|---|---|---|---|
-| 0 | Entropy | <span class="arithmatex">\(\delta\rho\)</span> | <span class="arithmatex">\(2\pi/5\)</span> |
-| 1 | Slow    | <span class="arithmatex">\(\delta\rho,\,\delta u,\,\delta\tilde{u}^{1,2},\,\delta B^{1,2}\)</span> | <span class="arithmatex">\(2.410\)</span> |
-| 2 | Alfvén  | <span class="arithmatex">\(\delta\tilde{u}^3,\,\delta B^3\)</span> | <span class="arithmatex">\(3.441\)</span> |
-| 3 | Fast    | <span class="arithmatex">\(\delta\rho,\,\delta u,\,\delta\tilde{u}^{1,2},\,\delta B^{1,2}\)</span> | <span class="arithmatex">\(5.537\)</span> |</p>
-<p>The final time is set automatically to one wave period <span class="arithmatex">\(t_f = 2\pi/|\omega|\)</span> for the selected mode.</p>
+<p>with amplitude <span class="arithmatex">\(A = 10^{-4}\)</span> and <span class="arithmatex">\(k_1 = k_2 = 2\pi\)</span> (one wavelength along each axis, diagonal wavelength <span class="arithmatex">\(\lambda = 1/\sqrt{2}\)</span>). The perturbation eigenvector <span class="arithmatex">\(\delta q\)</span> for each mode is:</p>
+<table>
+<thead>
+<tr>
+<th><code>nmode</code></th>
+<th>Mode</th>
+<th>Perturbed variables</th>
+<th><span class="arithmatex">\(\lvert\omega\rvert\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Entropy</td>
+<td><span class="arithmatex">\(\delta\rho\)</span></td>
+<td><span class="arithmatex">\(t_f\)</span></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Slow</td>
+<td><span class="arithmatex">\(\delta\rho,\,\delta u,\,\delta\tilde{u}^{1,2},\,\delta B^{1,2}\)</span></td>
+<td><span class="arithmatex">\(2.410\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Alfvén</td>
+<td><span class="arithmatex">\(\delta\tilde{u}^3,\,\delta B^3\)</span></td>
+<td><span class="arithmatex">\(3.441\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Fast</td>
+<td><span class="arithmatex">\(\delta\rho,\,\delta u,\,\delta\tilde{u}^{1,2},\,\delta B^{1,2}\)</span></td>
+<td><span class="arithmatex">\(5.537\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The final time is set automatically to one full wave period <span class="arithmatex">\(t_f = 2\pi/\lvert\omega\rvert\)</span> for each mode. The frequencies are evaluated for the given background state above with <span class="arithmatex">\(k = 2\pi\sqrt{2}\)</span> and adiabatic index <span class="arithmatex">\(\Gamma = 4/3\)</span>.</p>
 <h2 id="parameters">Parameters</h2>
 <p>Problem-specific runtime parameters are:</p>
 <table>
@@ -1016,12 +1046,16 @@ q(x,y,0) = q_0 + A\,\delta q\,\cos(k_1 x + k_2 y),\qquad A = 10^{-4}.
 </tbody>
 </table>
 <h2 id="convergence">Convergence</h2>
-<p>The L1 error is computed against the analytic eigenmode solution for all eight primitives at the final dump. Run at a sequence of resolutions placing each in a directory named after its resolution, then</p>
-<div class="language-text highlight"><pre><span></span><code>python /path/to/iharm2d_v4/prob/mhdmodes2d/convergence_mhdmodes2d.py \
-    -r 64,128,256,512 -m fast
-</code></pre></div>
-<p>The <code>-m</code> flag selects the mode (<code>entropy</code>, <code>slow</code>, <code>alfven</code>, <code>fast</code>). With <code>LINEAR</code> reconstruction the expected slope is <span class="arithmatex">\(L_1 \propto N^{-2}\)</span>.</p>
-<!-- TODO: embed convergence plot -->
+<p>Because <code>tf</code> is set to exactly one wave period, the analytic solution at <span class="arithmatex">\(t_f\)</span> equals the initial eigenmode. The L1 error for each primitive <span class="arithmatex">\(q\)</span> is</p>
+<div class="arithmatex">\[
+L_1(q) = \frac{1}{N_1 N_2}\sum_{i,j}\left|q_{ij}(t_f) - q_0 - A\,\delta q\,\cos(k_1 x_i + k_2 y_j)\right|,
+\]</div>
+<p>where <span class="arithmatex">\(q_0\)</span> is the background value and only primitives with <span class="arithmatex">\(\delta q \neq 0\)</span> for the selected mode are included. The expected slope is <span class="arithmatex">\(L_1 \propto N^{-2}\)</span> as shown below,</p>
+<div style="display: flex; gap: 1rem;">
+  <img src="../../assets/mhdmodes2d_slow_convergence.png" style="width: 33%;">
+  <img src="../../assets/mhdmodes2d_alfven_convergence.png" style="width: 33%;">
+  <img src="../../assets/mhdmodes2d_fast_convergence.png" style="width: 33%;">
+</div>
 
 <h2 id="references">References</h2>
 <ul>
