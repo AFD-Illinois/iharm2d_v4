@@ -951,15 +951,15 @@
 
 <h1 id="linear-mhd-modes-1d">Linear MHD modes (1D)</h1>
 <h2 id="overview">Overview</h2>
-<p>Four linear MHD eigenmodes — entropy, slow, Alfvén, and fast — are initialized as small-amplitude sinusoidal perturbations propagating along one coordinate axis through a magnetized background. Selecting <code>nmode</code> chooses which eigenmode is excited; selecting <code>idim</code> sets the propagation direction. Because the wave propagates strictly along a coordinate axis aligned with the background magnetic field, this is a genuinely 1D problem: the grid collapses to a single strip of cells (<span class="arithmatex">\(N_2 = 1\)</span> for <code>idim=1</code>, <span class="arithmatex">\(N_1 = 1\)</span> for <code>idim=2</code>). All eight primitives are tracked, and the analytic solution is known at all times, making this a precise test of the MHD wave speeds and the accuracy with which the code propagates each mode individually.</p>
+<p>Four linear MHD eigenmodes — entropy, slow, Alfvén, and fast — are initialized as small-amplitude sinusoidal perturbations propagating along one coordinate axis through a magnetized background. Selecting <code>nmode</code> chooses which eigenmode is excited; selecting <code>idim</code> sets the propagation direction. Because the wave propagates strictly along a coordinate axis aligned with the background magnetic field, this is a 1D problem: the grid collapses to a single strip of cells (not counting ghost zones; <span class="arithmatex">\(N_2 = 1\)</span> for <code>idim=1</code>, <span class="arithmatex">\(N_1 = 1\)</span> for <code>idim=2</code>). All eight primitives are tracked, and the analytic solution is known at all times, making this a precise test of the MHD wave speeds and the accuracy with which the code propagates each mode individually.</p>
 <h2 id="setup">Setup</h2>
 <p>The domain is the unit square <span class="arithmatex">\([0,1]\times[0,1]\)</span> in Minkowski coordinates with periodic boundaries. The background state is</p>
 <div class="arithmatex">\[
-\rho_0 = 1,\quad u_0 = 1,\quad \mathbf{B}_0 = \hat{e}_{\rm idim},\quad \tilde{u}^i_0 = 0,
+\rho_0 = 1,\quad u_0 = 1,\quad \mathbf{B}_0 = 1\hat{e}_{\rm idim},\quad \tilde{u}^i_0 = 0,
 \]</div>
-<p>i.e. the field is aligned with the propagation direction. The initial state is</p>
+<p>where <span class="arithmatex">\(\hat{e}_{\rm idim}\)</span> is the unit vector along the propagation axis (<code>idim=1</code> <span class="arithmatex">\(\Rightarrow\)</span> <span class="arithmatex">\(\hat{x}\)</span>, <code>idim=2</code> <span class="arithmatex">\(\Rightarrow\)</span> <span class="arithmatex">\(\hat{y}\)</span>), i.e. the field is aligned with the propagation direction. The initial state is</p>
 <div class="arithmatex">\[
-q(x,0) = q_0 + A\,\delta q\,\cos(k\,x_{\rm idim}),
+q(x,t=0) = q_0 + A\,\delta q\,\cos(k\,x_{\rm idim}),
 \]</div>
 <p>with amplitude <span class="arithmatex">\(A = 10^{-4}\)</span> and <span class="arithmatex">\(k = 2\pi\)</span> (one wavelength in the box). The perturbation eigenvector <span class="arithmatex">\(\delta q\)</span> for each mode is:</p>
 <table>
@@ -968,6 +968,7 @@ q(x,0) = q_0 + A\,\delta q\,\cos(k\,x_{\rm idim}),
 <th><code>nmode</code></th>
 <th>Mode</th>
 <th>Perturbed variables</th>
+<th><span class="arithmatex">\(\lvert\omega\rvert\)</span></th>
 </tr>
 </thead>
 <tbody>
@@ -975,25 +976,29 @@ q(x,0) = q_0 + A\,\delta q\,\cos(k\,x_{\rm idim}),
 <td>0</td>
 <td>Entropy</td>
 <td><span class="arithmatex">\(\delta\rho\)</span> only</td>
+<td><span class="arithmatex">\(t_f\)</span></td>
 </tr>
 <tr>
 <td>1</td>
 <td>Slow</td>
 <td><span class="arithmatex">\(\delta\rho,\,\delta u,\,\delta\tilde{u}_{\parallel}\)</span></td>
+<td><span class="arithmatex">\(2.742\)</span></td>
 </tr>
 <tr>
 <td>2</td>
 <td>Alfvén</td>
 <td><span class="arithmatex">\(\delta\tilde{u}_{\perp}^{(1)},\,\delta B_{\perp}^{(1)}\)</span></td>
+<td><span class="arithmatex">\(3.441\)</span></td>
 </tr>
 <tr>
 <td>3</td>
 <td>Fast</td>
 <td><span class="arithmatex">\(\delta\tilde{u}_{\perp}^{(2)},\,\delta B_{\perp}^{(2)}\)</span></td>
+<td><span class="arithmatex">\(3.441\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>where <span class="arithmatex">\(\parallel\)</span> denotes the propagation direction and <span class="arithmatex">\(\perp^{(1,2)}\)</span> denote the two transverse directions. The final time is set automatically to one full wave period <span class="arithmatex">\(t_f = 2\pi/|\omega|\)</span> for each mode. With <span class="arithmatex">\(\Gamma = 4/3\)</span> the angular frequencies are: <span class="arithmatex">\(|\omega_{\rm slow}| = 2.742\)</span>, <span class="arithmatex">\(|\omega_{\rm Alfv\acute{e}n}| = |\omega_{\rm fast}| = 3.441\)</span> (in units where <span class="arithmatex">\(k=2\pi\)</span>).</p>
+<p>where <span class="arithmatex">\(\parallel\)</span> denotes the propagation direction and <span class="arithmatex">\(\perp^{(1,2)}\)</span> denote the two transverse directions. The final time is set automatically to one full wave period <span class="arithmatex">\(t_f = 2\pi/|\omega|\)</span>. The frequencies are evaluated for the given background state above with <span class="arithmatex">\(k = 2\pi\sqrt{2}\)</span> and adiabatic index <span class="arithmatex">\(\Gamma = 4/3\)</span>. Note that the Alfvén and fast modes are degenerate for propagation along <span class="arithmatex">\(\mathbf{B}\)</span>.</p>
 <h2 id="parameters">Parameters</h2>
 <p>Problem-specific runtime parameters are:</p>
 <table>
@@ -1032,7 +1037,7 @@ q(x,0) = q_0 + A\,\delta q\,\cos(k\,x_{\rm idim}),
 <tr>
 <td><code>N2TOT</code></td>
 <td><code>1</code></td>
-<td></td>
+<td>Set to <span class="arithmatex">\(N\)</span>, keep <code>N1TOT=1</code> when <code>idim=2</code>; swap for <code>idim=1</code></td>
 </tr>
 <tr>
 <td><code>METRIC</code></td>
@@ -1052,12 +1057,16 @@ q(x,0) = q_0 + A\,\delta q\,\cos(k\,x_{\rm idim}),
 </tbody>
 </table>
 <h2 id="convergence">Convergence</h2>
-<p>Because the analytic solution is known at all times, the L1 error is computed for all eight primitives (<span class="arithmatex">\(\rho\)</span>, <span class="arithmatex">\(u\)</span>, <span class="arithmatex">\(\tilde{u}^1\)</span>–<span class="arithmatex">\(\tilde{u}^3\)</span>, <span class="arithmatex">\(B^1\)</span>–<span class="arithmatex">\(B^3\)</span>) at the final dump. Run at a sequence of resolutions placing each in a directory named after its resolution, then</p>
-<div class="language-text highlight"><pre><span></span><code>python /path/to/iharm2d_v4/prob/mhdmodes1d/convergence_mhdmodes1d.py \
-    -r 64,128,256,512 -m fast -d 1
-</code></pre></div>
-<p>The <code>-m</code> flag selects the mode (<code>entropy</code>, <code>slow</code>, <code>alfven</code>, <code>fast</code>) and <code>-d</code> selects <code>idim</code>. With <code>LINEAR</code> reconstruction the expected slope is <span class="arithmatex">\(L_1 \propto N^{-2}\)</span>.</p>
-<!-- TODO: embed convergence plot -->
+<p>Because <code>tf</code> is set to exactly one wave period, the analytic solution at <span class="arithmatex">\(t_f\)</span> equals the initial eigenmode. The L1 error for each primitive <span class="arithmatex">\(q\)</span> is</p>
+<div class="arithmatex">\[
+L_1(q) = \frac{1}{N}\sum_{i}\left|q_i(t_f) - q_0 - A\,\delta q\,\cos(k\,x_i)\right|,
+\]</div>
+<p>where <span class="arithmatex">\(q_0\)</span> is the background value and only primitives with <span class="arithmatex">\(\delta q \neq 0\)</span> for the selected mode are included. The expected slope is <span class="arithmatex">\(L_1 \propto N^{-2}\)</span> as shown below,</p>
+<div style="display: flex; gap: 1rem;">
+  <img src="../../assets//mhdmodes1d_slow_convergence.png" style="width: 33%;">
+  <img src="../../assets//mhdmodes1d_alfven_convergence.png" style="width: 33%;">
+  <img src="../../assets//mhdmodes1d_fast_convergence.png" style="width: 33%;">
+</div>
 
 <h2 id="references">References</h2>
 <ul>

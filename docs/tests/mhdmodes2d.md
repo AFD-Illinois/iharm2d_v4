@@ -2,32 +2,32 @@
 
 ## Overview
 
-The same four MHD eigenmodes as in the 1D test are initialized here as oblique waves propagating at 45° in the $x_1$–$x_2$ plane. Because the wave is no longer aligned with the background magnetic field, the slow, Alfvén, and fast modes all have distinct phase speeds and involve non-trivial couplings between all eight primitives. This makes the 2D mode test a more stringent check of the multi-dimensional MHD transport: errors in the treatment of off-axis wave propagation, the divergence-free constraint on $\mathbf{B}$, and the flux-CT update of the magnetic field all show up as deviations from the analytic eigenmode solution.
+The same four MHD eigenmodes as in the 1D test are initialized here as small-amplitude sinusoidal perturbations propagating obliquely at 45° through a magnetized background. Unlike the 1D test where propagation is along $\mathbf{B}$, here the oblique geometry breaks the degeneracy between the Alfvén and fast speeds, so all three modes propagate at different speeds. It also means the slow and fast eigenvectors simultaneously perturb density, internal energy, both in-plane velocity components, and both in-plane magnetic field components. This makes the 2D test a more stringent check of the code. The analytic solution is known at all times, and the test exercises multi-dimensional MHD transport as well as the flux-CT update of the magnetic field.
 
 ## Setup
 
 The domain is the unit square $[0,1]\times[0,1]$ in Minkowski coordinates with periodic boundaries. The background state is
 
 $$
-\rho_0 = 1,\quad u_0 = 1,\quad B^1_0 = 1,\quad B^2_0 = B^3_0 = 0,\quad \tilde{u}^i_0 = 0.
+\rho_0 = 1,\quad u_0 = 1,\quad \mathbf{B}_0 = \hat{x},\quad \tilde{u}^i_0 = 0,
 $$
 
-The initial perturbation is a plane wave with wave-vector $(k_1, k_2) = (2\pi, 2\pi)$, giving one wavelength along each axis and a diagonal wavelength $\lambda = 1/\sqrt{2}$,
+with the wave propagating at 45° to the field. The initial state is
 
 $$
-q(x,y,0) = q_0 + A\,\delta q\,\cos(k_1 x + k_2 y),\qquad A = 10^{-4}.
+q(x,y,t=0) = q_0 + A\,\delta q\,\cos(k_1 x + k_2 y),
 $$
 
-The perturbation eigenvector $\delta q$ for each mode is:
+with amplitude $A = 10^{-4}$ and $k_1 = k_2 = 2\pi$ (one wavelength along each axis, diagonal wavelength $\lambda = 1/\sqrt{2}$). The perturbation eigenvector $\delta q$ for each mode is:
 
-| `nmode` | Mode | Primary perturbations | $|\omega|$ |
+| `nmode` | Mode | Perturbed variables | $\lvert\omega\rvert$ |
 |---|---|---|---|
-| 0 | Entropy | $\delta\rho$ | $2\pi/5$ |
+| 0 | Entropy | $\delta\rho$ | $t_f$ |
 | 1 | Slow    | $\delta\rho,\,\delta u,\,\delta\tilde{u}^{1,2},\,\delta B^{1,2}$ | $2.410$ |
 | 2 | Alfvén  | $\delta\tilde{u}^3,\,\delta B^3$ | $3.441$ |
 | 3 | Fast    | $\delta\rho,\,\delta u,\,\delta\tilde{u}^{1,2},\,\delta B^{1,2}$ | $5.537$ |
 
-The final time is set automatically to one wave period $t_f = 2\pi/|\omega|$ for the selected mode.
+The final time is set automatically to one full wave period $t_f = 2\pi/\lvert\omega\rvert$ for each mode. The frequencies are evaluated for the given background state above with $k = 2\pi\sqrt{2}$ and adiabatic index $\Gamma = 4/3$.
 
 ## Parameters
 
@@ -48,16 +48,19 @@ Relevant compile-time parameters are:
 
 ## Convergence
 
-The L1 error is computed against the analytic eigenmode solution for all eight primitives at the final dump. Run at a sequence of resolutions placing each in a directory named after its resolution, then
+Because `tf` is set to exactly one wave period, the analytic solution at $t_f$ equals the initial eigenmode. The L1 error for each primitive $q$ is
 
-```
-python /path/to/iharm2d_v4/prob/mhdmodes2d/convergence_mhdmodes2d.py \
-    -r 64,128,256,512 -m fast
-```
+$$
+L_1(q) = \frac{1}{N_1 N_2}\sum_{i,j}\left|q_{ij}(t_f) - q_0 - A\,\delta q\,\cos(k_1 x_i + k_2 y_j)\right|,
+$$
 
-The `-m` flag selects the mode (`entropy`, `slow`, `alfven`, `fast`). With `LINEAR` reconstruction the expected slope is $L_1 \propto N^{-2}$.
+where $q_0$ is the background value and only primitives with $\delta q \neq 0$ for the selected mode are included. The expected slope is $L_1 \propto N^{-2}$ as shown below,
 
-<!-- TODO: embed convergence plot -->
+<div style="display: flex; gap: 1rem;">
+  <img src="../../assets/mhdmodes2d_slow_convergence.png" style="width: 33%;">
+  <img src="../../assets/mhdmodes2d_alfven_convergence.png" style="width: 33%;">
+  <img src="../../assets/mhdmodes2d_fast_convergence.png" style="width: 33%;">
+</div>
 
 ## References
 
