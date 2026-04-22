@@ -15,6 +15,9 @@ nav:
     - tests/advection.md
     - tests/entropy_wave.md
     - tests/sound_wave.md
+    - tests/sod.md
+    - tests/mhdmodes1d.md
+    - tests/mhdmodes2d.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)

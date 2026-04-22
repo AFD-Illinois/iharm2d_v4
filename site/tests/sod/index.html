@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../compile-time-parameters/">
+        <link rel="prev" href="../sound_wave/">
       
       
-        <link rel="next" href="../output-data-format/">
+        <link rel="next" href="../mhdmodes1d/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Runtime parameters - iharm2d v4: wiki</title>
+        <title>Sod shock tube - iharm2d v4: wiki</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#runtime-parameters" class="md-skip">
+        <a href="#sod-shock-tube" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Runtime parameters
+              Sod shock tube
             
           </span>
         </div>
@@ -280,10 +280,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -299,11 +297,13 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -324,7 +324,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -342,7 +342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -370,7 +370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../compile-time-parameters/" class="md-nav__link">
+      <a href="../../getting-started/compile-time-parameters/" class="md-nav__link">
         
   
   
@@ -395,37 +395,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Runtime parameters
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../getting-started/runtime-parameters/" class="md-nav__link">
         
   
   
@@ -441,92 +414,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#time-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Time control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-cadences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output cadences
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#problem-specific" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem-specific
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fluid-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fluid parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coordinates-and-domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coordinates and domain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#electron-thermodynamics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Electron thermodynamics
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -539,7 +426,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../output-data-format/" class="md-nav__link">
+      <a href="../../getting-started/output-data-format/" class="md-nav__link">
         
   
   
@@ -625,8 +512,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -646,13 +535,11 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -673,7 +560,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -691,7 +578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tests/advection/" class="md-nav__link">
+      <a href="../advection/" class="md-nav__link">
         
   
   
@@ -719,7 +606,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tests/entropy_wave/" class="md-nav__link">
+      <a href="../entropy_wave/" class="md-nav__link">
         
   
   
@@ -747,7 +634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tests/sound_wave/" class="md-nav__link">
+      <a href="../sound_wave/" class="md-nav__link">
         
   
   
@@ -772,10 +659,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tests/sod/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sod shock tube
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -791,6 +705,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-and-resolution-dependence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output and resolution dependence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -803,7 +792,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tests/mhdmodes1d/" class="md-nav__link">
+      <a href="../mhdmodes1d/" class="md-nav__link">
         
   
   
@@ -831,7 +820,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tests/mhdmodes2d/" class="md-nav__link">
+      <a href="../mhdmodes2d/" class="md-nav__link">
         
   
   
@@ -886,10 +875,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#time-control" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Time control
+        Overview
       
     </span>
   </a>
@@ -897,10 +886,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-cadences" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output cadences
+        Setup
       
     </span>
   </a>
@@ -908,10 +897,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#problem-specific" class="md-nav__link">
+  <a href="#parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Problem-specific
+        Parameters
       
     </span>
   </a>
@@ -919,10 +908,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fluid-parameters" class="md-nav__link">
+  <a href="#output-and-resolution-dependence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fluid parameters
+        Output and resolution dependence
       
     </span>
   </a>
@@ -930,21 +919,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#coordinates-and-domain" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Coordinates and domain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#electron-thermodynamics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Electron thermodynamics
+        References
       
     </span>
   </a>
@@ -971,67 +949,69 @@
   
 
 
-<h1 id="runtime-parameters">Runtime parameters</h1>
-<p>Runtime parameters are read from <code>param.dat</code> each time the executable is launched — you can change them between runs without recompiling. Each problem ships with a sample <code>param.dat</code> under <code>prob/PROB/param.dat</code>; copy it into your output directory before running.</p>
-<p>The parameter file format is straightforward: each line begins with a type tag (<code>[dbl]</code>, <code>[int]</code>, or <code>[str]</code>) that tells the parser which data type to read, followed by the parameter name and its value. Lines beginning with <code>#</code> are ignored.</p>
-<p>The torus problem (<code>prob/torus/param.dat</code>) is used as the running example throughout this page.</p>
-<h2 id="time-control">Time control</h2>
-<div class="language-text highlight"><pre><span></span><code>[dbl] tf     = 1000.0
-[dbl] dt     = 1.0e-06
-[dbl] cour   = 0.9
-</code></pre></div>
-<p><code>tf</code> is the simulation end time in code units (gravitational units <span class="arithmatex">\(GM/c^3\)</span> for black hole problems). <code>dt</code> sets the initial timestep; the code will adapt it quickly, so this value mainly prevents an enormous first step — <code>1e-6</code> is a safe conservative starting point. <code>cour</code> is the Courant–Friedrichs–Lewy (CFL) number: the timestep is set to <code>cour</code> times the minimum light-crossing time across all zones. Values between <code>0.5</code> and <code>0.9</code> are typical; smaller values are more stable but take more steps to reach <code>tf</code>.</p>
-<h2 id="output-cadences">Output cadences</h2>
-<div class="language-text highlight"><pre><span></span><code>[dbl] DTd  = 5.0
-[dbl] DTf  = 10.0
-[dbl] DTl  = 0.5
-[int] DTr  = 10000
-[int] DTp  = 100
-</code></pre></div>
-<p>These control how often different types of output are written. <code>DTd</code>, <code>DTf</code>, and <code>DTl</code> are measured in code time units; <code>DTr</code> and <code>DTp</code> are measured in timesteps.</p>
+<h1 id="sod-shock-tube">Sod shock tube</h1>
+<h2 id="overview">Overview</h2>
+<p>The Sod shock tube is the standard test of a code's ability to capture discontinuous wave structures. The initial state consists of two constant states separated by a discontinuity: high-density, high-pressure left state and a low-density, low-pressure right state. The resulting Riemann problem immediately produces three families of waves: a left-going rarefaction fan, a right-going contact discontinuity, and a right-going shock. Because the problem is 1D and involves no magnetic field, it tests only the hydrodynamic Riemann solver and reconstruction scheme.</p>
+<h2 id="setup">Setup</h2>
+<p>The domain is <span class="arithmatex">\([0,1]\)</span> in <span class="arithmatex">\(x\)</span> with outflow boundaries on both sides and <span class="arithmatex">\(N_2=1\)</span> (a single cell in <span class="arithmatex">\(y\)</span>, making the problem truly 1D). The initial condition is a step function at <span class="arithmatex">\(x=0.5\)</span>,</p>
+<div class="arithmatex">\[
+(\rho,\, p,\, v^x) =
+\begin{cases}
+(1.0,\; 1.0,\; 0) &amp; x &lt; 0.5 \\
+(0.125,\; 0.1,\; 0) &amp; x \geq 0.5
+\end{cases}
+\]</div>
+<p>with <span class="arithmatex">\(\Gamma = 1.4\)</span> and <span class="arithmatex">\(\mathbf{B} = 0\)</span>. The <code>tscale</code> parameter rescales the velocities and internal energies so the flow is non-relativistic (<span class="arithmatex">\(\texttt{tscale} = 0.01 \ll 1\)</span>), recovering the classical Sod solution to high accuracy.</p>
+<h2 id="parameters">Parameters</h2>
+<p>Relevant compile-time parameters are:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>N1TOT</code></td>
+<td><code>256</code></td>
+<td>Resolution; increase for sharper profiles</td>
+</tr>
+<tr>
+<td><code>N2TOT</code></td>
+<td><code>1</code></td>
+<td>Keep at 1 (problem is 1D)</td>
+</tr>
+<tr>
+<td><code>METRIC</code></td>
+<td><code>MINKOWSKI</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>RECONSTRUCTION</code></td>
+<td><code>WENO</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>X{1,2}{L,R}_BOUND</code></td>
+<td><code>OUTFLOW</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="output-and-resolution-dependence">Output and resolution dependence</h2>
+<p>The video below shows <span class="arithmatex">\(\rho\)</span>, <span class="arithmatex">\(p\)</span>, <span class="arithmatex">\(v^x\)</span>, and specific internal energy <span class="arithmatex">\(u/\rho\)</span> at resolutions <span class="arithmatex">\(N = 128\)</span>, <span class="arithmatex">\(256\)</span>, <span class="arithmatex">\(512\)</span>, and <span class="arithmatex">\(4096\)</span> as a function of time.</p>
+<video controls width="100%">
+  <source src="../../assets/sod_resolution.mp4" type="video/mp4">
+</video>
+
+<p>A plotting script for individual dumps at a single resolution is provided at <code>prob/sod/plot_sod.py</code>; the multi-resolution comparison script is <code>prob/sod/plot_sod_resolution.py</code>.</p>
+<p>At lower resolutions (<span class="arithmatex">\(N \lesssim 256\)</span>), small-amplitude oscillations are visible in <span class="arithmatex">\(u/\rho\)</span> near the contact discontinuity. These arise because at low resolution the numerical dissipation smears the density jump over only a few cells (see <span class="arithmatex">\(\rho\)</span>), and any errors in the reconstructed density profile get amplified when computing the ratio <span class="arithmatex">\(u/\rho\)</span> as <span class="arithmatex">\(u\)</span> is continuous at the contact discontinuity. The oscillations diminish with increasing resolution and are not prominent in the <span class="arithmatex">\(N=4096\)</span> reference run, which is included as a high-resolution benchmark.</p>
+<h2 id="references">References</h2>
 <ul>
-<li><code>DTd</code> — interval between fluid-state dumps written to <code>dumps/</code>.</li>
-<li><code>DTf</code> — legacy "full" dump interval, retained for historical compatibility and unused in current runs.</li>
-<li><code>DTl</code> — interval between entries in <code>log.out</code> (for example, radial fluxes and maximum divergence error).</li>
-<li><code>DTr</code> — interval between restart files, written every N timesteps.</li>
-<li><code>DTp</code> — interval between performance reports printed to stdout, written every N timesteps.</li>
+<li><a href="https://doi.org/10.1016/0021-9991(78)90023-2">Sod (1978)</a> — original shock tube problem.</li>
 </ul>
-<p>For black hole accretion problems in EHT production runs, a typical value is <code>DTd = 5.0</code>.</p>
-<h2 id="problem-specific">Problem-specific</h2>
-<p>In addition to the core parameters above, each problem registers its own parameters in <code>set_problem_params()</code> inside <code>prob/PROB/problem.c</code>. These are read from the same <code>param.dat</code> — there is no separate file — so what appears in <code>param.dat</code> depends entirely on the problem. For example, <code>mhdmodes2d</code> adds only a single parameter <code>nmode</code> (an integer selecting which linear MHD eigenmode to initialise), whereas the torus problem adds <code>rin</code>, <code>rmax</code>, <code>u_jitter</code>, <code>beta</code>, <code>mad_type</code>, explained below.</p>
-<div class="language-text highlight"><pre><span></span><code>[dbl] rin      = 6.0
-[dbl] rmax     = 12.0
-[dbl] u_jitter = 4.0e-02
-[dbl] beta     = 100.0
-[int] mad_type = 0
-</code></pre></div>
-<p><code>rin</code> and <code>rmax</code> define the <a href="https://ui.adsabs.harvard.edu/abs/1976ApJ...207..962F/abstract">Fishbone-Moncrief torus</a>: <code>rin</code> is the inner edge of the torus (in <span class="arithmatex">\(r_g\equiv GM/c^2\)</span>) and <code>rmax</code> is the radius of the pressure maximum (also in $r_g). It is a solution to the relativistic Euler equations in a stationary, axisymmetric background for an isentropic, axisymmetric, purely azimuthal flow. The solutions are parameterized by a constant angular momentum mass density, <span class="arithmatex">\(\ell\equiv u_{\phi}u^{t}\)</span>. The angular momentum of the torus is set analytically from <code>rmax</code>. Typically we set <code>rin</code> and <code>rmax</code> to 10 and 20 for SANE simulations, and 20 and 41 for MAD simulations.</p>
-<p><code>u_jitter</code> adds a small random perturbation to the initial internal energy field. This perturbs the equilibrium torus, seeds instabilities such as the magnetorotational instability (MRI), and helps trigger accretion.</p>
-<p><code>beta</code> is the target plasma <span class="arithmatex">\(\beta = P_{\rm gas} / P_{\rm mag}\)</span> used to normalise the initial magnetic field. <code>beta = 100</code> is the standard choice and it implies that the initial field is dynamically weak, which is standard for most GRMHD torus setups.</p>
-<p><code>mad_type</code> specifies the initial magnetic field configuration. <code>0</code> selects the standard and normal evolution (SANE), while <code>1</code> selects a magnetically arrested disk (MAD) setup. Although the steady-state magnetic flux is not trivially determined by the initial conditions, these configurations reflect setups identified in previous work as producing either SANE or MAD flows.</p>
-<h2 id="fluid-parameters">Fluid parameters</h2>
-<div class="language-text highlight"><pre><span></span><code>[dbl] gam = 1.333333
-</code></pre></div>
-<p><code>gam</code> is the adiabatic index <span class="arithmatex">\(\gamma\)</span> of the gas. For a relativistic gas, <span class="arithmatex">\(\gamma = 4/3 \approx 1.333\)</span>; for a non-relativistic monatomic gas, <span class="arithmatex">\(\gamma = 5/3 \approx 1.666667\)</span>. The latter is a good choice for single-temperature GRMHD.</p>
-<h2 id="coordinates-and-domain">Coordinates and domain</h2>
-<p><div class="language-text highlight"><pre><span></span><code>[dbl] a           = 0.9375
-[dbl] Rout        = 50.0
-[dbl] hslope = 0.3
-[dbl] mks_smooth  = 0.5
-[dbl] poly_xt     = 0.82
-[dbl] poly_alpha  = 14.0
-</code></pre></div>
-<code>a</code> is the dimensionless black hole spin parameter, <span class="arithmatex">\(a = J c / G M^2\)</span>, ranging from <code>0</code> (Schwarzschild) to <code>1</code> (maximally spinning Kerr).</p>
-<p><code>Rout</code> sets the outer radial boundary of the grid in gravitational radii (<span class="arithmatex">\(r_g = GM/c^2\)</span>). The inner boundary is calculated based on the outer boundary and the resolution in the radial direction so that there are five zones inside the event horizon. </p>
-<p><code>hslope</code> controls the degree of coordinate compression toward the midplane in MKS coordinates — smaller values concentrate more zones near <span class="arithmatex">\(\theta = \pi/2\)</span>; <code>0.3</code> is a common choice for torus problems. <code>mks_smooth</code>, <code>poly_xt</code>, and <code>poly_alpha</code> are FMKS coordinate shape parameters (only used when <code>DEREFINE_POLES = 1</code>).</p>
-<h2 id="electron-thermodynamics">Electron thermodynamics</h2>
-<div class="language-text highlight"><pre><span></span><code>[dbl] game    = 1.333333
-[dbl] gamp    = 1.666667
-[dbl] fel0    = 0.01
-[dbl] tptemin = 0.001
-[dbl] tptemax = 1000.0
-</code></pre></div>
-<p>These parameters are only read when <code>ELECTRONS = 1</code> is set in <code>parameters.h</code>. <code>game</code> and <code>gamp</code> are the adiabatic indices for electrons and ions respectively; the standard choices are <span class="arithmatex">\(\gamma_e = 4/3\)</span> (relativistic electrons) and <span class="arithmatex">\(\gamma_p = 5/3\)</span> (non-relativistic ions). <code>fel0</code> is the initial fraction of dissipated energy assigned to electrons; it also sets the electron entropy in the initial condition. <code>tptemin</code> and <code>tptemax</code> clamp the ion-to-electron temperature ratio <span class="arithmatex">\(T_p/T_e\)</span> to a physically reasonable range.</p>
 
 
 
