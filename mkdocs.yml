@@ -10,6 +10,7 @@ nav:
     - getting-started/runtime-parameters.md
     - getting-started/output-data-format.md
   - GRMHD Theory: theory.md
+  - Numerical Algorithm: numerical-algo.md
   - Control flow and FluidState mapping: iharm-control-flow.md
   - Tests:
     - tests/advection.md
@@ -18,6 +19,7 @@ nav:
     - tests/sod.md
     - tests/mhdmodes1d.md
     - tests/mhdmodes2d.md
+    - tests/kelvin_helmholtz.md
 
 markdown_extensions:
   - pymdownx.arithmatex:        # LaTeX math support ($E = mc^2$)

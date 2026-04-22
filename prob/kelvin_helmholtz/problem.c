@@ -3,7 +3,8 @@
   PROBLEM.C
  
   -Read and store problem-specific parameters from parameter file
-  -Initialize Kelvin-Helmholtz problem
+  -Initialize Kelvin-Helmholtz problem based on (Lecoanet et al. 2016, MNRAS, 455, 4274)
+   https://ui.adsabs.harvard.edu/abs/2016MNRAS.455.4274L/abstract
 
 -----------------------------------------------------------------------------------*/
 
