@@ -17,9 +17,9 @@ nav:
     - tests/entropy_wave.md
     - tests/sound_wave.md
     - tests/sod.md
+    - tests/kelvin_helmholtz.md
     - tests/mhdmodes1d.md
     - tests/mhdmodes2d.md
-    - tests/kelvin_helmholtz.md
     - tests/bondi.md
     - tests/torus_equilibrium.md
 
