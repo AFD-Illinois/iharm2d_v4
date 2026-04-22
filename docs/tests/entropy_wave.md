@@ -49,12 +49,8 @@ $$
 L_1 = \frac{1}{N_1 N_2}\sum_{i,j}\left|\rho_{ij}(t_f) - \rho^{\rm exact}_{ij}(t_f)\right|.
 $$
 
-To run the convergence study, build and run at a sequence of resolutions (e.g. $64^2, 128^2, 256^2, 512^2$) placing each run in a directory named after its resolution, then
 
-```
-python /path/to/iharm2d_v4/prob/entropy_wave/convergence_entropy_wave.py -r 64,128,256,512
-```
 
-which saves `entropy_wave_2d_convergence.png`. With `LINEAR` reconstruction the expected slope is $L_1 \propto N^{-2}$.
+Below is the convergence plot with `LINEAR` reconstruction; the expected slope is $L_1 \propto N^{-2}$.
 
-<!-- TODO: embed convergence plot -->
+![Convergence](../../assets/entropy_wave_2d_convergence.png)

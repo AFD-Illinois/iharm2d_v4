@@ -55,7 +55,7 @@ $$
 L_1 = \frac{1}{N_1 N_2}\sum_{i,j}\left|\rho_{ij}(t_f) - \rho_{ij}(0)\right|.
 $$
 
-Below is the convergence plot with WENO reconstruction the expected slope is $L_1 \propto N^{-2}$.
+Below is the convergence plot with WENO reconstruction; the expected slope is $L_1 \propto N^{-2}$.
 
 ![Convergence](../../assets/advection_2d_convergence.png)
 
