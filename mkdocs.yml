@@ -9,8 +9,8 @@ nav:
     - getting-started/compile-time-parameters.md
     - getting-started/runtime-parameters.md
     - getting-started/output-data-format.md
-  - GRMHD Theory: theory.md
-  - Numerical Algorithm: numerical-algo.md
+  # - GRMHD Theory: theory.md
+  # - Numerical Algorithm: numerical-algo.md
   - Tests:
     - tests/advection.md
     - tests/entropy_wave.md
